@@ -1,0 +1,107 @@
+.navbar {
+  display: grid;
+  justify-items: center;
+  grid-template-columns: max-content max-content;
+  gap: 0 50px;
+  justify-content: space-between;
+  margin-top: 16px;
+  width: 100%;
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0px;
+  }
+
+  .form {
+    display: flex;
+    gap: 0 10px;
+    @media screen and (max-width: 768px) {
+      margin: 0 16px;
+    }
+  }
+
+  .link {
+    display: grid;
+    align-items: center;
+    grid-template-columns: max-content 1fr;
+    gap: 0 8px;
+    padding: 6px 12px;
+    color: #0c0c0c;
+    font-size: 14px;
+    border-radius: 16px;
+    width: max-content;
+    @media screen and (max-width: 768px) {
+      padding: 6px 22px;
+      gap: 0px;
+    }
+
+    &.active {
+      color: #ffc812;
+      background-color: #0c0c0c;
+
+      svg path {
+        fill: #ffc812;
+      }
+    }
+  }
+
+  .phone {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0 8px;
+    color: #0c0c0c;
+    font-size: 14px;
+    align-items: center;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 16px;
+    background-color: #ffc812;
+    transition: background-color 0.2s;
+    @media screen and (max-width: 768px) {
+      width: 100%;
+      margin-top: 8px;
+      border-radius: 0px;
+    }
+
+    &:hover {
+      background-color: #fff2df;
+      transition: background-color 0.2s;
+    }
+
+    &:active {
+      background-color: #fab23c;
+      transition: background-color 0.2s;
+    }
+  }
+
+  .links {
+    display: flex;
+    gap: 18px 0;
+    @media screen and (max-width: 768px) {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      gap: 0px;
+    }
+  }
+  
+  .navLinks {
+    display: flex;
+    flex-direction:row;
+    background-color: transparent;
+    @media screen and (max-width: 768px) {
+        background-color: white; 
+        margin-bottom: 12px;
+        padding: 8px 6px;
+        width: 100%;
+        gap: 0px;
+        justify-content: space-around;
+    }
+  }
+
+  .name {
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
+  }
+}

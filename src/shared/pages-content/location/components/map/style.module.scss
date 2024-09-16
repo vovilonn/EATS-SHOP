@@ -1,0 +1,45 @@
+.wraper {
+  display: grid;
+  justify-items: center;
+  gap: 24px 0;
+
+  .map {
+    position: relative;
+
+    .iframe {
+      width: 609px;
+      height: 492px;
+      border-radius: 24px;
+      border: 1px solid #000;
+    }
+
+    .define {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      padding: 16px 20px;
+      display: grid;
+      align-items: center;
+      grid-template-columns: max-content 1fr;
+      gap: 0 12px;
+      border-radius: 44px;
+      background-color: #fff;
+      color: #0c0c0c;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  }
+
+  .address {
+    color: #0c0c0c;
+    font-size: 20px;
+    line-height: 120%;
+  }
+
+  .btn {
+    min-width: 196px;
+    margin: 0 auto;
+    padding: 12px 16px;
+  }
+}

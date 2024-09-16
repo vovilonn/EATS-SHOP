@@ -1,0 +1,14 @@
+.wraper {
+  padding: 45.5px 23.5px;
+  border-radius: 24px;
+  background-color: #fff;
+
+  .swiper {
+    padding: 0 23.5px;
+  }
+
+  .slide {
+    display: grid;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,16 @@
+.back {
+  padding: 6px 12px;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+  gap: 0 8px;
+  border-radius: 16px;
+  background-color: #fff;
+  width: max-content;
+  font-size: 14px;
+  color: #808080;
+
+  .icon path {
+    fill: #808080;
+  }
+}

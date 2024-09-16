@@ -1,0 +1,8 @@
+.products {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  @media screen and (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}

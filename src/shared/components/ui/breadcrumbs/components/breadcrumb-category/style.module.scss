@@ -1,0 +1,18 @@
+.category {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+  gap: 0 10px;
+  color: #0c0c0c;
+  font-size: 14px;
+
+  .icon {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 30px;
+    background-color: #f9f9f9;
+  }
+}

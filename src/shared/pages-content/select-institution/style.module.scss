@@ -1,0 +1,13 @@
+.row {
+  display: grid;
+  grid-template-columns: 358px 358px;
+  justify-content: center;
+  gap: 0 24px;
+  margin-bottom: 24px;
+}
+
+.btn {
+  min-width: 196px;
+  margin: 0 auto;
+  display: block;
+}

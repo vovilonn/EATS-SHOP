@@ -1,0 +1,49 @@
+.categories {
+  .slide {
+    width: max-content;
+    display: grid;
+    align-self: center;
+  }
+
+  .category,
+  .all {
+    padding: 4px 12px 4px 8px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: max-content 1fr;
+    gap: 0 6px;
+    color: #0c0c0c;
+    border-radius: 24px;
+    cursor: pointer;
+
+    .icon {
+      display: grid;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 30px;
+      background-color: #fff;
+    }
+
+    &.active {
+      color: #fff;
+      border-radius: 24px;
+      background: linear-gradient(
+          0deg,
+          rgba(0, 0, 0, 0.2) 0%,
+          rgba(0, 0, 0, 0.2) 100%
+        ),
+        linear-gradient(0deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%),
+        linear-gradient(0deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%),
+        #0c0c0c;
+    }
+  }
+
+  .all {
+    height: 38px;
+    padding-left: 20px;
+    padding-right: 20px;
+    display: flex;
+  }
+}

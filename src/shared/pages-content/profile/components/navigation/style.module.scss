@@ -1,0 +1,32 @@
+.links {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 18px 0;
+
+  .link,
+  .exit {
+    padding: 16px 20px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: max-content 1fr max-content;
+    gap: 0 12px;
+    border-radius: 44px;
+    background-color: #fff;
+    color: #0c0c0c;
+    font-size: 24px;
+  }
+
+  .exit {
+    background-color: #f9f9f9;
+  }
+
+  .arrow path {
+    fill: #0c0c0c;
+  }
+
+  .icon {
+    width: 32px;
+    height: 32px;
+  }
+}

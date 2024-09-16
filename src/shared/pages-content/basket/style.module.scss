@@ -1,0 +1,24 @@
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 32px 0 0 auto;
+  width: max-content;
+  min-width: 358px;
+  padding: 16px 24px;
+  border-radius: 60px;
+  background-color: #0c0c0c;
+  cursor: pointer;
+
+  .total {
+    color: #fff;
+    font-size: 14px;
+    padding-right: 20px;
+    border-right: 1px solid rgba(255, 255, 255, 0.8);
+  }
+
+  .title {
+    color: #ffc812;
+    padding-left: 20px;
+  }
+}

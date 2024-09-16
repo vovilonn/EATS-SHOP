@@ -1,0 +1,28 @@
+.added {
+  padding: 12px 16px;
+  display: grid;
+  align-items: center;
+  grid-template-columns: max-content 1fr;
+  gap: 0 12px;
+
+  .icon {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    background-color: #00cc2e;
+
+    path {
+      fill: #fff;
+    }
+  }
+
+  .text {
+    color: #00cc2e;
+    font-size: 16px;
+    font-weight: 500;
+  }
+}

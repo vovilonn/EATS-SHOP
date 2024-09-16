@@ -1,0 +1,80 @@
+import { FC, FormEvent, useState } from 'react'
+import { useDispatch } from 'react-redux'
+
+import { fillingProfile } from '@/shared/store/auth/requests'
+import { TypeDispatch } from '@/shared/store'
+
+import FormInput from '../../../form/form-input'
+import SelectCity from '../../../select-city'
+import Button from '../../../button'
+
+import style from './style.module.scss'
+
+interface IPopupPersonalInfoProps {
+  onSubmit: () => void
+}
+
+const PopupPersonalInfo: FC<IPopupPersonalInfoProps> = props => {
+  const dispatch = useDispatch<TypeDispatch>()
+  const [name, setName] = useState<string>('')
+  const [referralCode, setreferralCode] = useState<string>('')
+  const [cityId, setCityId] = useState<number>()
+  const [loading, setLoading] = useState<boolean>(false)
+  const isValidField: boolean = Boolean(name.length && cityId)
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    if (!isValidField) return
+
+    try {
+      setLoading(true)
+
+      const response = await dispatch(
+        fillingProfile({
+          cityId: Number(cityId),
+          referralCode: Number(referralCode) || null,
+          name,
+        })
+      )
+
+      if (response.payload?.status === 'OK') {
+        props.onSubmit()
+      }
+    } catch (error) {
+      console.log('error =>', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <form className={style.personal} onSubmit={e => onSubmit(e)}>
+      <p className={style.text}>Вкажіть ваше ім’я та місто</p>
+      <FormInput
+        placeholder='Ім’я'
+        onChange={value => setName(value)}
+        valid={Boolean(name.length)}
+        large
+      />
+      <FormInput
+        className={style.number}
+        placeholder='Реферальний номер'
+        onChange={value => setreferralCode(value)}
+        valid={Boolean(referralCode.length)}
+        large
+      />
+      <SelectCity onChange={id => setCityId(id)} large />
+      <Button
+        className={style.btn}
+        type='submit'
+        disabled={!isValidField || loading}
+        basket
+        large
+      >
+        Продовжити
+      </Button>
+    </form>
+  )
+}
+
+export default PopupPersonalInfo

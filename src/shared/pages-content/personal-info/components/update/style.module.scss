@@ -1,0 +1,56 @@
+.form {
+  .fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: max-content max-content max-content;
+    align-items: start;
+    gap: 16px;
+  }
+
+  .field {
+    display: grid;
+    gap: 6px 0;
+
+    .label {
+      color: #808080;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 120%;
+    }
+  }
+
+  .genders {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+
+    .gender {
+      padding: 12px 20px;
+      border-radius: 44px;
+      border: 1px solid rgba(12, 12, 12, 0.08);
+      color: #808080;
+      background-color: transparent;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+      cursor: pointer;
+
+      &.active {
+        color: #0c0c0c;
+        background-color: #ffc812;
+        border-color: #ffc812;
+        transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+      }
+    }
+  }
+
+  .checkbox {
+    align-self: end;
+    margin-bottom: 6px;
+  }
+
+  .btn {
+    margin-top: 32px;
+    margin-left: auto;
+    min-width: 196px;
+    display: block;
+  }
+}

@@ -1,0 +1,26 @@
+.title {
+  color: #0c0c0c;
+  font-size: 28px;
+  line-height: 120%;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+  gap: 0 10px;
+
+  .icon {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    border-radius: 30px;
+    background-color: #fff;
+  }
+
+  &.large {
+    color: #0c0c0c;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 120%;
+  }
+}

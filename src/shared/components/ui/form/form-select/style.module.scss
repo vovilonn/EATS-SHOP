@@ -1,0 +1,56 @@
+.wraper {
+  position: relative;
+  width: max-content;
+  display: grid;
+
+  .select {
+    appearance: none;
+    color: #0c0c0c;
+    font-size: 14px;
+    padding: 6px 40px 6px 12px;
+    border-radius: 16px;
+    background-color: #fff;
+    cursor: pointer;
+  }
+
+  .icon {
+    position: absolute;
+    right: 12px;
+    pointer-events: none;
+    align-self: center;
+  }
+
+  .placeholder {
+    position: absolute;
+    align-self: center;
+    background-color: #fff;
+    left: 12px;
+    color: #808080;
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  &.large {
+    width: 100%;
+
+    .select {
+      border-radius: 56px;
+      padding: 16px 56px 16px 20px;
+      border: 1px solid rgba(12, 12, 12, 0.08);
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .placeholder {
+      left: 20px;
+      font-size: 16px;
+    }
+  }
+
+  &.large.valid {
+    .select {
+      border-color: #ffc812;
+      transition: border-color 0.2s;
+    }
+  }
+}

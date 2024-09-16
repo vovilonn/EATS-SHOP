@@ -1,0 +1,32 @@
+.wallet {
+  width: 358px;
+  display: grid;
+  justify-items: center;
+  gap: 20px 0;
+
+  .icon {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    width: 56px;
+    height: 56px;
+    border-radius: 60px;
+    background-color: #00cc2e;
+
+    path {
+      fill: #fff;
+    }
+  }
+
+  .title {
+    color: #0c0c0c;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 120%;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

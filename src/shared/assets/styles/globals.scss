@@ -1,0 +1,24 @@
+@import './utils/reset.scss';
+@import '../fonts/index.scss';
+@import './components/swiper.scss';
+
+* {
+  font-family: 'Montserrat Alternates';
+  font-variant-numeric: lining-nums proportional-nums;
+  font-size: 16px;
+  font-weight: 500;
+  box-sizing: border-box;
+}
+
+svg {
+  width: 24px;
+  height: 24px;
+}
+
+body {
+  background-color: #f2f2f2;
+  width: 100%;
+  @media screen and (max-width: 768px) {
+    overflow-x: hidden;
+  }
+}

@@ -1,0 +1,104 @@
+.order {
+  display: grid;
+  gap: 14px 0;
+  border-radius: 24px;
+  background-color: #fff;
+  padding: 16px 20px;
+
+  .title {
+    &,
+    * {
+      color: #0c0c0c;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 120%;
+    }
+  }
+
+  .header {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    grid-template-areas: 'header-title header-status' 'header-date header-status';
+    gap: 6px 10px;
+
+    .title {
+      grid-area: header-title;
+    }
+
+    .status {
+      grid-area: header-status;
+      line-height: 120%;
+      font-size: 14px;
+
+      &.create {
+        color: #fab23c;
+      }
+
+      &.delivered {
+        color: #00cc2e;
+      }
+
+      &.canceled {
+        color: #ff4548;
+      }
+    }
+
+    .date {
+      grid-area: header-date;
+      color: #808080;
+      font-size: 14px;
+      line-height: 120%;
+    }
+  }
+
+  .address {
+    .label,
+    .text {
+      font-size: 14px;
+      line-height: 120%;
+    }
+
+    .label {
+      color: #808080;
+      margin-bottom: 6px;
+    }
+
+    .text {
+      color: #0c0c0c;
+    }
+  }
+
+  .images {
+    display: flex;
+    align-items: center;
+    gap: 0 8px;
+
+    .image {
+      margin: 4px;
+      display: grid;
+      align-items: center;
+
+      width: 70px;
+      height: auto;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+
+  .footer {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr max-content;
+    gap: 0 4px;
+
+    .btn {
+      color: #ffc812;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 11px 20px;
+    }
+  }
+}

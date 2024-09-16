@@ -1,0 +1,39 @@
+.institution {
+  display: grid;
+  gap: 8px 0;
+  border-radius: 24px;
+  background-color: #fff;
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s;
+  cursor: pointer;
+
+  .title {
+    color: #0c0c0c;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 120%;
+  }
+
+  h2.title {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  h3.title {
+    color: #808080;
+    font-size: 14px;
+  }
+
+  .schedule .text {
+    color: #808080;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 140%;
+  }
+
+  &.selected {
+    border-color: #ffc812;
+    transition: border-color 0.2s;
+  }
+}

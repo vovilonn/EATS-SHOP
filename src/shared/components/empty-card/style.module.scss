@@ -1,0 +1,17 @@
+.empty {
+  display: grid;
+  justify-items: center;
+  margin: 160px 0;
+
+  .title {
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .text {
+    color: #808080;
+    font-size: 20px;
+    line-height: 120%;
+    margin-bottom: 64px;
+  }
+}

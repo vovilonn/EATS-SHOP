@@ -1,0 +1,81 @@
+.wraper {
+  display: grid;
+  justify-items: space-between;
+  grid-template-columns: 405px;
+
+  .order {
+    padding: 20px;
+    border-radius: 24px;
+
+    .header {
+      display: grid;
+      gap: 16px 0;
+    }
+
+    .row {
+      display: grid;
+      align-items: center;
+      grid-template-columns: 1fr max-content;
+      gap: 0 4px;
+    }
+
+    .date {
+      color: #808080;
+      font-size: 14px;
+      line-height: 120%;
+    }
+
+    .status {
+      &.create {
+        color: #fab23c;
+      }
+
+      &.delivered {
+        color: #00cc2e;
+      }
+
+      &.canceled {
+        color: #ff4548;
+      }
+    }
+
+    .address {
+      .label,
+      .text {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 120%;
+      }
+
+      .label {
+        color: #808080;
+        margin-bottom: 6px;
+      }
+
+      .text {
+        font-weight: 600;
+        color: #0c0c0c;
+      }
+    }
+
+    .total,
+    .payment {
+      color: #0c0c0c;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 120%;
+    }
+
+    .products {
+      margin-top: 32px;
+      display: grid;
+      gap: 32px 0;
+    }
+  }
+
+  .btn {
+    min-width: 196px;
+    margin-top: 16px;
+    justify-self: end;
+  }
+}

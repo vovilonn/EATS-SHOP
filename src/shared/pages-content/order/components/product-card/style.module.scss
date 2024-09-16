@@ -1,0 +1,78 @@
+.card {
+  display: grid;
+  align-items: center;
+  gap: 0 13px;
+  grid-template-columns: max-content 1fr;
+  grid-template-areas:
+    'product-image product-title'
+    'product-image product-composition'
+    'product-image product-option'
+    'product-image product-price'
+    'product-image product-ingredients';
+
+  .image {
+    grid-area: product-image;
+    width: 88px;
+    height: auto;
+  }
+
+  .title {
+    grid-area: product-title;
+    color: #0c0c0c;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 120%;
+    margin-bottom: 6px;
+  }
+
+  .composition {
+    grid-area: product-composition;
+    margin-bottom: 6px;
+
+    &,
+    b {
+      color: #808080;
+      font-size: 10px;
+      line-height: 120%;
+    }
+
+    b {
+      color: #0c0c0c;
+    }
+  }
+
+  .option {
+    grid-area: product-option;
+    color: #fab23c;
+    font-size: 12px;
+    line-height: 120%;
+    margin-bottom: 8px;
+  }
+
+  .price {
+    grid-area: product-price;
+    color: #0c0c0c;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 120%;
+    margin-bottom: 8px;
+  }
+
+  .ingredients {
+    grid-area: product-ingredients;
+    display: grid;
+    gap: 4px 0;
+
+    .label {
+      color: #0c0c0c;
+      font-size: 12px;
+      line-height: 120%;
+    }
+
+    .text {
+      color: #808080;
+      font-size: 10px;
+      line-height: 120%;
+    }
+  }
+}

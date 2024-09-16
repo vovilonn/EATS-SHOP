@@ -1,0 +1,24 @@
+#product-swiper {
+  .swiper-pagination {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0 8px;
+
+    &-bullet {
+      background-color: #fff;
+      border-radius: 100%;
+      width: 10px;
+      height: 10px;
+      border: 1px solid rgba(12, 12, 12, 0.08);
+      transition: border-color 0.2s;
+      cursor: pointer;
+
+      &.swiper-pagination-bullet-active {
+        border-color: #808080;
+        transition: border-color 0.2s;
+      }
+    }
+  }
+}

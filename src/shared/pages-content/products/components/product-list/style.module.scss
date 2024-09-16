@@ -1,0 +1,14 @@
+.products {
+  .row {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    gap: 0 30px;
+    margin-bottom: 25px;
+  }
+
+  .view {
+    min-width: 184px;
+    margin: 24px auto 0;
+    display: block;
+  }
+}

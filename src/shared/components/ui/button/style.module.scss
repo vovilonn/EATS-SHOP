@@ -1,0 +1,51 @@
+.button {
+  cursor: pointer;
+
+  &.view {
+    padding: 12px;
+    border-radius: 60px;
+    background-color: #ffc812;
+    color: #0c0c0c;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      background-color: #fff2df;
+      transition: background-color 0.2s;
+    }
+
+    &:active {
+      background-color: #fab23c;
+      transition: background-color 0.2s;
+    }
+  }
+
+  &.basket {
+    padding: 14px 16px;
+    border-radius: 50px;
+    background-color: #0c0c0c;
+    color: #ffc812;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      background-color: #808080;
+      transition: background-color 0.2s;
+    }
+
+    &:active {
+      background-color: #0c0c0c;
+      color: #fab23c;
+      transition: background-color 0.2s, color 0.2s;
+    }
+  }
+
+  &.basket.large {
+    padding: 18px 20px;
+  }
+
+  &:disabled {
+    color: #808080;
+    background-color: #e3e3e3;
+    pointer-events: none;
+    transition: background-color 0.2s, color 0.2s;
+  }
+}

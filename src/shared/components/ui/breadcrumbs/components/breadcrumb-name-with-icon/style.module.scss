@@ -1,0 +1,9 @@
+.name {
+  display: grid;
+  align-items: center;
+  grid-template-columns: max-content 1fr;
+  gap: 0 8px;
+  color: #0c0c0c;
+  font-size: 14px;
+  font-weight: 400;
+}

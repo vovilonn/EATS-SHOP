@@ -1,0 +1,301 @@
+.footer {
+  margin: 200px 0 24px;
+  @media screen and (max-width: 768px) {
+    margin: 20px 0;    
+  }
+
+  .footerPc {
+    display: block;
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 0.8fr 0.5fr 0.5fr 0.4fr 0.7fr;
+    align-items: start;
+  }
+
+  .logo {
+    width: 232px;
+    height: 80px;
+    margin-bottom: 40px;
+    @media (max-width: 768px) {
+      width: 145px;
+      height: 50px;
+      margin-bottom: 20px;
+    }
+  }
+
+  .cards {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: max-content max-content;
+    gap: 0 24px;
+
+    .card {
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  .store {
+    display: grid;
+    align-items: center;
+    grid-template-columns: max-content 1fr;
+    grid-template-areas: 'store-icon store-text' 'store-icon store-title';
+    padding: 8px 16px;
+    gap: 0 8px;
+    border-radius: 16px;
+    background-color: #0c0c0c;
+    cursor: pointer;
+    width: max-content;
+    transition: background-color 0.2s;
+
+    .icon {
+      grid-area: store-icon;
+
+      path {
+        transition: fill 0.2s;
+      }
+    }
+
+    .text {
+      grid-area: store-text;
+      color: #fff;
+      font-size: 10px;
+      line-height: 120%;
+      transition: color 0.2s;
+    }
+
+    .title {
+      grid-area: store-title;
+      color: #fff;
+      font-size: 18px;
+      line-height: 120%;
+      transition: color 0.2s;
+    }
+
+    &:hover {
+      background-color: #808080;
+      transition: background-color 0.2s;
+    }
+
+    &:active {
+      background-color: #060606;
+      transition: background-color 0.2s;
+
+      .title {
+        color: #fab23c;
+        transition: color 0.2s;
+      }
+
+      .text {
+        color: #fab23c;
+        transition: color 0.2s;
+      }
+
+      .icon path {
+        fill: #fab23c;
+        transition: fill 0.2s;
+      }
+    }
+  }
+
+  .nav,
+  .time,
+  .cities {
+    .title {
+      color: #808080;
+      line-height: 140%;
+      margin-bottom: 12px;
+    }
+  }
+
+  .list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px 0;
+  }
+
+  .link,
+  .text {
+    color: #0c0c0c;
+    line-height: 120%;
+  }
+
+  .phone {
+    border-radius: 16px;
+    background-color: #fff;
+    padding: 7px 20px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: max-content 1fr;
+    grid-template-areas: 'phone-icon phone-text' 'phone-icon phone-title';
+    gap: 3px 16px;
+    transition: background-color 0.2s;
+
+    .icon {
+      grid-area: phone-icon;
+
+      path {
+        transition: fill 0.2s;
+      }
+    }
+
+    .text {
+      grid-area: phone-text;
+      color: #808080;
+      font-size: 12px;
+      line-height: 120%;
+      transition: color 0.2s;
+    }
+
+    .title {
+      grid-area: phone-title;
+      color: #0c0c0c;
+      line-height: 120%;
+      transition: color 0.2s;
+    }
+
+    &:hover {
+      background-color: #fff2df;
+      transition: background-color 0.2s;
+    }
+
+    &:active {
+      background-color: #fff;
+      transition: background-color 0.2s;
+
+      .title {
+        color: #fab23c;
+        transition: color 0.2s;
+      }
+
+      .text {
+        color: #fab23c;
+        transition: color 0.2s;
+      }
+
+      .icon path {
+        stroke: #fab23c;
+        transition: stroke 0.2s;
+      }
+    }
+  }
+
+  .socials {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    @media screen and (max-width: 768px) {
+      margin: 30px 0;
+    }
+
+    .phone {
+      grid-column: 1 / 3;
+    }
+  }
+
+  .social {
+    display: grid;
+    align-items: center;
+    grid-template-columns: max-content 1fr;
+    gap: 0 8px;
+    padding: 13px 7.5px;
+    border-radius: 16px;
+    background-color: #fff;
+    color: #0c0c0c;
+    transition: background-color 0.2s, color 0.2s;
+
+    .icon path {
+      transition: fill 0.2s;
+    }
+
+    &:hover {
+      background-color: #fff2df;
+      transition: background-color 0.2s;
+    }
+
+    &:active {
+      background-color: #fff;
+      transition: background-color 0.2s, color 0.2s;
+      color: #fab23c;
+
+      .icon path {
+        stroke: #fab23c;
+        transition: fill 0.2s, stroke 0.2s;
+      }
+    }
+  }
+
+  .rights {
+    margin-top: 44px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: max-content 1fr;
+    gap: 0 30px;
+
+    .copy,
+    .politics {
+      color: #808080;
+      line-height: 125%;
+    }
+
+    .politics {
+      justify-self: end;
+    }
+  }
+}
+
+.copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0 8px;
+ 
+  svg {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+  .footerMobile {
+    display: none;
+    @media screen and (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+  }
+
+  .mediaRow {
+    @media screen and (max-width: 768px) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+  }
+
+  .citiesAndTimeRow {
+    @media screen and (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: space-between;
+    }
+  }
+
+  .rightsMobile {
+    @media screen and (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  
+
+}

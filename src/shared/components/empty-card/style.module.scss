@@ -2,10 +2,15 @@
   display: grid;
   justify-items: center;
   margin: 160px 0;
-
+  @media screen and (max-width: 768px) {
+    margin: 0;
+  } 
   .title {
     font-weight: 600;
     margin-bottom: 24px;
+    @media screen and (max-width: 768px) {
+      font-size: 20px;
+    }
   }
 
   .text {
@@ -13,5 +18,8 @@
     font-size: 20px;
     line-height: 120%;
     margin-bottom: 64px;
+    @media screen and (max-width: 768px) {
+      font-size: 14px;
+    }
   }
 }

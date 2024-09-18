@@ -1,3 +1,6 @@
 .header {
   margin: 26px 0;
+  @media screen and (max-width: 768px) {
+    margin: 13px 16px;
+  }
 }

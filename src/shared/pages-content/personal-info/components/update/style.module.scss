@@ -1,10 +1,17 @@
 .form {
+  @media screen and (max-width: 768px) {
+    margin-bottom: 16px;
+  }
+
   .fields {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: max-content max-content max-content;
     align-items: start;
     gap: 16px;
+    @media screen and (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
   }
 
   .field {

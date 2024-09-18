@@ -7,6 +7,7 @@ import ProfileNavigation from './components/navigation'
 import ProfileHeader from './components/header'
 
 import style from './style.module.scss'
+import Footer from '@/shared/components/footer'
 
 const ProfilePageContent: FC = () => {
   return (
@@ -16,6 +17,7 @@ const ProfilePageContent: FC = () => {
       <section className={style.row}>
         <ProfileCard />
         <ProfileNavigation />
+        <Footer/>
       </section>
     </LoggedLayout>
   )

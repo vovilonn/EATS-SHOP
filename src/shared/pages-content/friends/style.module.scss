@@ -4,4 +4,11 @@
   align-items: start;
   gap: 0 82px;
   padding-right: 82px;
+  @media screen and (max-width: 768px) {
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+  }
 }

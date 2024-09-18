@@ -15,7 +15,7 @@ const OrdersHeader: FC = () => {
     <header className={style.header}>
       <Breadcrumbs>
         <BreadcrumbBack href='/' />
-        <BreadcrumbGeneral icon={ProfileIcon} name='Профіль' href='/' />
+        <BreadcrumbGeneral icon={ProfileIcon} name='Профіль' href='/profile' />
         <ArrowRightIcon />
         <BreadcrumbName name='Замовлення' />
         <ArrowRightIcon />

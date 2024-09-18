@@ -15,7 +15,7 @@ const BasketPageContent: FC = () => {
     <LoggedLayout>
       <BasketHeader />
 
-      <section>
+      <section className={style.section}>
         <ProductList
           products={PRODUCT_LIST}
           basket

@@ -13,27 +13,31 @@ const FriendsAction: FC = () => {
   return (
     <div className={style.wraper}>
       <div className={style.list}>
-        <div className={style.item}>
-          <p className={style.text}>
-            Загалом <br /> накопичено:
-          </p>
-          <Title className={style.title}>696,4 грн</Title>
-        </div>
-        <div className={style.item}>
-          <p className={style.text}>
-            Загалом <br /> запрошених друзів:
-          </p>
-          <Title className={style.title}>12</Title>
+        <div className={style.items}>
+          <div className={style.item}>
+            <p className={style.text}>
+              Загалом <br /> накопичено:
+            </p>
+            <Title className={style.title}>696,4 грн</Title>
+          </div>
+          <div className={style.item}>
+            <p className={style.text}>
+              Загалом <br /> запрошених друзів:
+            </p>
+            <Title className={style.title}>12</Title>
+          </div>
         </div>
         <div className={style.ref}>
           <Title className={style.title}>Реферальний код:</Title>
-          <p className={style.code}>r84z9a5</p>
-          <span
-            className={style.icon}
-            onClick={() => setShowedInfo(prev => !prev)}
-          >
-            <InfoIcon />
-          </span>
+          <div className={style.codeWraper}>
+            <p className={style.code}>r84z9a5</p>
+            <span
+              className={style.icon}
+              onClick={() => setShowedInfo(prev => !prev)}
+            >
+              <InfoIcon />
+            </span>
+          </div>
         </div>
         {hasShowedInfo && (
           <p className={style.text}>

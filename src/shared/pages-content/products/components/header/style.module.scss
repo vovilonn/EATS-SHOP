@@ -4,6 +4,10 @@
   grid-template-columns: 1fr 500px;
   gap: 0 30px;
   margin: 40px 0 25px;
+  @media screen and (max-width: 768px) {
+    grid-template-columns: 1fr;
+    overflow: hidden;
+  }
 
   .brand {
     display: block;

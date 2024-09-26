@@ -17,8 +17,8 @@ const ProfilePageContent: FC = () => {
       <section className={style.row}>
         <ProfileCard />
         <ProfileNavigation />
-        <Footer/>
       </section>
+        <Footer/>
     </LoggedLayout>
   )
 }

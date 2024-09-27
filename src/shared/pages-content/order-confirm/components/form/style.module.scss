@@ -4,6 +4,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0 80px;
+  @media screen and (max-width: 768px) {
+    grid-template-columns: 1fr;
+    margin: 8px 16px;
+  }
 
   .field {
     .label {
@@ -16,8 +20,20 @@
     .input {
       margin-top: 6px;
     }
+
+  }
+  .error {
+    color: #ff0000;
+    font-size: 12px;
+    line-height: 120%;
+    margin-top: 6px;
   }
 
+  .errorBorder {
+    border: 1px solid red; 
+    border-radius: 40px;
+  }
+  
   .title {
     color: #0c0c0c;
     font-size: 24px;

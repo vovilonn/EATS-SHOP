@@ -13,7 +13,7 @@ const BasketHeader: FC = () => {
     <header className={style.header}>
       <Breadcrumbs>
         <BreadcrumbBack href='/' />
-        <BreadcrumbGeneral icon={BasketIcon} name='Корзина' href='/' />
+        <BreadcrumbGeneral icon={BasketIcon} name='Корзина' href='/profile/basket' />
       </Breadcrumbs>
     </header>
   )

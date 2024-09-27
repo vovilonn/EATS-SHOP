@@ -23,7 +23,7 @@ const BasketPageContent: FC = () => {
           minAmount={1}
         />
 
-        <Link className={style.btn} href='/basket/order-confirm'>
+        <Link className={style.btn} href='/profile/basket/order-confirm'>
           <span className={style.total}>Загалом: 595 грн</span>
           <span className={style.title}>Оплатити</span>
         </Link>

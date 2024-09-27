@@ -1,7 +1,7 @@
-import { ComponentType, FC, Ref, RefObject } from 'react'
-import { InputAttributes } from 'react-digit-input'
+import { ComponentType, FC, Ref, RefObject } from 'react';
+import { InputAttributes } from 'react-digit-input';
 
-import style from './style.module.scss'
+import style from './style.module.scss';
 
 interface IFormInputProps {
   type?: string;
@@ -20,8 +20,8 @@ interface IFormInputProps {
   digitAttr?: InputAttributes;
 }
 
-const FormInput: FC<IFormInputProps> = props => {
-  const type: string = props.type || 'text'
+const FormInput: FC<IFormInputProps> = (props) => {
+  const type: string = props.type || 'text';
   const classNameWraper: string = `
     ${style.wraper}
     ${props.className}
@@ -29,7 +29,7 @@ const FormInput: FC<IFormInputProps> = props => {
     ${props.valid && style.valid}
     ${props.code && style.code}
     ${!!props.icon && style.icon}
-  `
+  `;
 
   return (
     <div className={classNameWraper}>
@@ -45,7 +45,7 @@ const FormInput: FC<IFormInputProps> = props => {
         {...props.digitAttr}
       />
     </div>
-  )
-}
+  );
+};
 
-export default FormInput
+export default FormInput;

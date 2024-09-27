@@ -1,18 +1,20 @@
-import { bindActionCreators } from '@reduxjs/toolkit'
-import { useDispatch } from 'react-redux'
+import { bindActionCreators } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
 
-import citySlice from '../store/city'
-import authSlice from '../store/auth'
-import favoriteSlice from '../store/favorite'
+import citySlice from '../store/city';
+import authSlice from '../store/auth';
+import favoriteSlice from '../store/favorite';
+import productSlice from '../store/product';
 
 const actions = {
   ...authSlice.actions,
   ...citySlice.actions,
   ...favoriteSlice.actions,
-}
+  ...productSlice.actions,
+};
 
 export const useActions = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  return bindActionCreators(actions, dispatch)
-}
+  return bindActionCreators(actions, dispatch);
+};

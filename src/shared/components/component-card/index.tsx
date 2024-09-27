@@ -1,25 +1,41 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 
-import IComponent from '@/shared/interfaces/component.interface'
+import AmountToggle from '../ui/amount-toggle';
 
-import AmountToggle from '../ui/amount-toggle'
+import IComponent from '@/shared/interfaces/component.interface';
 
-import style from './style.module.scss'
+import style from './style.module.scss';
 
 interface IComponentCardProps extends IComponent {}
 
-const ComponentCard: FC<IComponentCardProps> = props => {
-  const [amount, setAmount] = useState<number>(0)
+const ComponentCard: FC<IComponentCardProps> = (props) => {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const ingredient = useTypedSelector((state) =>
+    state.product.productIngredientsCount
+      .find((item) => item.product_id === Number(id))
+      ?.ingredients.find(
+        (ingredient) => ingredient.menu_ingredients_id === props.id
+      )
+  );
+
+  const [amount, setAmount] = useState<number>(
+    ingredient ? ingredient.count : 0
+  );
+
   const [classNameComponent, setClassNameComponent] = useState<string>(`
     ${style.component}
-  `)
+  `);
 
   useEffect(() => {
     setClassNameComponent(`
       ${style.component}
       ${amount >= 1 && style.selected}
-    `)
-  }, [amount])
+    `);
+  }, [amount]);
 
   return (
     <article className={classNameComponent}>
@@ -32,10 +48,17 @@ const ComponentCard: FC<IComponentCardProps> = props => {
         {props.options} - <span>{props.price} грн</span>
       </p>
       <footer className={style.footer}>
-        <AmountToggle setAmount={setAmount} amount={amount} component full />
+        <AmountToggle
+          ingredienId={props.id}
+          productId={Number(id) ?? 1}
+          setAmount={setAmount}
+          amount={amount}
+          component
+          full
+        />
       </footer>
     </article>
-  )
-}
+  );
+};
 
-export default ComponentCard
+export default ComponentCard;

@@ -1,46 +1,79 @@
-import { Dispatch, FC, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction } from 'react';
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/shared/store';
+import { useActions } from '@/shared/hooks/use-actions';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 
-import { useTypedSelector } from '@/shared/hooks/use-typed-selector'
-import { useActions } from '@/shared/hooks/use-actions'
+import { editCartCount } from '@/shared/store/cart/requests';
 
-import MinusIcon from '@/shared/assets/icons/minus-icon.svg'
-import PlusIcon from '@/shared/assets/icons/plus-icon.svg'
+import MinusIcon from '@/shared/assets/icons/minus-icon.svg';
+import PlusIcon from '@/shared/assets/icons/plus-icon.svg';
 
-import style from './style.module.scss'
+import style from './style.module.scss';
 
 interface IAmountToggleProps {
-  setAmount: Dispatch<SetStateAction<number>>
-  amount: number
-  basket?: boolean
-  component?: boolean
-  full?: boolean
-  minAmount?: number
+  cartId?: number;
+  ingredienId?: number;
+  productId: number;
+  setAmount: Dispatch<SetStateAction<number>>;
+  amount: number;
+  basket?: boolean;
+  component?: boolean;
+  full?: boolean;
+  minAmount?: number;
 }
 
-const AmountToggle: FC<IAmountToggleProps> = props => {
-  const actions = useActions()
-  const stateAuth = useTypedSelector(state => state.auth)
+const AmountToggle: FC<IAmountToggleProps> = (props) => {
+  const dispatch = useDispatch<TypeDispatch>();
+  const actions = useActions();
+  const stateAuth = useTypedSelector((state) => state.auth);
   const classNameAmount = `
     ${style.amount}
     ${props.basket && style.basket}
     ${props.component && style.component}
-  `
+  `;
 
   const onChangeAmount = (method: string) => {
     if (stateAuth.isAuth) {
-      props.setAmount(prev => {
-        const calculateAmount = eval(`${prev} ${method} 1`)
+      props.setAmount((prev) => {
+        const calculateAmount = eval(`${prev} ${method} 1`);
 
         if (calculateAmount < (props.minAmount || 0)) {
-          return prev
+          return prev;
         }
 
-        return calculateAmount
-      })
+        return calculateAmount;
+      });
+
+      if (props.basket) {
+        actions.clearProductCount(props.productId);
+        actions.clearProductIngredientsCount(props.productId);
+        dispatch(
+          editCartCount({
+            id: props.cartId ?? 0,
+            count: method === '+' ? props.amount + 1 : props.amount - 1,
+          })
+        );
+      } else if (method === '+' && props.component) {
+        actions.addProductIngredientsCount({
+          product_id: props.productId,
+          ingredients_id: props.ingredienId ?? 1,
+          ingredients_count: props.amount,
+        });
+      } else if (method === '-' && props.component) {
+        actions.removeProductIngredientsCount({
+          product_id: props.productId,
+          ingredients_id: props.ingredienId ?? 1,
+        });
+      } else if (method === '+' && !props.component && !props.basket) {
+        actions.addProductCount(props.productId);
+      } else if (method === '-' && !props.component && !props.basket) {
+        actions.removeProductCount(props.productId);
+      }
     } else {
-      actions.setNeedAuth(true)
+      actions.setNeedAuth(true);
     }
-  }
+  };
 
   return (
     <div className={classNameAmount}>
@@ -56,7 +89,7 @@ const AmountToggle: FC<IAmountToggleProps> = props => {
         <PlusIcon />
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default AmountToggle
+export default AmountToggle;

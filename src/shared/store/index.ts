@@ -3,13 +3,18 @@ import { configureStore } from '@reduxjs/toolkit';
 import authSlice from './auth';
 import citySlice from './city';
 import favoriteSlice from './favorite';
+import cartSlice from './cart';
+import productSlice from './product';
 import accountInfoSlice from './account';
+
 
 export const store = configureStore({
   reducer: {
     [authSlice.name]: authSlice.reducer,
     [citySlice.name]: citySlice.reducer,
     [favoriteSlice.name]: favoriteSlice.reducer,
+    [cartSlice.name]: cartSlice.reducer,
+    [productSlice.name]: productSlice.reducer,
     [accountInfoSlice.name]: accountInfoSlice.reducer,
   },
 });

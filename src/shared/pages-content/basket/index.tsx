@@ -1,16 +1,18 @@
-import { FC } from 'react'
-import Link from 'next/link'
+import { FC } from 'react';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
+import Link from 'next/link';
 
-import { PRODUCT_LIST } from '@/shared/mock-data'
+import { PRODUCT_LIST } from '@/shared/mock-data';
 
-import LoggedLayout from '@/shared/layouts/logged'
-import ProductList from '@/shared/components/product-list'
-import EmptyCard from '@/shared/components/empty-card'
-import BasketHeader from './components/header'
+import LoggedLayout from '@/shared/layouts/logged';
+import ProductList from '@/shared/components/product-list';
+import BasketHeader from './components/header';
 
-import style from './style.module.scss'
+import style from './style.module.scss';
 
 const BasketPageContent: FC = () => {
+  const { total_cost } = useTypedSelector((state) => state.cart);
+
   return (
     <LoggedLayout>
       <BasketHeader />
@@ -23,18 +25,13 @@ const BasketPageContent: FC = () => {
           minAmount={1}
         />
 
-        <Link className={style.btn} href='/basket/order-confirm'>
-          <span className={style.total}>Загалом: 595 грн</span>
+        <Link className={style.btn} href="/basket/order-confirm">
+          <span className={style.total}>Загалом: {total_cost} грн</span>
           <span className={style.title}>Оплатити</span>
         </Link>
-
-        <EmptyCard
-          title='Ваш корзина порожня 😯'
-          text='Оберіть товар, щоб додати його в корзину'
-        />
       </section>
     </LoggedLayout>
-  )
-}
+  );
+};
 
-export default BasketPageContent
+export default BasketPageContent;

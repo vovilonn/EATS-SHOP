@@ -1,24 +1,27 @@
-import { ComponentType, FC, Ref, RefObject } from 'react'
-import { InputAttributes } from 'react-digit-input'
+import { ComponentType, FC, Ref, RefObject } from 'react';
+import { InputAttributes } from 'react-digit-input';
 
-import style from './style.module.scss'
+import style from './style.module.scss';
 
 interface IFormInputProps {
-  type?: string
-  className?: string
-  large?: boolean
-  code?: boolean
-  placeholder?: string
-  htmlFor?: string
-  valid?: boolean
-  onChange?: (value: string) => void
-  icon?: ComponentType<{ className?: string }>
-  reference?: Ref<HTMLInputElement>
-  digitAttr?: InputAttributes
+  type?: string;
+  id?: string;
+  value?: string;
+  className?: string;
+  large?: boolean;
+  code?: boolean;
+  placeholder?: string;
+  htmlFor?: string;
+  valid?: boolean;
+  onInput?: (e: React.FormEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  icon?: ComponentType<{ className?: string }>;
+  reference?: Ref<HTMLInputElement>;
+  digitAttr?: InputAttributes;
 }
 
-const FormInput: FC<IFormInputProps> = props => {
-  const type: string = props.type || 'text'
+const FormInput: FC<IFormInputProps> = (props) => {
+  const type: string = props.type || 'text';
   const classNameWraper: string = `
     ${style.wraper}
     ${props.className}
@@ -26,7 +29,7 @@ const FormInput: FC<IFormInputProps> = props => {
     ${props.valid && style.valid}
     ${props.code && style.code}
     ${!!props.icon && style.icon}
-  `
+  `;
 
   return (
     <div className={classNameWraper}>
@@ -37,12 +40,12 @@ const FormInput: FC<IFormInputProps> = props => {
         className={style.input}
         id={props.htmlFor}
         type={type}
-        onChange={e => props.onChange && props.onChange(e.target.value)}
+        onChange={e => props.onChange && props.onChange(e)}
         placeholder={props.placeholder}
         {...props.digitAttr}
       />
     </div>
-  )
-}
+  );
+};
 
-export default FormInput
+export default FormInput;

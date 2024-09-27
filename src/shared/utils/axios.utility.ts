@@ -1,31 +1,32 @@
-import axios, { AxiosRequestConfig } from 'axios'
-import * as cookies from 'cookies-next'
+import axios, { AxiosRequestConfig } from 'axios';
+import * as cookies from 'cookies-next';
 
 const instanceAxios = axios.create({
   baseURL: 'https://eats.pp.ua/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
+  // headers: {
+  //   'Content-Type': 'application/json',
+  // },
+});
 
-instanceAxios.interceptors.request.use(config => {
-  const token = cookies.getCookie('token')
+instanceAxios.interceptors.request.use((config) => {
+  const token = cookies.getCookie('token');
 
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+    config.headers.Authorization = `Bearer ${token}`;
   }
 
-  return config
-})
+  return config;
+});
 
 const Axios = async (props: AxiosRequestConfig) => {
   const response = await instanceAxios({
     url: props.url,
     method: props.method,
     data: props.data,
-  })
+    headers: props.headers,
+  });
 
-  return response.data
-}
+  return response.data;
+};
 
-export default Axios
+export default Axios;

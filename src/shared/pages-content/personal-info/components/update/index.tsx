@@ -77,7 +77,7 @@ const PersonalInfoUpdate: FC = () => {
           </label>
           <FormInput
             placeholder="Ім’я"
-            onChange={(value: string) => handleInputChange('name', value)}
+            onChange={(e) => handleInputChange('name', e.target.value)}
             large
           />
         </div>
@@ -87,7 +87,7 @@ const PersonalInfoUpdate: FC = () => {
           </label>
           <FormInput
             placeholder="Пошта"
-            onChange={(value: string) => handleInputChange('email', value)}
+            onChange={(e) => handleInputChange('email', e.target.value)}
             large
           />
         </div>
@@ -97,7 +97,7 @@ const PersonalInfoUpdate: FC = () => {
           </label>
           <FormInput
             placeholder="Телефон"
-            onChange={(value: string) => handleInputChange('phone', value)}
+            onChange={(e) => handleInputChange('phone', e.target.value)}
             large
           />
         </div>
@@ -108,9 +108,7 @@ const PersonalInfoUpdate: FC = () => {
           <FormInput
             reference={dateInputRef}
             placeholder="рррр-мм-дд"
-            onChange={(value: string) =>
-              handleInputChange('date_birthday', value)
-            }
+            onChange={(e) => handleInputChange('date_birthday', e.target.value)}
             large
           />
         </div>

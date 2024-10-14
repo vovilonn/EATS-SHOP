@@ -7,6 +7,7 @@ import cartSlice from './cart';
 import productSlice from './product';
 import accountInfoSlice from './account';
 import ordersSlice from './orders';
+import walletSlice from './wallet';
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     [productSlice.name]: productSlice.reducer,
     [accountInfoSlice.name]: accountInfoSlice.reducer,
     [ordersSlice.name]: ordersSlice.reducer,
+    [walletSlice.name]: walletSlice.reducer,
   },
 });
 

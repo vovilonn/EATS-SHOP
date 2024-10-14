@@ -6,6 +6,7 @@ import favoriteSlice from './favorite';
 import cartSlice from './cart';
 import productSlice from './product';
 import accountInfoSlice from './account';
+import ordersSlice from './orders';
 import walletSlice from './wallet';
 
 export const store = configureStore({
@@ -16,6 +17,7 @@ export const store = configureStore({
     [cartSlice.name]: cartSlice.reducer,
     [productSlice.name]: productSlice.reducer,
     [accountInfoSlice.name]: accountInfoSlice.reducer,
+    [ordersSlice.name]: ordersSlice.reducer,
     [walletSlice.name]: walletSlice.reducer,
   },
 });

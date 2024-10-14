@@ -1,23 +1,29 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react';
 
-import IOrder from '@/shared/interfaces/order.interface'
+import OrdersOrderCard from '../order-card';
 
-import OrdersOrderCard from '../order-card'
+import style from './style.module.scss';
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/shared/store';
+import { getOrdersHistory } from '@/shared/store/orders/requests';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 
-import style from './style.module.scss'
+const OrdersOrderList: FC = () => {
+  const dispatch = useDispatch<TypeDispatch>();
+  const { ordersHistory } = useTypedSelector((state) => state.orders);
 
-interface IOrdersOrderListProps {
-  orders: Array<IOrder>
-}
+  useEffect(() => {
+    dispatch(getOrdersHistory());
+  }, []);
 
-const OrdersOrderList: FC<IOrdersOrderListProps> = props => {
-  const orderListRendering = props.orders.map(order => {
-    const key = Math.random()
+  return (
+    <section className={style.list}>
+      {ordersHistory &&
+        ordersHistory.map((order) => (
+          <OrdersOrderCard key={order.id} {...order} />
+        ))}
+    </section>
+  );
+};
 
-    return <OrdersOrderCard key={key} {...order} />
-  })
-
-  return <section className={style.list}>{orderListRendering}</section>
-}
-
-export default OrdersOrderList
+export default OrdersOrderList;

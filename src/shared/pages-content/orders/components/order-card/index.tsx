@@ -1,50 +1,67 @@
-import { FC } from 'react'
-import Image from 'next/image'
+import { FC } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/shared/store';
+import { repeatPayment } from '@/shared/store/orders/requests';
 
-import IOrder from '@/shared/interfaces/order.interface'
+import { IOrdersHistory } from '@/shared/interfaces/order.interface';
+import Button from '@/shared/components/ui/button';
 
-import Button from '@/shared/components/ui/button'
+import style from './style.module.scss';
 
-import style from './style.module.scss'
-import Link from 'next/link'
+interface IOrdersOrderCardProps extends IOrdersHistory {}
 
-interface IOrdersOrderCardProps extends IOrder {}
+const OrdersOrderCard: FC<IOrdersOrderCardProps> = (props) => {
+  const dispatch = useDispatch<TypeDispatch>();
 
-const OrdersOrderCard: FC<IOrdersOrderCardProps> = props => {
-  const classNameStatus: string = `${style.status} ${style.create}`
+  const classNameStatus: string = `${style.status} ${
+    style[props.status_order.toLowerCase()]
+  }`;
 
-  const imagesRendering = props.picture.map(image => {
-    const key = Math.random()
-
+  const imagesRendering = props.cart.cart_items.map((item) => {
     return (
-      <div className={style.image} key={key}>
-        <Image width='70' height='70' src={image} alt='product image' />
+      <div className={style.image} key={item.id}>
+        <Image
+          width="70"
+          height="70"
+          src={item.model_menu.picture[0]}
+          alt={item.model_menu.name}
+        />
       </div>
-    )
-  })
+    );
+  });
 
   return (
     <article className={style.order}>
       <header className={style.header}>
         <h1 className={style.title}>
-          <Link href={`/profile/orders/${props.id}`}>{props.title}</Link>
+          <Link href={`/profile/orders/${props.id}`}>Заказ №{props.id}</Link>
         </h1>
-        <p className={classNameStatus}>{props.status}</p>
-        <p className={style.date}>{props.date}</p>
+        <p className={classNameStatus}>{props.status_order}</p>
+        <p className={style.date}>
+          {new Date(props.createdAt * 1000).toLocaleDateString()}
+        </p>{' '}
       </header>
       <div className={style.address}>
-        <p className={style.label}>Адреса доставки</p>
-        <p className={style.text}>{props.address}</p>
+        <p className={style.label}>Адрес доставки</p>
+        <p
+          className={style.text}
+        >{`${props.address}, кв. ${props.apartment}, подъезд ${props.entrance}, этаж ${props.floor}`}</p>
       </div>
       <div className={style.images}>{imagesRendering}</div>
       <footer className={style.footer}>
-        <h1 className={style.title}>Сума {props.price} грн</h1>
-        <Button className={style.btn} basket>
-          Повторити
+        <h1 className={style.title}>Сумма: {props.cost_order} грн</h1>
+        <Button
+          className={style.btn}
+          basket
+          onClick={() => dispatch(repeatPayment(props.id))}
+        >
+          Повторить
         </Button>
       </footer>
     </article>
-  )
-}
+  );
+};
 
-export default OrdersOrderCard
+export default OrdersOrderCard;

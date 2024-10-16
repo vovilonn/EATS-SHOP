@@ -1,8 +1,19 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react';
 
-import style from './style.module.scss'
+import style from './style.module.scss';
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/shared/store';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
+import { getMyReferalls } from '@/shared/store/referrals/requests';
 
 const FriendsFriendList: FC = () => {
+  const dispatch = useDispatch<TypeDispatch>();
+  const { referalls } = useTypedSelector((state) => state.referalls);
+
+  useEffect(() => {
+    dispatch(getMyReferalls());
+  }, []);
+
   return (
     <div className={style.wraper}>
       <table className={style.table}>
@@ -14,25 +25,17 @@ const FriendsFriendList: FC = () => {
           </tr>
         </thead>
         <tbody className={style.tbody}>
-          <tr>
-            <td>Ім’я</td>
-            <td>+50</td>
-            <td>+12.25</td>
-          </tr>
-          <tr>
-            <td>Ім’я</td>
-            <td>+50</td>
-            <td>+12.25</td>
-          </tr>
-          <tr>
-            <td>Ім’я</td>
-            <td>+50</td>
-            <td>+12.25</td>
-          </tr>
+          {referalls.map((item) => (
+            <tr key={item.account_id}>
+              <td>{item.name}</td>
+              <td>+{item.award_sum}</td>
+              <td>+{item.bonus_sum}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};
 
-export default FriendsFriendList
+export default FriendsFriendList;

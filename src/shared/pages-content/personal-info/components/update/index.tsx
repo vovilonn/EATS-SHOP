@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { useMask } from '@react-input/mask';
 import { useDispatch } from 'react-redux';
 import FormInput from '@/shared/components/ui/form/form-input';
@@ -10,22 +10,47 @@ import { updateAccountInfo } from '@/shared/store/account/requests';
 import { TypeDispatch } from '@/shared/store';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 
-const PersonalInfoUpdate: FC = () => {
+interface PersonalInfoUpdateProps {
+  previewImage: File | null;
+}
+
+const PersonalInfoUpdate: FC<PersonalInfoUpdateProps> = (props) => {
   const dispatch = useDispatch<TypeDispatch>();
   const { accountInfo } = useTypedSelector((state) => state.accountInfo);
-  console.log(accountInfo);
 
   const optionGenderList = [{ name: 'Чоловік' }, { name: 'Жінка' }];
   const [selectedGender, setGender] = useState<string>(
     optionGenderList[0].name
   );
-  const [formData, setFormData] = useState({
-    name: accountInfo?.name ?? '',
-    email: accountInfo?.email ?? '',
-    phone: accountInfo?.number ?? '',
-    date_birthday: accountInfo?.date_birthday ?? '',
+
+  const [formData, setFormData] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+    date_birthday: string;
+    photo: File | null;
+  }>({
+    name: '',
+    email: '',
+    phone: '',
+    date_birthday: '',
+    photo: null,
   });
+
   const [isSubscribed, setIsSubscribed] = useState(false);
+
+  useEffect(() => {
+    if (accountInfo) {
+      setFormData({
+        name: accountInfo.name || '',
+        email: accountInfo.email || '',
+        phone: accountInfo.number || '',
+        date_birthday: accountInfo.date_birthday || '',
+        photo: props.previewImage || null,
+      });
+      setGender(accountInfo.gender || optionGenderList[0].name);
+    }
+  }, [accountInfo]);
 
   const dateInputRef = useMask({
     mask: 'рррр-мм-дд',
@@ -43,6 +68,10 @@ const PersonalInfoUpdate: FC = () => {
     data.append('phone', formData.phone);
     data.append('date_birthday', formData.date_birthday);
     data.append('gender', selectedGender);
+
+    if (props.previewImage) {
+      data.append('photo', props.previewImage);
+    }
 
     dispatch(updateAccountInfo(data));
   };
@@ -77,6 +106,7 @@ const PersonalInfoUpdate: FC = () => {
           </label>
           <FormInput
             placeholder="Ім’я"
+            value={formData.name}
             onChange={(e) => handleInputChange('name', e.target.value)}
             large
           />
@@ -87,6 +117,7 @@ const PersonalInfoUpdate: FC = () => {
           </label>
           <FormInput
             placeholder="Пошта"
+            value={formData.email}
             onChange={(e) => handleInputChange('email', e.target.value)}
             large
           />
@@ -97,6 +128,7 @@ const PersonalInfoUpdate: FC = () => {
           </label>
           <FormInput
             placeholder="Телефон"
+            value={formData.phone}
             onChange={(e) => handleInputChange('phone', e.target.value)}
             large
           />
@@ -107,6 +139,7 @@ const PersonalInfoUpdate: FC = () => {
           </label>
           <FormInput
             reference={dateInputRef}
+            value={formData.date_birthday}
             placeholder="рррр-мм-дд"
             onChange={(e) => handleInputChange('date_birthday', e.target.value)}
             large

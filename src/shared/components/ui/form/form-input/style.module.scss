@@ -38,11 +38,17 @@
     }
   }
 
+  &.filled {
+    .input {
+      border: 1px solid #ffc812;
+    }
+  }
+
   &.code {
     .input {
       background-color: #f9f9f9;
       border-radius: 16px;
-      text-align: center  ;
+      text-align: center;
     }
   }
 

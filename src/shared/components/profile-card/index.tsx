@@ -13,8 +13,8 @@ import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { getAccountInfo } from '@/shared/store/account/requests';
 
 interface ProfileCardProps {
-  previewImage: File | null;
-  onImageUpload: (file: File) => void;
+  previewImage?: File | null;
+  onImageUpload?: (file: File) => void;
 }
 
 const ProfileCard: FC<ProfileCardProps> = (props) => {
@@ -22,20 +22,20 @@ const ProfileCard: FC<ProfileCardProps> = (props) => {
   const { accountInfo } = useTypedSelector((state) => state.accountInfo);
 
   const [uploadedImage, setUploadedImage] = useState<File | null>(
-    props.previewImage
+    props.previewImage ?? null
   );
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      props.onImageUpload(file);
+      props.onImageUpload && props.onImageUpload(file);
       setUploadedImage(file);
     }
   };
 
   const handleRemoveImage = () => {
     setUploadedImage(null);
-    props.onImageUpload(null as unknown as File);
+    props.onImageUpload && props.onImageUpload(null as unknown as File);
   };
 
   const imageUrl = uploadedImage

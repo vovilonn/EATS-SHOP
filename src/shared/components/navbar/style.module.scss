@@ -6,17 +6,57 @@
   justify-content: space-between;
   margin-top: 16px;
   width: 100%;
+
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column-reverse;
-    gap: 0px;
+    gap: 0;
   }
 
   .form {
+    position: relative;
     display: flex;
     gap: 0 10px;
-    @media screen and (max-width: 768px) {
+
+    @media (max-width: 768px) {
       margin: 0 16px;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 64%;
+      max-height: 200px;
+      overflow-y: auto;
+      background-color: white;
+      border: 1px solid #ffc812;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .dropdown-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: #fff2df;
+        }
+
+        svg {
+          margin-right: 10px;
+        }
+      }
     }
   }
 
@@ -30,9 +70,10 @@
     font-size: 14px;
     border-radius: 16px;
     width: max-content;
-    @media screen and (max-width: 768px) {
+
+    @media (max-width: 768px) {
       padding: 6px 22px;
-      gap: 0px;
+      gap: 0;
     }
 
     &.active {
@@ -49,63 +90,99 @@
     display: grid;
     grid-template-columns: max-content 1fr;
     gap: 0 8px;
+    align-items: center;
+    padding: 6px 12px;
     color: #0c0c0c;
     font-size: 14px;
-    align-items: center;
     font-weight: 600;
-    padding: 6px 12px;
     border-radius: 16px;
     background-color: #ffc812;
     transition: background-color 0.2s;
-    @media screen and (max-width: 768px) {
+
+    @media (max-width: 768px) {
       width: 100%;
       margin-top: 8px;
-      border-radius: 0px;
+      border-radius: 0;
       display: flex;
       justify-content: center;
     }
 
     &:hover {
       background-color: #fff2df;
-      transition: background-color 0.2s;
     }
 
     &:active {
       background-color: #fab23c;
-      transition: background-color 0.2s;
     }
   }
 
   .links {
     display: flex;
-    gap: 18px 0;
-    @media screen and (max-width: 768px) {
-      display: flex;
+    gap: 18px;
+
+    @media (max-width: 768px) {
       flex-direction: column-reverse;
       align-items: center;
-      gap: 0px;
+      gap: 0;
     }
   }
-  
+
   .navLinks {
     display: flex;
-    flex-direction:row;
+    flex-direction: row;
     background-color: transparent;
     margin-right: 12px;
-    @media screen and (max-width: 768px) {
-        background-color: white; 
-        margin-bottom: 12px;
-        margin-right: 0px;
-        padding: 8px 6px;
-        width: 100%;
-        gap: 0px;
-        justify-content: space-around;
+
+    @media (max-width: 768px) {
+      background-color: white;
+      margin-bottom: 12px;
+      padding: 8px 6px;
+      width: 100%;
+      justify-content: space-around;
     }
   }
 
   .name {
-    @media screen and (max-width: 768px) {
+    @media (max-width: 768px) {
       display: none;
     }
   }
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  span {
+    animation: blink 1.4s infinite both;
+    margin: 0 2px;
+    font-size: 20px;
+
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+.noResults {
+  padding: 10px;
+  text-align: center;
+  color: #666;
 }

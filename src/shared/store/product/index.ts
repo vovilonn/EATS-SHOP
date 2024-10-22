@@ -1,4 +1,6 @@
+import IProduct from '@/shared/interfaces/product.interface';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { fetchSearchProducts } from './requests';
 
 interface IProductsCount {
   product_id: number;
@@ -18,17 +20,24 @@ interface IProductIngredientsCount {
 interface IProductInitialState {
   productsCount: IProductsCount[];
   productIngredientsCount: IProductIngredientsCount[];
+  searchQuery: string;
+  searchResults: IProduct[];
 }
 
 const initialState: IProductInitialState = {
   productsCount: [],
   productIngredientsCount: [],
+  searchQuery: '',
+  searchResults: [],
 };
 
 const productSlice = createSlice({
   name: 'product',
   initialState,
   reducers: {
+    setSearchQuery: (state, action) => {
+      state.searchQuery = action.payload;
+    },
     clearProductCount: (state, action: PayloadAction<number>) => {
       const productId = action.payload;
       state.productsCount = state.productsCount.filter(
@@ -132,6 +141,11 @@ const productSlice = createSlice({
         }
       }
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(fetchSearchProducts.fulfilled, (state, action) => {
+      state.searchResults = action.payload;
+    });
   },
 });
 

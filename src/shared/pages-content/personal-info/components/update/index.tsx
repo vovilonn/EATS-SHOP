@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from 'react';
+import { useMask } from '@react-input/mask';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import FormInput from '@/shared/components/ui/form/form-input';
@@ -12,7 +13,11 @@ import { TypeDispatch } from '@/shared/store';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { toast } from 'react-toastify';
 
-const PersonalInfoUpdate: FC = () => {
+interface PersonalInfoUpdateProps {
+  previewImage: File | null;
+}
+
+const PersonalInfoUpdate: FC<PersonalInfoUpdateProps> = (props) => {
   const dispatch = useDispatch<TypeDispatch>();
   const router = useRouter();
   const { accountInfo } = useTypedSelector((state) => state.accountInfo);
@@ -34,7 +39,41 @@ const PersonalInfoUpdate: FC = () => {
     name: '',
     email: '',
     phone: '',
+    date_birthday: ''
+
+  const [formData, setFormData] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+    date_birthday: string;
+    photo: File | null;
+  }>({
+    name: '',
+    email: '',
+    phone: '',
     date_birthday: '',
+    photo: null,
+  });
+
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
+  useEffect(() => {
+    if (accountInfo) {
+      setFormData({
+        name: accountInfo.name || '',
+        email: accountInfo.email || '',
+        phone: accountInfo.number || '',
+        date_birthday: accountInfo.date_birthday || '',
+        photo: props.previewImage || null,
+      });
+      setGender(accountInfo.gender || optionGenderList[0].name);
+    }
+  }, [accountInfo]);
+
+  const dateInputRef = useMask({
+    mask: 'рррр-мм-дд',
+    replacement: { д: /\d/, м: /\d/, р: /\d/ },
+>>>>>>> main
   });
 
   useEffect(() => {
@@ -116,6 +155,11 @@ const PersonalInfoUpdate: FC = () => {
     } catch (error) {
       toast.error('Сталася помилка при оновленні даних');
     }
+    if (props.previewImage) {
+      data.append('photo', props.previewImage);
+    }
+
+    dispatch(updateAccountInfo(data));
   };
 
   const renderingOptionGender = optionGenderList.map((gender) => {
@@ -191,6 +235,12 @@ const PersonalInfoUpdate: FC = () => {
             placeholderText="Оберіть дату"
             className={style.datePicker}
             maxDate={new Date()}
+          <FormInput
+            reference={dateInputRef}
+            value={formData.date_birthday}
+            placeholder="рррр-мм-дд"
+            onChange={(e) => handleInputChange('date_birthday', e.target.value)}
+            large
           />
           {errors.date_birthday && (
             <p className={style.error}>{errors.date_birthday}</p>

@@ -1,53 +1,68 @@
-import { FC } from 'react'
+import { FC, useState } from 'react';
+import { IAchievement } from '@/shared/interfaces/achievements.interface';
 
-import Image from 'next/image'
+import Image from 'next/image';
 
-import style from './style.module.scss'
+import CloseIcon from '@/shared/assets/icons/close-icon.svg';
 
-interface IAchievementsAchievementCardProps {
-  active?: boolean
-  progress: number
+import style from './style.module.scss';
+
+interface IAchievementsAchievementCardProps extends IAchievement {
+  active?: boolean;
 }
 
-const AchievementsAchievementCard: FC<
-  IAchievementsAchievementCardProps
-> = props => {
+const AchievementsAchievementCard: FC<IAchievementsAchievementCardProps> = (
+  props
+) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const isDone = props.progress < props.count;
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
-    <article className={style.card}>
-      {!props.active && (
-        <div className={style.progress}>
-          <svg
-            className={style.circle}
-            width='120px'
-            height='120px'
-            xmlns='http://www.w3.org/2000/svg'
-          >
-            <circle className={style.back} cx='60' cy='60' r='50'></circle>
-            <circle
-              className={style.prog}
-              style={{
-                strokeDasharray: (props.progress * (3.15 * 100)) / 100 + ' 999',
-              }}
-              cx='60'
-              cy='60'
-              r='50'
-            ></circle>
-          </svg>
-          <p className={style.text}>{(props.progress / 100) * 100 + '%'}</p>
+    <>
+      <div className={style.card} onClick={toggleModal}>
+        <div className={style.imageWrapper}>
+          <Image
+            width="120"
+            height="120"
+            src={props.picture}
+            alt="achievement image"
+            className={isDone ? style.imageBlurred : ''}
+          />
         </div>
-      )}
-      {props.active && (
-        <Image
-          width='120'
-          height='120'
-          src='https://iili.io/dwFwq8P.jpg'
-          alt='achievement image'
-        />
-      )}
+        <h1 className={style.title}>{props.header}</h1>
+      </div>
 
-      <h1 className={style.title}>Новачок</h1>
-    </article>
-  )
-}
+      {isModalOpen && (
+        <>
+          <div className={style.modalOverlay} onClick={toggleModal}></div>
+          <div className={style.modal}>
+            <div className={style.modalHeader}>
+              <h2>{props.header}</h2>
+              <CloseIcon className={style.modalClose} onClick={toggleModal} />
+            </div>
+            <Image
+              width="350"
+              height="250"
+              src={props.picture}
+              alt="achievement image"
+              className={isDone ? style.imageBlurred : ''}
+            />
+            {!isDone && (
+              <div className={style.statusDone}>
+                <h3>Відкрито ✅</h3>
+                <p>{props.open_date} 24 черв. 2024</p>
+              </div>
+            )}
+            <p>{props.description}</p>
+          </div>
+        </>
+      )}
+    </>
+  );
+};
 
-export default AchievementsAchievementCard
+export default AchievementsAchievementCard;

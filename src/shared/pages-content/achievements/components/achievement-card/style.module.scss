@@ -15,41 +15,94 @@
     text-align: center;
   }
 
-  .progress {
+  .imageWrapper {
     position: relative;
-    width: 120px;
-    height: 120px;
-    display: grid;
-    justify-items: center;
+
+    .imageBlurred {
+      filter: blur(5px);
+    }
+  }
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 10;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .modalHeader {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
     align-items: center;
+    margin-bottom: 45px;
+  }
 
-    .circle {
-      width: 100%;
-      height: 100%;
-      transform: rotate(-90deg);
-    }
+  .modalClose {
+    width: 38px;
+    height: 38px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #f9f9f9;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 10px;
+  }
 
-    .back {
-      fill: none;
-      stroke: #e3e3e3;
-      stroke-width: 2px;
-    }
+  img {
+    margin-bottom: 45px;
+    padding: 0 65px;
+  }
 
-    .prog {
-      fill: none;
-      stroke: #fab23c;
-      stroke-width: 2px;
-      stroke-dasharray: 0 999;
-      stroke-dashoffset: 1px;
-      transition: stroke-dasharray 0.7s linear 0s;
-    }
+  .imageBlurred {
+    filter: blur(5px);
+  }
 
-    .text {
-      position: absolute;
-      color: #0c0c0c;
-      font-size: 20px;
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  p {
+    color: #808080;
+  }
+
+  .statusDone {
+    margin-bottom: 25px;
+
+    h3 {
+      font-size: 18px;
       font-weight: 600;
-      line-height: 120%;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 13px;
+      color: #808080;
     }
   }
 }

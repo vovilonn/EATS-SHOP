@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
@@ -12,20 +12,40 @@ import { TypeDispatch } from '@/shared/store';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { getAccountInfo } from '@/shared/store/account/requests';
 
-const ProfileCard: FC = () => {
+interface ProfileCardProps {
+  previewImage?: File | null;
+  onImageUpload?: (file: File) => void;
+}
+
+const ProfileCard: FC<ProfileCardProps> = (props) => {
   const dispatch = useDispatch<TypeDispatch>();
   const { accountInfo } = useTypedSelector((state) => state.accountInfo);
 
-  const router = useRouter();
-  const [previewImage, setPreviewImage] = useState('');
-  const isRoute = router.asPath.includes('/personal-info');
-  const neddAddImage = !previewImage && isRoute;
-  const classNameImage: string = `${style.image} ${isRoute && style.event}`;
+  const [uploadedImage, setUploadedImage] = useState<File | null>(
+    props.previewImage ?? null
+  );
 
-  const onLoadFile = (e: any) => {
-    const image = URL.createObjectURL(e.target.files[0]);
-    setPreviewImage(image);
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      props.onImageUpload && props.onImageUpload(file);
+      setUploadedImage(file);
+    }
   };
+
+  const handleRemoveImage = () => {
+    setUploadedImage(null);
+    props.onImageUpload && props.onImageUpload(null as unknown as File);
+  };
+
+  const imageUrl = uploadedImage
+    ? URL.createObjectURL(uploadedImage)
+    : accountInfo?.avatar ?? '';
+
+  const router = useRouter();
+  const isRoute = router.asPath.includes('/personal-info');
+  const needAddImage = !uploadedImage && isRoute;
+  const classNameImage: string = `${style.image} ${isRoute && style.event}`;
 
   useEffect(() => {
     dispatch(getAccountInfo());
@@ -35,36 +55,35 @@ const ProfileCard: FC = () => {
     <article className={style.profile}>
       <div className={style.mediaWrapper}>
         <label className={classNameImage} htmlFor="file">
-          {previewImage && (
+          {uploadedImage || accountInfo?.avatar ? (
             <>
               <Image
                 className={style.preview}
                 width="397"
                 height="262"
-                src={previewImage}
+                src={imageUrl}
                 alt="user image"
               />
-
-              <span
-                className={style.remove}
-                onClick={(e) => e.preventDefault()}
-              >
-                <RemoveIcon />
-              </span>
+              {isRoute && (
+                <span className={style.remove} onClick={handleRemoveImage}>
+                  <RemoveIcon />
+                </span>
+              )}
             </>
-          )}
-          {!previewImage && (
+          ) : (
             <span className={style.empty}>
-              {!neddAddImage && <ProfileIcon className={style.icon} />}
-              {neddAddImage && <AddProfileIcon className={style.icon} />}
+              {!needAddImage && <ProfileIcon className={style.icon} />}
+              {needAddImage && <AddProfileIcon className={style.icon} />}
             </span>
           )}
-          <input
-            id="file"
-            type="file"
-            style={{ display: 'none' }}
-            onChange={(e) => onLoadFile(e)}
-          />
+          {!uploadedImage && (
+            <input
+              id="file"
+              type="file"
+              style={{ display: 'none' }}
+              onChange={(e) => handleFileChange(e)}
+            />
+          )}
         </label>
         <div className={style.container}>
           <div className={style.row}>

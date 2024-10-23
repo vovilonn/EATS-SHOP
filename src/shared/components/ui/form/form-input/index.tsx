@@ -15,6 +15,7 @@ interface IFormInputProps {
   valid?: boolean;
   onInput?: (e: React.FormEvent<HTMLInputElement>) => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   icon?: ComponentType<{ className?: string }>;
   reference?: Ref<HTMLInputElement>;
   digitAttr?: InputAttributes;
@@ -27,6 +28,7 @@ const FormInput: FC<IFormInputProps> = (props) => {
     ${props.className}
     ${props.large && style.large}
     ${props.valid && style.valid}
+    ${!!props.value && style.filled} // New class for filled input
     ${props.code && style.code}
     ${!!props.icon && style.icon}
   `;
@@ -34,14 +36,14 @@ const FormInput: FC<IFormInputProps> = (props) => {
   return (
     <div className={classNameWraper}>
       {props.icon && <props.icon className={style.icon} />}
-
       <input
+        value={props.value}
         ref={props.reference}
         className={style.input}
         id={props.htmlFor}
         type={type}
-        value={props.value}
         onChange={(e) => props.onChange && props.onChange(e)}
+        onBlur={(e) => props.onBlur && props.onBlur(e)}
         placeholder={props.placeholder}
         {...props.digitAttr}
       />

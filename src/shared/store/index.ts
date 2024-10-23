@@ -10,6 +10,8 @@ import ordersSlice from './orders';
 import walletSlice from './wallet';
 import brandSlice from './brand';
 import authAdminSlice from "./admin"
+import referallsSlice from './referrals';
+import achievementsSlice from './achievements';
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +25,8 @@ export const store = configureStore({
     [walletSlice.name]: walletSlice.reducer,
     [brandSlice.name]: brandSlice.reducer,
     [authAdminSlice.name]: authAdminSlice.reducer
+    [referallsSlice.name]: referallsSlice.reducer,
+    [achievementsSlice.name]: achievementsSlice.reducer,
   },
 });
 

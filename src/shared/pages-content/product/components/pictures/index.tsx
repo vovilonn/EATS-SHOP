@@ -13,7 +13,7 @@ interface IProductPicturesProps {
 const ProductPictures: FC<IProductPicturesProps> = props => {
   const renderingPictures = props.picture.map(picture => (
     <SwiperSlide className={style.slide} key={picture}>
-      <Image width='498' height='479' src={picture} alt='product image' />
+      <Image width='498' height='479' src={picture} alt='product image' className={style.image}/>
     </SwiperSlide>
   ))
   return (

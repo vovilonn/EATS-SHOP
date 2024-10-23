@@ -3,6 +3,14 @@
     margin-bottom: 16px;
   }
 
+  .datePicker {
+    border-radius: 56px;
+    border: 1px solid rgba(12, 12, 12, 0.08);
+    background-color: #fff;
+    padding: 18px 20px;
+    width: 100%;
+  }
+
   .fields {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -59,5 +67,15 @@
     margin-left: auto;
     min-width: 196px;
     display: block;
+  }
+
+  p {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  .inputError {
+    border: 1px solid red;
   }
 }

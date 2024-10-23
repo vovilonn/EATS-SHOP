@@ -1,4 +1,4 @@
-import { ComponentType, FC, Ref, RefObject } from 'react';
+import { ComponentType, FC, Ref } from 'react';
 import { InputAttributes } from 'react-digit-input';
 
 import style from './style.module.scss';
@@ -40,7 +40,8 @@ const FormInput: FC<IFormInputProps> = (props) => {
         className={style.input}
         id={props.htmlFor}
         type={type}
-        onChange={e => props.onChange && props.onChange(e)}
+        value={props.value}
+        onChange={(e) => props.onChange && props.onChange(e)}
         placeholder={props.placeholder}
         {...props.digitAttr}
       />

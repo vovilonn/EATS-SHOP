@@ -67,6 +67,11 @@
     align-items: center;
     grid-template-columns: 1fr max-content max-content;
     gap: 0 24px;
+    @media screen and (max-width: 768px) {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 12px;
+    }
 
     .btn {
       min-width: 196px;

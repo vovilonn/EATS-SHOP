@@ -112,71 +112,72 @@ const ProductCard: FC<IProductCardProps> = (props) => {
   return (
     <article className={classNameProduct}>
       <div className={style.wrapper}>
-        <header
+        <Link
+          href={`/product/${props.id}`}
           className={style.header}
           style={{ backgroundImage: `url(${props.picture[0]})` }}
         />
         <div className={style.containerWrapper}>
-          <div className={style.container}>
-            <div className={style.row}>
-              <h1 className={style.title}>
-                <Link href={`/product/${props.id}`}>
+        <Link href={`/product/${props.id}`}>
+            <div className={style.container}>
+              <div className={style.row}>
+                <h1 className={style.title}>
                   {sliceTextUtility(props.name, 25)}
-                </Link>
-              </h1>
-              {isFavorite ||
-                (props.basket && (
-                  <RemoveIcon
-                    className={style.icon}
-                    onClick={() =>
-                      onToggleToIcon(
-                        props.basket ? props.cart_id ?? 0 : props.id
-                      )
-                    }
-                  />
-                ))}
-              {!isFavorite ||
-                (!props.basket && (
-                  <LikeIcon
-                    className={style.icon}
-                    onClick={() => onToggleToIcon(props.id)}
-                  />
-                ))}
+                </h1>
+                {isFavorite ||
+                  (props.basket && (
+                    <RemoveIcon
+                      className={style.icon}
+                      onClick={() =>
+                        onToggleToIcon(
+                          props.basket ? props.cart_id ?? 0 : props.id
+                        )
+                      }
+                    />
+                  ))}
+                {!isFavorite ||
+                  (!props.basket && (
+                    <LikeIcon
+                      className={style.icon}
+                      onClick={() => onToggleToIcon(props.id)}
+                    />
+                  ))}
+              </div>
+
+              {!props.basket && (
+                <p className={style.composition}>
+                  Склад: {sliceTextUtility(props.composition, 35)}
+                </p>
+              )}
+
+              {props.basket && (
+                <>
+                  <p className={style.composition}>(30 см), 490 гр</p>
+                  <p className={style.components}>+ шинка королівська (23 грн)</p>
+                </>
+              )}
+
+
             </div>
-
-            {!props.basket && (
-              <p className={style.composition}>
-                Склад: {sliceTextUtility(props.composition, 35)}
-              </p>
-            )}
-
-            {props.basket && (
-              <>
-                <p className={style.composition}>(30 см), 490 гр</p>
-                <p className={style.components}>+ шинка королівська (23 грн)</p>
-              </>
-            )}
-
-            {!props.basket && (
-              <div className={style.options}>{optionsRendering}</div>
-            )}
-
-            <footer className={style.footer}>
-              <h2 className={style.price}>
-                {props.basket ? cartTotalPrice + totalPrice : totalPrice} грн
-              </h2>
-              {props.basket && <button className={style.edit}>Змінити</button>}
-              <AmountToggle
-                cartId={props.cart_id}
-                productId={props.id}
-                setAmount={setAmount}
-                amount={amount}
-                basket={props.basket}
-                minAmount={props.minAmount}
-                full={props.toggleAmountFull}
-              />
-            </footer>
-          </div>
+          </Link>
+              {!props.basket && (
+                <div className={style.options}>{optionsRendering}</div>
+              )}
+          <footer className={style.footer}>
+            <h2 className={style.price}>
+              {props.basket ? cartTotalPrice + totalPrice : totalPrice} грн
+            </h2>
+            {props.basket && <button className={style.edit}>Змінити</button>}
+            <AmountToggle
+              cartId={props.cart_id}
+              productId={props.id}
+              setAmount={setAmount}
+              amount={amount}
+              basket={props.basket}
+              minAmount={props.minAmount}
+              full={props.toggleAmountFull}
+            />
+          </footer>
         </div>
       </div>
     </article>

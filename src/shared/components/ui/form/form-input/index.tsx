@@ -28,7 +28,7 @@ const FormInput: FC<IFormInputProps> = (props) => {
     ${props.className}
     ${props.large && style.large}
     ${props.valid && style.valid}
-    ${!!props.value && style.filled} // New class for filled input
+    ${!!props.value && style.filled} 
     ${props.code && style.code}
     ${!!props.icon && style.icon}
   `;

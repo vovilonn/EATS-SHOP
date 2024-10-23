@@ -9,11 +9,17 @@
     font-size: 14px;
     color: #0c0c0c;
     transition: border-color 0.2s;
+    border: 1px solid transparent;
 
     &::placeholder {
       color: #808080;
       font-size: 14px;
       font-weight: 400;
+    }
+
+    &:focus {
+      border-color: #ffc812;
+      outline: none;
     }
   }
 
@@ -27,6 +33,10 @@
       &,
       &::placeholder {
         font-size: 16px;
+      }
+
+      &:focus {
+        border-color: #ffc812;
       }
     }
   }
@@ -49,6 +59,10 @@
       background-color: #f9f9f9;
       border-radius: 16px;
       text-align: center;
+    }
+
+    &:focus {
+      border-color: #ffc812;
     }
   }
 

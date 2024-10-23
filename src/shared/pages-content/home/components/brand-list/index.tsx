@@ -1,27 +1,38 @@
-import { FC } from 'react'
-import Link from 'next/link'
+import { FC, useEffect } from 'react';
+import Link from 'next/link';
 
-import IBrand from '@/shared/interfaces/brand.interface'
+import style from './style.module.scss';
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/shared/store';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
+import { getBrands } from '@/shared/store/brand/requests';
 
-import style from './style.module.scss'
+const HomeBrandList: FC = () => {
+  const dispatch = useDispatch<TypeDispatch>();
 
-interface IHomeBrandListProps {
-  brands: IBrand[]
-}
+  // Получаем бренды и выбранный город из глобального состояния
+  const { brand_items } = useTypedSelector(state => state.brand);
+  const selectedCityId = useTypedSelector(state => state.city.selectedCityId);
 
-const HomeBrandList: FC<IHomeBrandListProps> = props => {
-  const brandsRendering = props.brands.map(brand => {
+  useEffect(() => {
+    dispatch(getBrands()); // Получаем все бренды
+  }, [dispatch]);
+
+  // Фильтруем заведения по выбранному городу
+  const filteredBrands = brand_items.filter(brand => brand.city_id === selectedCityId);
+
+  const brandsRendering = filteredBrands.map(brand => {
     return (
       <Link
-        className={ style.brand }
-        key={ brand.id }
-        href={ `/products/brand/${ brand.id }` }
-        style={ { backgroundImage: `url(${ brand.picture })` } }
+        className={style.brand}
+        key={brand.id}
+        href={`/products/brand/${brand.id}`}
+        style={{ backgroundImage: `url(${brand.picture})` }}
       />
-    )
-  })
+    );
+  });
 
-  return <div className={ style.brands }>{ brandsRendering }</div>
-}
+  return <div className={style.brands}>{brandsRendering}</div>;
+};
 
-export default HomeBrandList
+export default HomeBrandList;

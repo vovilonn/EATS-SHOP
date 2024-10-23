@@ -1,0 +1,42 @@
+.adminLayout {
+    min-height: 100vh;
+  }
+  
+  .sider {
+    height: 100vh; // Занимаем всю высоту экрана
+    position: fixed; // Фиксируем сайдбар
+    left: 0;
+    top: 0;
+  }
+  
+  .logo {
+    height: 64px;
+    margin: 16px;
+    background: rgba(255, 255, 255, 0.3);
+    text-align: center;
+    line-height: 64px;
+    font-size: 20px;
+    color: white;
+  }
+  
+  .header {
+    background-color: #fff;
+    padding: 0;
+    text-align: center;
+    font-size: 24px;
+    margin-left: 250px; // Отступ, чтобы учесть ширину сайдбара
+  }
+  
+  .content {
+    margin: 16px;
+    padding: 24px;
+    background: #fff;
+    min-height: 280px;
+    margin-left: 250px; // Отступ для контента
+  }
+  
+  .footer {
+    text-align: center;
+    margin-left: 250px; // Отступ для футера
+  }
+  

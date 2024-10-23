@@ -1,6 +1,10 @@
 .row {
   margin-bottom: 80px;
-  display: grid;
-  grid-template-columns: 592px 1fr;
+  display: flex;
+  flex-direction: row;
   gap: 0 40px;
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+  }
+  margin: 16px;
 }

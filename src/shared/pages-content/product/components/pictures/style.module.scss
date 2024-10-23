@@ -2,6 +2,9 @@
   padding: 45.5px 23.5px;
   border-radius: 24px;
   background-color: #fff;
+  @media screen and (max-width: 768px) {
+    margin-bottom: 30px;
+  }
 
   .swiper {
     padding: 0 23.5px;
@@ -10,5 +13,17 @@
   .slide {
     display: grid;
     justify-content: center;
+    max-width: 500px;
+    @media screen and (max-width: 768px) {
+      max-height: 210px;
+    }
   }
+  
+  .image {
+    @media screen and (max-width: 768px) {
+      max-height: 210px;
+      max-width: 100%;
+      object-fit: contain;
+    }
+  } 
 }

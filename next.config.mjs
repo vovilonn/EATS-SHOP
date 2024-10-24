@@ -12,20 +12,34 @@ const nextConfig = {
       'iili.io',
     ],
   },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /rc-tree/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['next/babel'],
+        },
+      },
+    });
+    return config;
+  },
 };
 
-// Конфигурация для SVGR плагина
 const svgrWithConfig = svgrPlugin({
   svgrOptions: {
     icon: true,
   },
 });
 
-// Добавляем транспиляцию модулей для @ant-design/icons и других
-const transpileModules = withTM(['antd', 'rc-util', '@ant-design/icons', 'rc-pagination', 'rc-picker']);
+const transpileModules = withTM([
+  'antd',
+  'rc-util',
+  '@ant-design/icons',
+  'rc-pagination',
+  'rc-picker',
+  'rc-tree',
+  'rc-table',
+]);
 
-// Экспортируем скомбинированные плагины
-export default withPlugins(
-  [svgrWithConfig, transpileModules], // Транспиляция и SVGR плагины
-  nextConfig
-);
+export default withPlugins([svgrWithConfig, transpileModules], nextConfig);

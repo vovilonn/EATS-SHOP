@@ -22,7 +22,11 @@ const ProductEditPageContent = () => {
   }, [id]);
 
   const fetchProduct = async (productId: string) => {
-    const mockProduct = { id: Number(productId), name: `Товар ${productId}`, price: 100 + Number(productId) * 10 };
+    const mockProduct = {
+      id: Number(productId),
+      name: `Товар ${productId}`,
+      price: 100 + Number(productId) * 10,
+    };
     setProduct(mockProduct);
     setLoading(false);
   };
@@ -34,15 +38,28 @@ const ProductEditPageContent = () => {
 
   return (
     <div className={styles.editContainer}>
-      <h1>Редактирование товара {id}</h1>
+      <div className={styles.editProductTitle}>Редактирование товара {id}</div>
       {loading ? (
         <p>Загрузка...</p>
       ) : (
-        <Form initialValues={product} onFinish={handleSave} layout="vertical" className={styles.form}>
-          <Form.Item label="Название товара" name="name" rules={[{ required: true, message: 'Введите название товара' }]}>
+        <Form
+          initialValues={product}
+          onFinish={handleSave}
+          layout="vertical"
+          className={styles.form}
+        >
+          <Form.Item
+            label="Название товара"
+            name="name"
+            rules={[{ required: true, message: 'Введите название товара' }]}
+          >
             <Input />
           </Form.Item>
-          <Form.Item label="Цена товара" name="price" rules={[{ required: true, message: 'Введите цену товара' }]}>
+          <Form.Item
+            label="Цена товара"
+            name="price"
+            rules={[{ required: true, message: 'Введите цену товара' }]}
+          >
             <Input type="number" />
           </Form.Item>
           <Button type="primary" htmlType="submit">

@@ -1,5 +1,5 @@
-import AdminLayout from "@/shared/layouts/admin-layout";
-import CityPageContent from "@/shared/pages-content/admin/general/city";
+import AdminLayout from '@/shared/layouts/admin-layout';
+import CityPageContent from '@/shared/pages-content/admin/general/city';
 
 const DashboardPage = () => {
   return (

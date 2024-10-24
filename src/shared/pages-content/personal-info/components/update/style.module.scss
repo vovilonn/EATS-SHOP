@@ -9,6 +9,10 @@
     background-color: #fff;
     padding: 18px 20px;
     width: 100%;
+
+    &:focus {
+      border: 1px solid #ffc812;
+    }
   }
 
   .fields {
@@ -74,7 +78,7 @@
     font-size: 14px;
     margin-top: 5px;
   }
-  
+
   .inputError {
     border: 1px solid red;
   }

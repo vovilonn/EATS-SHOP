@@ -34,25 +34,13 @@ const PersonalInfoUpdate: FC<PersonalInfoUpdateProps> = (props) => {
     date_birthday: accountInfo?.date_birthday
       ? new Date(accountInfo.date_birthday)
       : null,
+    photo: accountInfo?.avatar ?? props.previewImage,
   });
   const [errors, setErrors] = useState({
     name: '',
     email: '',
     phone: '',
-    date_birthday: ''
-
-  const [formData, setFormData] = useState<{
-    name: string;
-    email: string;
-    phone: string;
-    date_birthday: string;
-    photo: File | null;
-  }>({
-    name: '',
-    email: '',
-    phone: '',
     date_birthday: '',
-    photo: null,
   });
 
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -63,7 +51,7 @@ const PersonalInfoUpdate: FC<PersonalInfoUpdateProps> = (props) => {
         name: accountInfo.name || '',
         email: accountInfo.email || '',
         phone: accountInfo.number || '',
-        date_birthday: accountInfo.date_birthday || '',
+        date_birthday: new Date(`${accountInfo.date_birthday}`) || null,
         photo: props.previewImage || null,
       });
       setGender(accountInfo.gender || optionGenderList[0].name);
@@ -73,7 +61,6 @@ const PersonalInfoUpdate: FC<PersonalInfoUpdateProps> = (props) => {
   const dateInputRef = useMask({
     mask: 'рррр-мм-дд',
     replacement: { д: /\d/, м: /\d/, р: /\d/ },
->>>>>>> main
   });
 
   useEffect(() => {
@@ -84,13 +71,14 @@ const PersonalInfoUpdate: FC<PersonalInfoUpdateProps> = (props) => {
       date_birthday: accountInfo?.date_birthday
         ? new Date(accountInfo.date_birthday)
         : null,
+      photo: accountInfo?.avatar ?? props.previewImage,
     });
     setGender(accountInfo?.gender ?? optionGenderList[0].name);
   }, [accountInfo]);
 
   const handleInputChange = (id: string, value: string | Date | null) => {
     setFormData((prev) => ({ ...prev, [id]: value }));
-    setErrors((prev) => ({ ...prev, [id]: '' })); 
+    setErrors((prev) => ({ ...prev, [id]: '' }));
   };
 
   const validateForm = () => {
@@ -195,7 +183,6 @@ const PersonalInfoUpdate: FC<PersonalInfoUpdateProps> = (props) => {
             placeholder="Ім’я"
             value={formData.name}
             onChange={(e) => handleInputChange('name', e.target.value)}
-           
             large
           />
           {errors.name && <p className={style.error}>{errors.name}</p>}
@@ -230,18 +217,21 @@ const PersonalInfoUpdate: FC<PersonalInfoUpdateProps> = (props) => {
           </label>
           <DatePicker
             selected={formData.date_birthday}
-            onChange={(date: string | Date | null) => handleInputChange('date_birthday', date)}
+            onChange={(date: string | Date | null) =>
+              handleInputChange('date_birthday', date)
+            }
             dateFormat="yyyy-MM-dd"
             placeholderText="Оберіть дату"
             className={style.datePicker}
             maxDate={new Date()}
-          <FormInput
+          />
+          {/* <FormInput
             reference={dateInputRef}
-            value={formData.date_birthday}
+            value={`${formData.date_birthday}`}
             placeholder="рррр-мм-дд"
             onChange={(e) => handleInputChange('date_birthday', e.target.value)}
             large
-          />
+          /> */}
           {errors.date_birthday && (
             <p className={style.error}>{errors.date_birthday}</p>
           )}

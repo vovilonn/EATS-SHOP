@@ -6,22 +6,29 @@ import { useDispatch } from 'react-redux';
 import { TypeDispatch } from '@/shared/store';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { getBrands } from '@/shared/store/brand/requests';
+import IBrand from '@/shared/interfaces/brand.interface';
 
-const HomeBrandList: FC = () => {
+interface IHomeBrandListProps {
+  brands: IBrand[];
+}
+
+const HomeBrandList: FC<IHomeBrandListProps> = () => {
   const dispatch = useDispatch<TypeDispatch>();
 
   // Получаем бренды и выбранный город из глобального состояния
-  const { brand_items } = useTypedSelector(state => state.brand);
-  const selectedCityId = useTypedSelector(state => state.city.selectedCityId);
+  const { brand_items } = useTypedSelector((state) => state.brand);
+  const selectedCityId = useTypedSelector((state) => state.city.selectedCityId);
 
   useEffect(() => {
     dispatch(getBrands()); // Получаем все бренды
   }, [dispatch]);
 
   // Фильтруем заведения по выбранному городу
-  const filteredBrands = brand_items.filter(brand => brand.city_id === selectedCityId);
+  const filteredBrands = brand_items.filter(
+    (brand) => brand.city_id === selectedCityId
+  );
 
-  const brandsRendering = filteredBrands.map(brand => {
+  const brandsRendering = filteredBrands.map((brand) => {
     return (
       <Link
         className={style.brand}

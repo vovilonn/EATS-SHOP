@@ -39,4 +39,13 @@
     text-align: center;
     margin-left: 250px; // Отступ для футера
   }
+
+  .loadingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+  }
+  
   

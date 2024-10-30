@@ -3,9 +3,6 @@ import * as cookies from 'cookies-next';
 
 const instanceAxios = axios.create({
   baseURL: 'https://eats.pp.ua/api',
-  // headers: {
-  //   'Content-Type': 'application/json',
-  // },
 });
 
 instanceAxios.interceptors.request.use((config) => {

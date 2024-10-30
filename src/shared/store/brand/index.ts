@@ -31,7 +31,7 @@ const brandSlice = createSlice({
       .addCase(getBrands.rejected, (state, action) => {
         state.loading = 'failed';
         state.error = action.error.message || 'Failed to fetch cart info';
-      })
+      });
   },
 });
 

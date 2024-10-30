@@ -6,7 +6,6 @@ import { TypeDispatch } from '@/shared/store';
 import styles from './style.module.scss';
 import { loginAdmin, sendNumberCodeAdmin } from '@/shared/store/admin/requests';
 
-
 const LoginPageContent = () => {
   const [loading, setLoading] = useState(false);
   const [codeModalVisible, setCodeModalVisible] = useState(false);
@@ -20,8 +19,7 @@ const LoginPageContent = () => {
     const { phone } = values;
 
     try {
-      // Запрос на отправку кода по номеру телефона
-      await dispatch(sendNumberCodeAdmin({numberPhone: phone}))
+      await dispatch(sendNumberCodeAdmin({ numberPhone: phone }));
       setPhoneNumber(phone);
       setCodeModalVisible(true);
       message.success('Код отправлен на ваш номер');
@@ -37,8 +35,9 @@ const LoginPageContent = () => {
     const { code } = values;
 
     try {
-      await dispatch(loginAdmin({numberPhone: phoneNumber, code: Number(code)}));
-      // localStorage.setItem('authToken', 'dummy-token');
+      await dispatch(
+        loginAdmin({ numberPhone: phoneNumber, code: Number(code) })
+      );
       router.push('/admin');
       message.success('Успешный вход');
       setCodeModalVisible(false);
@@ -78,7 +77,7 @@ const LoginPageContent = () => {
       </Form>
 
       <Modal
-        visible={codeModalVisible}
+        open={codeModalVisible}
         title="Введите код"
         onCancel={() => setCodeModalVisible(false)}
         footer={null}

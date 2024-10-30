@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import Link from 'next/link';
 
-import { PRODUCT_LIST } from '@/shared/mock-data';
+// import { PRODUCT_LIST } from '@/shared/mock-data';
 
 import LoggedLayout from '@/shared/layouts/logged';
 import ProductList from '@/shared/components/product-list';
@@ -18,12 +18,7 @@ const BasketPageContent: FC = () => {
       <BasketHeader />
 
       <section className={style.section}>
-        <ProductList
-          products={PRODUCT_LIST}
-          basket
-          toggleAmountFull
-          minAmount={1}
-        />
+        <ProductList products={[]} basket toggleAmountFull minAmount={1} />
         <Link className={style.btn} href="/profile/basket/order-confirm">
           <span className={style.total}>Загалом: {total_cost} грн</span>
           <span className={style.title}>Оплатити</span>

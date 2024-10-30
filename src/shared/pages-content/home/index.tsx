@@ -1,25 +1,23 @@
-import { FC } from 'react'
+import { FC } from 'react';
 
-import IBrand from '@/shared/interfaces/brand.interface'
-import ICategory from '@/shared/interfaces/category.interface'
+import ICategory from '@/shared/interfaces/category.interface';
 
-import Layout from '@/shared/layouts/default'
+import Layout from '@/shared/layouts/default';
 
-import HomeHeader from './components/header'
-import HomeBrandList from './components/brand-list'
+import HomeHeader from './components/header';
+import HomeBrandList from './components/brand-list';
 
 interface IHomePageContentProps {
-  brands: IBrand[]
-  categories: ICategory[]
+  categories: ICategory[];
 }
 
-const HomePageContent: FC<IHomePageContentProps> = props => {
+const HomePageContent: FC<IHomePageContentProps> = (props) => {
   return (
     <Layout>
       <HomeHeader categories={props.categories} />
-      <HomeBrandList brands={props.brands} />
+      <HomeBrandList />
     </Layout>
-  )
-}
+  );
+};
 
-export default HomePageContent
+export default HomePageContent;

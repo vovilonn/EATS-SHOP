@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Form, Input, Button, message, Modal } from 'antd';
+import { Form, Input, Button, message, Modal, Spin } from 'antd';
 import { useDispatch } from 'react-redux';
 import { TypeDispatch } from '@/shared/store';
 import styles from './style.module.scss';

@@ -1,18 +1,31 @@
 import { useState, useEffect } from 'react';
 import { Form, Select, Input, Button, message } from 'antd';
 import styles from './style.module.scss';
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/shared/store';
+import { getCities } from '@/shared/store/city/requests';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
+import IBrand from '@/shared/interfaces/brand.interface';
+import IProduct from '@/shared/interfaces/product.interface';
 
 const { Option } = Select;
 
 const AdminPageContent = () => {
-  const [cities, setCities] = useState([]);
-  const [stores, setStores] = useState([]);
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch<TypeDispatch>();
+
+  const { cities } = useTypedSelector((state) => state.city);
+
+  const [stores, setStores] = useState<IBrand[] | []>([]);
+  const [products, setProducts] = useState<IProduct[] | []>([]);
+  const [oneProduct, setOneProduct] = useState<IProduct | null>();
   const [loading, setLoading] = useState(false);
 
   const [selectedCity, setSelectedCity] = useState<number | null>(null);
   const [selectedStore, setSelectedStore] = useState<number | null>(null);
-  const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(
+    null
+  );
+  const [selectedOptionId, setSelectedOptionId] = useState<number | null>(null);
   const [productDetails, setProductDetails] = useState({
     price: '',
     weight: '',
@@ -20,16 +33,17 @@ const AdminPageContent = () => {
   });
 
   useEffect(() => {
-    fetchCities();
+    dispatch(getCities());
+    fetchStores();
   }, []);
 
   useEffect(() => {
     if (selectedCity) {
-      fetchStores();
       // Очищаем выбор магазина и товара при смене города
       setSelectedStore(null);
-      setSelectedProduct(null);
+      setSelectedProductId(null);
       setProducts([]);
+      setSelectedOptionId(null);
       setProductDetails({
         price: '',
         weight: '',
@@ -42,7 +56,8 @@ const AdminPageContent = () => {
     if (selectedStore) {
       fetchProducts();
       // Очищаем выбор товара при смене магазина
-      setSelectedProduct(null);
+      setSelectedProductId(null);
+      setSelectedOptionId(null);
       setProductDetails({
         price: '',
         weight: '',
@@ -52,24 +67,30 @@ const AdminPageContent = () => {
   }, [selectedStore]);
 
   useEffect(() => {
-    if (selectedProduct) {
-      fetchProductDetails(selectedProduct);
+    if (selectedProductId) {
+      fetchProductDetails();
     }
-  }, [selectedProduct]);
+  }, [selectedProductId]);
 
-  const fetchCities = async () => {
-    try {
-      const response = await fetch('https://eats.pp.ua/api/city/view');
-      const data = await response.json();
-      setCities(data.data);
-    } catch (error) {
-      message.error('Ошибка при получении городов');
+  useEffect(() => {
+    if (oneProduct) {
+      const option = oneProduct.options.filter(
+        (item) => item.id === selectedOptionId
+      );
+
+      setProductDetails({
+        price: `${option[0].price}` || '',
+        weight: `${option[0].weight}` || '',
+        composition: oneProduct.composition || '',
+      });
     }
-  };
+  }, [selectedOptionId]);
 
   const fetchStores = async () => {
     try {
-      const response = await fetch('https://eats.pp.ua/api/menu/general_categories/view');
+      const response = await fetch(
+        'https://eats.pp.ua/api/menu/branded_store/view'
+      );
       const data = await response.json();
       setStores(data.data);
     } catch (error) {
@@ -79,31 +100,35 @@ const AdminPageContent = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('https://eats.pp.ua/api/menu/view?page=1');
-      const data = await response.json();
-      setProducts(data.data);
+      if (selectedStore) {
+        const response = await fetch(
+          `https://eats.pp.ua/api/menu/view?branded_store_id=${selectedStore}`
+        );
+        const data = await response.json();
+        setProducts(data.data);
+      } else {
+        message.warning('Нужно обязательно выбрать магазин!');
+      }
     } catch (error) {
       message.error('Ошибка при получении товаров');
     }
   };
 
-  const fetchProductDetails = async (productId: number) => {
+  const fetchProductDetails = async () => {
     try {
-      const response = await fetch(`https://eats.pp.ua/api/product/${productId}`);
-      const data = await response.json();
-      const product = data.data;
-      // Предзаполняем поля данными о товаре
-      setProductDetails({
-        price: product.price || '',
-        weight: product.weight || '',
-        composition: product.composition || '',
-      });
+      const response = await fetch(
+        `https://eats.pp.ua/api/menu/view?menu_id=${selectedProductId}`
+      );
+      const { data } = await response.json();
+      setOneProduct(data[0]);
     } catch (error) {
       message.error('Ошибка при получении данных о товаре');
     }
   };
 
-  const handleProductDetailsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProductDetailsChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value } = e.target;
     setProductDetails((prev) => ({
       ...prev,
@@ -127,11 +152,12 @@ const AdminPageContent = () => {
             value={selectedCity}
             loading={loading}
           >
-            {cities && cities.map((city: any) => (
-              <Option key={city.id} value={city.id}>
-                {city.name}
-              </Option>
-            ))}
+            {cities &&
+              cities.map((city: any) => (
+                <Option key={city.id} value={city.id}>
+                  {city.name}
+                </Option>
+              ))}
           </Select>
         </Form.Item>
 
@@ -143,19 +169,21 @@ const AdminPageContent = () => {
             disabled={!selectedCity}
             loading={loading}
           >
-            {stores.map((store: any) => (
-              <Option key={store.id} value={store.id}>
-                {store.name}
-              </Option>
-            ))}
+            {stores
+              .filter((brand) => brand.city_id === selectedCity)
+              .map((store: IBrand) => (
+                <Option key={store.id} value={store.id}>
+                  {store.name}
+                </Option>
+              ))}
           </Select>
         </Form.Item>
 
         <Form.Item label="Товар">
           <Select
             placeholder="Выберите товар"
-            onChange={(value) => setSelectedProduct(value)}
-            value={selectedProduct}
+            onChange={(value) => setSelectedProductId(value)}
+            value={selectedProductId}
             disabled={!selectedStore}
             loading={loading}
           >
@@ -167,7 +195,27 @@ const AdminPageContent = () => {
           </Select>
         </Form.Item>
 
-        {selectedProduct && (
+        {selectedProductId && (
+          <Form.Item label="Размер товара">
+            <Select
+              placeholder="Выберите размер товар"
+              onChange={(value) => setSelectedOptionId(value)}
+              value={selectedOptionId}
+              disabled={!selectedProductId}
+              loading={loading}
+            >
+              {products
+                .filter((product) => product.id === selectedProductId)[0]
+                .options.map((option: any) => (
+                  <Option key={option.id} value={option.id}>
+                    {option.name}
+                  </Option>
+                ))}
+            </Select>
+          </Form.Item>
+        )}
+
+        {selectedOptionId && (
           <>
             <Form.Item label="Цена">
               <Input

@@ -1,18 +1,24 @@
 import { useState, useEffect } from 'react';
 import { Row, Col, Card, Statistic } from 'antd';
-import { UserOutlined, ShoppingCartOutlined, TagOutlined } from '@ant-design/icons';
+import {
+  UserOutlined,
+  ShoppingCartOutlined,
+  TagOutlined,
+} from '@ant-design/icons';
 import styles from './style.module.scss';
 
-const MainPageContent = () => {
+const StatisticPageContent = () => {
   const [clientCount, setClientCount] = useState<number>(0);
   const [orderCount, setOrderCount] = useState<number>(0);
   const [activePromocodes, setActivePromocodes] = useState<number>(0);
-  const [salesData, setSalesData] = useState<number[]>([100, 200, 150, 300, 250]);
+  const [salesData, setSalesData] = useState<number[]>([
+    100, 200, 150, 300, 250,
+  ]);
 
   useEffect(() => {
     // Здесь можно сделать запросы к API для получения реальных данных
     setClientCount(1500); // Количество клиентов
-    setOrderCount(125);    // Количество активных заказов
+    setOrderCount(125); // Количество активных заказов
     setActivePromocodes(5); // Количество активных промокодов
     // Установим salesData после получения данных о продажах
   }, []);
@@ -59,4 +65,4 @@ const MainPageContent = () => {
   );
 };
 
-export default MainPageContent;
+export default StatisticPageContent;

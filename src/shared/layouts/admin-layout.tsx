@@ -9,11 +9,10 @@ import {
   SettingOutlined,
   FileOutlined,
   LogoutOutlined,
-  BarChartOutlined,
+  PlusCircleOutlined,
+  EditOutlined,
 } from '@ant-design/icons';
 import styles from './admin-layout.module.scss';
-import { useDispatch } from 'react-redux';
-import { useTypedSelector } from '../hooks/use-typed-selector';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -22,9 +21,23 @@ interface AdminLayoutProps {
 }
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
-  const router = useRouter();
+  const [savedToken, setSavedToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string>('');
   const [collapsed, setCollapsed] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    setSavedToken(token);
+
+    if (!token) {
+      router.push('/admin/login');
+    } else {
+      setLoading(false);
+    }
+  }, [router]);
 
   useEffect(() => {
     setSelectedKey(router.pathname);
@@ -42,6 +55,22 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     localStorage.removeItem('authToken');
     router.push('/admin/login');
   };
+
+  if (loading && !savedToken) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          backgroundColor: '#f0f2f5',
+        }}
+      >
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <Layout className={styles.adminLayout}>
@@ -68,17 +97,20 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
             title="Структура"
             icon={<SettingOutlined />}
           >
-            <Menu.Item key="/admin/general" icon={<DashboardOutlined />}>
-              Общая инфо
+            <Menu.Item
+              key="/admin/add-new-product"
+              icon={<PlusCircleOutlined />}
+            >
+              Добавить товар
             </Menu.Item>
-            <Menu.Item key="/admin/general/city" icon={<UserOutlined />}>
+            <Menu.Item key="/admin/edit-product" icon={<EditOutlined />}>
+              Редактировать товар
+            </Menu.Item>
+            <Menu.Item key="/admin/city" icon={<UserOutlined />}>
               Город
             </Menu.Item>
-            <Menu.Item key="/admin/general/brands" icon={<ShopOutlined />}>
+            <Menu.Item key="/admin/brands" icon={<ShopOutlined />}>
               Магазин
-            </Menu.Item>
-            <Menu.Item key="/admin/general/menu" icon={<FileOutlined />}>
-              Меню
             </Menu.Item>
           </Menu.SubMenu>
           <Menu.Item key="/admin/roles" icon={<TeamOutlined />}>
@@ -92,9 +124,6 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           </Menu.Item>
           <Menu.Item key="/admin/promocodes" icon={<FileOutlined />}>
             Промокоды
-          </Menu.Item>
-          <Menu.Item key="/admin/main/statistics" icon={<BarChartOutlined />}>
-            Статистика
           </Menu.Item>
           <Menu.Item key="logout" icon={<LogoutOutlined />}>
             Logout

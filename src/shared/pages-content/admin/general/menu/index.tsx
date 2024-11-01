@@ -1,40 +1,27 @@
 import { useState, useEffect } from 'react';
 import { Form, Input, Select, Button, Table, message } from 'antd';
 import styles from './style.module.scss';
-
-interface Store {
-  id: number;
-  name: string;
-  cityId: number;
-  brandId: number;
-}
-
-interface MenuItem {
-  id: number;
-  name: string;
-  price: number;
-  weight: string;
-  storeId: number;
-}
-
-interface City {
-  id: number;
-  name: string;
-}
-
-interface Brand {
-  id: number;
-  name: string;
-}
+import ICity from '@/shared/interfaces/city.interface';
+import IBrand from '@/shared/interfaces/brand.interface';
+import IProduct from '@/shared/interfaces/product.interface';
 
 const { Option } = Select;
 
+interface IOption {
+  id: number;
+  name: string;
+  price: number;
+  weight: number;
+}
+
 const MenuPage = () => {
-  const [stores, setStores] = useState<Store[]>([]);
-  const [cities, setCities] = useState<City[]>([]);
-  const [brands, setBrands] = useState<Brand[]>([]);
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [cities, setCities] = useState<ICity[]>([]);
+  const [brands, setBrands] = useState<IBrand[]>([]);
+  const [menuItems, setMenuItems] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState<{
+    [key: number]: IOption | null;
+  }>({});
 
   const [newMenuItem, setNewMenuItem] = useState({
     name: '',
@@ -49,8 +36,6 @@ const MenuPage = () => {
   useEffect(() => {
     fetchCities();
     fetchBrands();
-    fetchStores();
-    fetchMenuItems();
   }, []);
 
   const fetchCities = async () => {
@@ -65,7 +50,9 @@ const MenuPage = () => {
 
   const fetchBrands = async () => {
     try {
-      const response = await fetch('https://eats.pp.ua/api/brands/view'); // Примерный endpoint для брендов
+      const response = await fetch(
+        'https://eats.pp.ua/api/menu/branded_store/view'
+      );
       const data = await response.json();
       setBrands(data.data || []);
     } catch (error) {
@@ -73,65 +60,25 @@ const MenuPage = () => {
     }
   };
 
-  const fetchStores = async () => {
+  async function fetchMenuItems() {
     try {
-      const response = await fetch('https://eats.pp.ua/api/store/view'); // Примерный endpoint для магазинов
-      const data = await response.json();
-      setStores(data.data || []);
-    } catch (error) {
-      message.error('Ошибка при получении магазинов');
-    }
-  };
-
-  const fetchMenuItems = async () => {
-    try {
-      const response = await fetch('https://eats.pp.ua/api/menu/view?page=1'); // Примерный endpoint для меню
+      const response = await fetch(
+        `https://eats.pp.ua/api/menu/view?branded_store_id=${selectedBrand}`
+      );
       const data = await response.json();
       setMenuItems(data.data || []);
     } catch (error) {
       message.error('Ошибка при получении меню');
     }
+  }
+
+  const handleOptionChange = (productId: number, optionId: number) => {
+    const selectedOption =
+      menuItems
+        .find((item) => item.id === productId)
+        ?.options.find((option) => option.id === optionId) || null;
+    setSelectedOptions((prev) => ({ ...prev, [productId]: selectedOption }));
   };
-
-  const handleAddMenuItem = async () => {
-    if (!newMenuItem.name || !newMenuItem.price || !newMenuItem.weight || !newMenuItem.storeId) {
-      message.error('Заполните все поля');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await fetch('https://eats.pp.ua/api/menu/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: newMenuItem.name,
-          price: newMenuItem.price,
-          weight: newMenuItem.weight,
-          storeId: newMenuItem.storeId,
-        }),
-      });
-
-      if (response.ok) {
-        message.success('Блюдо добавлено в меню');
-        fetchMenuItems();
-        setNewMenuItem({ name: '', price: '', weight: '', storeId: null });
-      } else {
-        message.error('Ошибка при добавлении блюда');
-      }
-    } catch (error) {
-      message.error('Ошибка при добавлении блюда');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const filteredStores = stores.filter(
-    (store) => (!selectedCity || store.cityId === selectedCity) &&
-               (!selectedBrand || store.brandId === selectedBrand)
-  );
 
   const columns = [
     {
@@ -145,28 +92,61 @@ const MenuPage = () => {
       key: 'name',
     },
     {
-      title: 'Цена',
-      dataIndex: 'price',
-      key: 'price',
-    },
-    {
-      title: 'Вес (г)',
-      dataIndex: 'weight',
-      key: 'weight',
-      render: (weight: string) => `${weight} г`,
-    },
-    {
       title: 'Магазин',
       dataIndex: 'storeId',
       key: 'storeId',
-      render: (storeId: number) => {
-        const store = stores.find((store) => store.id === storeId);
-        const city = cities.find((city) => city.id === store?.cityId)?.name || 'Неизвестно';
-        const brand = brands.find((brand) => brand.id === store?.brandId)?.name || 'Неизвестно';
-        return `${store?.name || 'Неизвестно'} (${city}, ${brand})`;
+      render: (text: string) => {
+        const store = brands.find((store) => store.id === selectedBrand);
+        return `${store?.name || 'Неизвестно'}`;
+      },
+    },
+    {
+      title: 'Опции',
+      dataIndex: 'options',
+      key: 'options',
+      render: (_: any, record: IProduct) => (
+        <Select
+          placeholder="Выберите опцию"
+          onChange={(value) => handleOptionChange(record.id, value)}
+          style={{ width: 120 }}
+        >
+          {record.options.map((option) => (
+            <Option key={option.id} value={option.id}>
+              {option.name}
+            </Option>
+          ))}
+        </Select>
+      ),
+    },
+    {
+      title: 'Детали опции',
+      key: 'optionDetails',
+      render: (_: any, record: IProduct) => {
+        const selectedOption = selectedOptions[record.id];
+        return selectedOption ? (
+          <div>
+            <p>Размер: {selectedOption.name}</p>
+            <p>Вес: {selectedOption.weight} г</p>
+            <p>Цена: {selectedOption.price} грн</p>
+          </div>
+        ) : (
+          <span>Выберите опцию</span>
+        );
       },
     },
   ];
+
+  useEffect(() => {
+    if (selectedCity) {
+      setSelectedBrand(null);
+    }
+  }, [selectedCity]);
+
+  useEffect(() => {
+    if (selectedBrand) {
+      fetchMenuItems();
+    }
+  }, [selectedBrand]);
 
   return (
     <div className={styles.menuContainer}>
@@ -176,7 +156,7 @@ const MenuPage = () => {
           <Select
             placeholder="Выберите город"
             onChange={(value) => setSelectedCity(value)}
-            style={{ width: 150 }}
+            style={{ width: 197, marginBottom: 10 }}
           >
             {cities.map((city) => (
               <Option key={city.id} value={city.id}>
@@ -189,43 +169,37 @@ const MenuPage = () => {
           <Select
             placeholder="Выберите бренд"
             onChange={(value) => setSelectedBrand(value)}
-            style={{ width: 150 }}
+            value={selectedBrand}
+            disabled={!selectedCity}
+            style={{ width: 197, marginBottom: 10 }}
           >
-            {brands.map((brand) => (
-              <Option key={brand.id} value={brand.id}>
-                {brand.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item>
-          <Select
-            placeholder="Выберите магазин"
-            onChange={(value) => setNewMenuItem({ ...newMenuItem, storeId: value })}
-            value={newMenuItem.storeId}
-            style={{ width: 200 }}
-          >
-            {filteredStores.length > 0
-              ? filteredStores.map((store) => (
-                  <Option key={store.id} value={store.id}>
-                    {store.name}
-                  </Option>
-                ))
-              : <Option disabled>Нет доступных магазинов</Option>}
+            {brands
+              .filter((item) => item.city_id === selectedCity)
+              .map((brand) => (
+                <Option key={brand.id} value={brand.id}>
+                  {brand.name}
+                </Option>
+              ))}
           </Select>
         </Form.Item>
         <Form.Item>
           <Input
             placeholder="Название блюда"
             value={newMenuItem.name}
-            onChange={(e) => setNewMenuItem({ ...newMenuItem, name: e.target.value })}
+            onChange={(e) =>
+              setNewMenuItem({ ...newMenuItem, name: e.target.value })
+            }
+            style={{ marginBottom: 10 }}
           />
         </Form.Item>
         <Form.Item>
           <Input
             placeholder="Цена"
             value={newMenuItem.price}
-            onChange={(e) => setNewMenuItem({ ...newMenuItem, price: e.target.value })}
+            onChange={(e) =>
+              setNewMenuItem({ ...newMenuItem, price: e.target.value })
+            }
+            style={{ marginBottom: 10 }}
           />
         </Form.Item>
         <Form.Item>
@@ -233,23 +207,35 @@ const MenuPage = () => {
             placeholder="Вес (г)"
             value={newMenuItem.weight}
             type="number"
-            onChange={(e) => setNewMenuItem({ ...newMenuItem, weight: e.target.value })}
+            onChange={(e) =>
+              setNewMenuItem({ ...newMenuItem, weight: e.target.value })
+            }
+            style={{ marginBottom: 10 }}
           />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" onClick={handleAddMenuItem} loading={loading}>
+          <Button
+            type="primary"
+            onClick={() => {}}
+            loading={loading}
+            style={{ width: 197 }}
+          >
             Добавить блюдо
           </Button>
         </Form.Item>
       </Form>
 
-      <Table
-        columns={columns}
-        dataSource={menuItems}
-        rowKey="id"
-        loading={loading}
-        className={styles.table}
-      />
+      {selectedCity && selectedBrand ? (
+        <Table
+          columns={columns}
+          dataSource={menuItems}
+          rowKey="id"
+          loading={loading}
+          className={styles.table}
+        />
+      ) : (
+        <h2>Выберите город и магазин!</h2>
+      )}
     </div>
   );
 };

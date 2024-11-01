@@ -1,27 +1,27 @@
-import { FC } from 'react'
+import { FC } from 'react';
 
-import { PRODUCT_LIST } from '@/shared/mock-data'
+// import { PRODUCT_LIST } from '@/shared/mock-data'
 
-import IOrder from '@/shared/interfaces/order.interface'
+import IOrder from '@/shared/interfaces/order.interface';
 
-import Button from '@/shared/components/ui/button'
-import LoggedLayout from '@/shared/layouts/logged'
-import OrderHeader from './components/header'
-import OrderProductCard from './components/product-card'
+import Button from '@/shared/components/ui/button';
+import LoggedLayout from '@/shared/layouts/logged';
+import OrderHeader from './components/header';
+import OrderProductCard from './components/product-card';
 
-import style from './style.module.scss'
+import style from './style.module.scss';
 
 // interface IOrderPageContentProps extends IOrder {}
 interface IOrderPageContentProps {}
 
-const OrderPageContent: FC<IOrderPageContentProps> = props => {
-  const classNameStatus: string = `${style.status} ${style.delivered}`
+const OrderPageContent: FC<IOrderPageContentProps> = (props) => {
+  const classNameStatus: string = `${style.status} ${style.delivered}`;
 
-  const productListRendering = PRODUCT_LIST.map(product => {
-    const key = Math.random()
+  const productListRendering = [].map((product) => {
+    const key = Math.random();
 
-    return <OrderProductCard key={key} {...product} />
-  })
+    return <OrderProductCard key={key} />;
+  });
 
   return (
     <LoggedLayout>
@@ -54,7 +54,7 @@ const OrderPageContent: FC<IOrderPageContentProps> = props => {
         </Button>
       </section>
     </LoggedLayout>
-  )
-}
+  );
+};
 
-export default OrderPageContent
+export default OrderPageContent;

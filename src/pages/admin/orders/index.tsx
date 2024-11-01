@@ -1,5 +1,5 @@
-import AdminLayout from "@/shared/layouts/admin-layout";
-import OrdersPageContent from "@/shared/pages-content/admin/orders";
+import AdminLayout from '@/shared/layouts/admin-layout';
+import OrdersPageContent from '@/shared/admin-pages-content/orders';
 
 const OrdersPage = () => {
   return (

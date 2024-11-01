@@ -1,10 +1,10 @@
 import AdminLayout from '@/shared/layouts/admin-layout';
-import AdminPageContent from '@/shared/pages-content/admin';
+import EditProductPageContent from '@/shared/admin-pages-content/edit-product-page';
 
 const AdminPage = () => {
   return (
     <AdminLayout>
-      <AdminPageContent />
+      <EditProductPageContent />
     </AdminLayout>
   );
 };

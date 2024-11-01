@@ -1,40 +1,26 @@
 import { useState, useEffect } from 'react';
+
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/shared/store';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
+
+import { fetchBrands, fetchCities } from '@/shared/store/admin/requests';
+
 import { Form, Input, Select, Button, Table, message } from 'antd';
+
 import styles from './style.module.scss';
-import IBrand from '@/shared/interfaces/brand.interface';
-import ICity from '@/shared/interfaces/city.interface';
 
 const { Option } = Select;
 
 const BrandsPageContent = () => {
-  const [brands, setBrands] = useState<IBrand[]>([]);
-  const [cities, setCities] = useState<ICity[]>([]);
+  const dispatch = useDispatch<TypeDispatch>();
+
+  const { cities, brands } = useTypedSelector((state) => state.adminPanel);
+
   const [loading, setLoading] = useState(false);
   const [newStoreName, setNewStoreName] = useState('');
 
   const [selectedCity, setSelectedCity] = useState<number | null>(null);
-
-  const fetchCities = async () => {
-    try {
-      const response = await fetch('https://eats.pp.ua/api/city/view');
-      const data = await response.json();
-      setCities(data.data);
-    } catch (error) {
-      message.error('Ошибка при получении городов');
-    }
-  };
-
-  const fetchBrands = async () => {
-    try {
-      const response = await fetch(
-        'https://eats.pp.ua/api/menu/branded_store/view'
-      ); // Примерный endpoint для магазинов
-      const data = await response.json();
-      setBrands(data.data);
-    } catch (error) {
-      message.error('Ошибка при получении магазинов');
-    }
-  };
 
   const handleAddStore = async () => {
     if (!newStoreName || !selectedCity) {
@@ -54,7 +40,7 @@ const BrandsPageContent = () => {
 
       if (response.ok) {
         message.success('Магазин добавлен');
-        fetchBrands(); // Обновляем список магазинов
+        dispatch(fetchBrands()); // Обновляем список магазинов
         setNewStoreName(''); // Очищаем поле ввода
         setSelectedCity(null); // Очищаем выбор города
       } else {
@@ -68,14 +54,9 @@ const BrandsPageContent = () => {
   };
 
   useEffect(() => {
-    fetchCities();
+    dispatch(fetchCities());
+    dispatch(fetchBrands());
   }, []);
-
-  useEffect(() => {
-    if (selectedCity) {
-      fetchBrands();
-    }
-  }, [selectedCity]);
 
   const columns = [
     {

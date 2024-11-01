@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import styles from './style.module.scss';
 
-const StatisticPageContent = () => {
+const MainPageContent = () => {
   const [clientCount, setClientCount] = useState<number>(0);
   const [orderCount, setOrderCount] = useState<number>(0);
   const [activePromocodes, setActivePromocodes] = useState<number>(0);
@@ -65,4 +65,4 @@ const StatisticPageContent = () => {
   );
 };
 
-export default StatisticPageContent;
+export default MainPageContent;

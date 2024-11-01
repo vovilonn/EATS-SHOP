@@ -5,12 +5,14 @@ import citySlice from '../store/city';
 import authSlice from '../store/auth';
 import favoriteSlice from '../store/favorite';
 import productSlice from '../store/product';
+import adminSlice from '../store/admin';
 
 const actions = {
   ...authSlice.actions,
   ...citySlice.actions,
   ...favoriteSlice.actions,
   ...productSlice.actions,
+  ...adminSlice.actions,
 };
 
 export const useActions = () => {

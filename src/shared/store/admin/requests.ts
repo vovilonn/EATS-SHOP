@@ -1,90 +1,42 @@
+import IBrand from '@/shared/interfaces/brand.interface';
+import ICity from '@/shared/interfaces/city.interface';
+import IProduct from '@/shared/interfaces/product.interface';
 import Axios from '@/shared/utils/axios.utility';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-interface IAdminDataProps {
-  // Дополните интерфейс необходимыми свойствами
-}
+export const fetchCities = createAsyncThunk<ICity[]>(
+  'admin/cities',
+  async () => {
+    return (await Axios({ method: 'get', url: '/city/view' })).data;
+  }
+);
 
-interface IUpdateAdminSettingsProps {
-  settings: any; // Замените 'any' на конкретный тип настроек
-}
+export const fetchBrands = createAsyncThunk<IBrand[]>(
+  'admin/brands',
+  async () => {
+    return (await Axios({ method: 'get', url: '/menu/branded_store/view' }))
+      .data;
+  }
+);
 
-// Получение данных администратора
-export const fetchAdminData = createAsyncThunk(
-  'admin/fetchAdminData',
-  async (props?: IAdminDataProps) => {
+export const fetchProducts = createAsyncThunk<IProduct[], number>(
+  'admin/products',
+  async (brand_id) => {
     const response = await Axios({
-      url: '/admin/data',
       method: 'get',
+      url: `/menu/view?branded_store_id=${brand_id}`,
     });
     return response.data;
   }
 );
 
-// Обновление настроек администратора
-export const updateAdminSettings = createAsyncThunk(
-  'admin/updateAdminSettings',
-  async (props: IUpdateAdminSettingsProps) => {
+export const fetchOneProduct = createAsyncThunk<IProduct[], number>(
+  'admin/oneProduct',
+  async (product_id) => {
     const response = await Axios({
-      url: '/admin/settings',
-      method: 'post',
-      data: props.settings,
+      method: 'get',
+      url: `/menu/view?menu_id=${product_id}`,
     });
     return response.data;
-  }
-);
-
-// Отправка кода на номер администратора
-interface ISendNumberCodeProps {
-  numberPhone: string;
-}
-
-export const sendNumberCodeAdmin = createAsyncThunk(
-  'admin/sendNumberCode',
-  (props: ISendNumberCodeProps) => {
-    return Axios({
-      url: '/admin/auth/send_number_code',
-      method: 'post',
-      data: { number: props.numberPhone },
-    });
-  }
-);
-
-// Вход администратора
-interface ILoginProps {
-  numberPhone: string;
-  code: number;
-}
-
-export const loginAdmin = createAsyncThunk(
-  'admin/login',
-  (props: ILoginProps) => {
-    return Axios({
-      url: '/admin/auth/login',
-      method: 'post',
-      data: { number: props.numberPhone, code: props.code },
-    });
-  }
-);
-
-// Заполнение профиля администратора
-interface IFillingProfileProps {
-  name: string;
-  referralCode: number | null;
-  cityId: number;
-}
-
-export const fillingProfileAdmin = createAsyncThunk(
-  'admin/fillingProfile',
-  (props: IFillingProfileProps) => {
-    return Axios({
-      url: '/admin/auth/filling_profile',
-      method: 'post',
-      data: {
-        name: props.name,
-        referral_code: props.referralCode,
-        city_id: props.cityId,
-      },
-    });
   }
 );

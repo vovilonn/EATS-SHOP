@@ -1,33 +1,26 @@
 import { useState, useEffect } from 'react';
+
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/shared/store';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
+
+import { fetchCities } from '@/shared/store/admin/requests';
+
 import { Form, Input, Button, Table, message } from 'antd';
+
 import styles from './style.module.scss';
 
-interface City {
-  id: number;
-  name: string;
-}
-
 const CityPageContent = () => {
-  const [cities, setCities] = useState<City[]>([]);
+  const dispatch = useDispatch<TypeDispatch>();
+
+  const { cities } = useTypedSelector((state) => state.adminPanel);
+
   const [loading, setLoading] = useState(false);
   const [newCityName, setNewCityName] = useState('');
 
   useEffect(() => {
-    fetchCities();
+    dispatch(fetchCities());
   }, []);
-
-  const fetchCities = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('https://eats.pp.ua/api/city/view');
-      const data = await response.json();
-      setCities(data.data);
-    } catch (error) {
-      message.error('Ошибка при получении городов');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleAddCity = async () => {
     if (!newCityName) {

@@ -1,6 +1,11 @@
 import { ReactNode, useEffect, useState } from 'react';
-import { Layout, Menu, Spin } from 'antd';
+
 import { useRouter } from 'next/router';
+import { useActions } from '../hooks/use-actions';
+import { useTypedSelector } from '../hooks/use-typed-selector';
+
+import { Layout, Menu, Spin } from 'antd';
+const { Header, Content, Footer, Sider } = Layout;
 import {
   UserOutlined,
   ShopOutlined,
@@ -12,32 +17,35 @@ import {
   PlusCircleOutlined,
   EditOutlined,
 } from '@ant-design/icons';
-import styles from './admin-layout.module.scss';
 
-const { Header, Content, Footer, Sider } = Layout;
+import styles from './admin-layout.module.scss';
 
 interface AdminLayoutProps {
   children: ReactNode;
 }
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
-  const [savedToken, setSavedToken] = useState<string | null>(null);
+  const { tokenAdmin } = useTypedSelector((state) => state.adminPanel);
+
   const [loading, setLoading] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string>('');
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
   const router = useRouter();
+  const actions = useActions();
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    setSavedToken(token);
-
-    if (!token) {
-      router.push('/admin/login');
+    if (typeof window !== 'undefined' && !tokenAdmin) {
+      const storedToken = localStorage.getItem('authToken');
+      if (storedToken) {
+        actions.setTokenAdmin(storedToken);
+      } else {
+        router.push('/admin/login');
+      }
     } else {
       setLoading(false);
     }
-  }, [router]);
+  }, [tokenAdmin, router, actions]);
 
   useEffect(() => {
     setSelectedKey(router.pathname);
@@ -52,11 +60,11 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
+    actions.setAdminLogout();
     router.push('/admin/login');
   };
 
-  if (loading && !savedToken) {
+  if (loading && !tokenAdmin) {
     return (
       <div
         style={{

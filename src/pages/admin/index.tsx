@@ -1,12 +1,12 @@
 import AdminLayout from '@/shared/layouts/admin-layout';
-import StatisticPageContent from '@/shared/pages-content/admin/statistic';
+import MainPageContent from '@/shared/admin-pages-content/main';
 
-const AdminPage = () => {
+const MainAdminPage = () => {
   return (
     <AdminLayout>
-      <StatisticPageContent />
+      <MainPageContent />
     </AdminLayout>
   );
 };
 
-export default AdminPage;
+export default MainAdminPage;

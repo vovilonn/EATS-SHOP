@@ -1,9 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Form, Input, Select, Button, Table, message } from 'antd';
-import styles from './style.module.scss';
-import ICity from '@/shared/interfaces/city.interface';
-import IBrand from '@/shared/interfaces/brand.interface';
+
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/shared/store';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
+
+import {
+  fetchBrands,
+  fetchCities,
+  fetchProducts,
+} from '@/shared/store/admin/requests';
+
 import IProduct from '@/shared/interfaces/product.interface';
+
+import { Form, Input, Select, Button, Table } from 'antd';
+
+import styles from './style.module.scss';
 
 const { Option } = Select;
 
@@ -14,10 +25,13 @@ interface IOption {
   weight: number;
 }
 
-const MenuPage = () => {
-  const [cities, setCities] = useState<ICity[]>([]);
-  const [brands, setBrands] = useState<IBrand[]>([]);
-  const [menuItems, setMenuItems] = useState<IProduct[]>([]);
+const AddNewProductPageContent = () => {
+  const dispatch = useDispatch<TypeDispatch>();
+
+  const { cities, brands, products } = useTypedSelector(
+    (state) => state.adminPanel
+  );
+
   const [loading, setLoading] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: number]: IOption | null;
@@ -34,51 +48,30 @@ const MenuPage = () => {
   const [selectedBrand, setSelectedBrand] = useState<number | null>(null);
 
   useEffect(() => {
-    fetchCities();
-    fetchBrands();
+    dispatch(fetchCities());
+    dispatch(fetchBrands());
   }, []);
-
-  const fetchCities = async () => {
-    try {
-      const response = await fetch('https://eats.pp.ua/api/city/view');
-      const data = await response.json();
-      setCities(data.data);
-    } catch (error) {
-      message.error('Ошибка при получении городов');
-    }
-  };
-
-  const fetchBrands = async () => {
-    try {
-      const response = await fetch(
-        'https://eats.pp.ua/api/menu/branded_store/view'
-      );
-      const data = await response.json();
-      setBrands(data.data || []);
-    } catch (error) {
-      message.error('Ошибка при получении брендов');
-    }
-  };
-
-  async function fetchMenuItems() {
-    try {
-      const response = await fetch(
-        `https://eats.pp.ua/api/menu/view?branded_store_id=${selectedBrand}`
-      );
-      const data = await response.json();
-      setMenuItems(data.data || []);
-    } catch (error) {
-      message.error('Ошибка при получении меню');
-    }
-  }
 
   const handleOptionChange = (productId: number, optionId: number) => {
     const selectedOption =
-      menuItems
+      products
         .find((item) => item.id === productId)
         ?.options.find((option) => option.id === optionId) || null;
     setSelectedOptions((prev) => ({ ...prev, [productId]: selectedOption }));
   };
+
+  useEffect(() => {
+    if (selectedCity) {
+      setSelectedBrand(null);
+    }
+  }, [selectedCity]);
+
+  useEffect(() => {
+    if (selectedBrand) {
+      setSelectedOptions({});
+      dispatch(fetchProducts(selectedBrand));
+    }
+  }, [selectedBrand]);
 
   const columns = [
     {
@@ -95,7 +88,7 @@ const MenuPage = () => {
       title: 'Магазин',
       dataIndex: 'storeId',
       key: 'storeId',
-      render: (text: string) => {
+      render: () => {
         const store = brands.find((store) => store.id === selectedBrand);
         return `${store?.name || 'Неизвестно'}`;
       },
@@ -135,18 +128,6 @@ const MenuPage = () => {
       },
     },
   ];
-
-  useEffect(() => {
-    if (selectedCity) {
-      setSelectedBrand(null);
-    }
-  }, [selectedCity]);
-
-  useEffect(() => {
-    if (selectedBrand) {
-      fetchMenuItems();
-    }
-  }, [selectedBrand]);
 
   return (
     <div className={styles.menuContainer}>
@@ -228,7 +209,7 @@ const MenuPage = () => {
       {selectedCity && selectedBrand ? (
         <Table
           columns={columns}
-          dataSource={menuItems}
+          dataSource={products}
           rowKey="id"
           loading={loading}
           className={styles.table}
@@ -240,4 +221,4 @@ const MenuPage = () => {
   );
 };
 
-export default MenuPage;
+export default AddNewProductPageContent;

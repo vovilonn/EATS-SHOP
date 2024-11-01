@@ -1,10 +1,10 @@
-import AdminLayout from "@/shared/layouts/admin-layout";
-import RolesPageContent from "@/shared/pages-content/admin/roles/index";
+import AdminLayout from '@/shared/layouts/admin-layout';
+import RolePageContent from '@/shared/admin-pages-content/roles';
 
 const DashboardPage = () => {
   return (
     <AdminLayout>
-      <RolesPageContent />
+      <RolePageContent />
     </AdminLayout>
   );
 };

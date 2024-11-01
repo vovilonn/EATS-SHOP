@@ -5,8 +5,22 @@ import { User, roles, availablePermissions } from './mock';
 const { Option } = Select;
 
 const initialUsers: User[] = [
-  { id: 1, phone: '+380123456789', firstName: '', lastName: '', role: 'Оператор', customPermissions: [] },
-  { id: 2, phone: '+380987654321', firstName: '', lastName: '', role: 'Админ', customPermissions: [] },
+  {
+    id: 1,
+    phone: '+380123456789',
+    firstName: '',
+    lastName: '',
+    role: 'Оператор',
+    customPermissions: [],
+  },
+  {
+    id: 2,
+    phone: '+380987654321',
+    firstName: '',
+    lastName: '',
+    role: 'Админ',
+    customPermissions: [],
+  },
 ];
 
 const RolePageContent = () => {
@@ -15,14 +29,14 @@ const RolePageContent = () => {
 
   // Выбор пользователя
   const handleUserSelect = (userId: number) => {
-    const user = users.find(u => u.id === userId);
+    const user = users.find((u) => u.id === userId);
     setSelectedUser(user || null);
   };
 
   // Назначение роли пользователю
   const handleRoleChange = (role: string) => {
     if (selectedUser) {
-      const updatedUsers = users.map(user => 
+      const updatedUsers = users.map((user) =>
         user.id === selectedUser.id ? { ...user, role } : user
       );
       setUsers(updatedUsers);
@@ -33,11 +47,18 @@ const RolePageContent = () => {
   const handlePermissionChange = (permissionKey: string, checked: boolean) => {
     if (selectedUser) {
       const updatedPermissions = checked
-        ? [...selectedUser.customPermissions!, availablePermissions.find(p => p.key === permissionKey)!]
-        : selectedUser.customPermissions!.filter(p => p.key !== permissionKey);
+        ? [
+            ...selectedUser.customPermissions!,
+            availablePermissions.find((p) => p.key === permissionKey)!,
+          ]
+        : selectedUser.customPermissions!.filter(
+            (p) => p.key !== permissionKey
+          );
 
-      const updatedUsers = users.map(user => 
-        user.id === selectedUser.id ? { ...user, customPermissions: updatedPermissions } : user
+      const updatedUsers = users.map((user) =>
+        user.id === selectedUser.id
+          ? { ...user, customPermissions: updatedPermissions }
+          : user
       );
       setUsers(updatedUsers);
     }
@@ -46,7 +67,7 @@ const RolePageContent = () => {
   // Сохранение имени и фамилии
   const handleNameChange = (field: 'firstName' | 'lastName', value: string) => {
     if (selectedUser) {
-      const updatedUsers = users.map(user =>
+      const updatedUsers = users.map((user) =>
         user.id === selectedUser.id ? { ...user, [field]: value } : user
       );
       setUsers(updatedUsers);
@@ -123,8 +144,10 @@ const RolePageContent = () => {
               onChange={handleRoleChange}
               style={{ width: '200px' }}
             >
-              {roles.map(role => (
-                <Option key={role} value={role}>{role}</Option>  // Передаем строку роли
+              {roles.map((role) => (
+                <Option key={role} value={role}>
+                  {role}
+                </Option> // Передаем строку роли
               ))}
             </Select>
           </div>
@@ -133,11 +156,15 @@ const RolePageContent = () => {
           {selectedUser.role === 'Настраиваемая роль' && (
             <div style={{ marginTop: '20px' }}>
               <h3>Выбор разрешений:</h3>
-              {availablePermissions.map(permission => (
+              {availablePermissions.map((permission) => (
                 <Checkbox
                   key={permission.key}
-                  checked={selectedUser.customPermissions?.some(p => p.key === permission.key)}
-                  onChange={(e) => handlePermissionChange(permission.key, e.target.checked)}
+                  checked={selectedUser.customPermissions?.some(
+                    (p) => p.key === permission.key
+                  )}
+                  onChange={(e) =>
+                    handlePermissionChange(permission.key, e.target.checked)
+                  }
                 >
                   {permission.name}
                 </Checkbox>
@@ -145,7 +172,11 @@ const RolePageContent = () => {
             </div>
           )}
 
-          <Button type="primary" onClick={handleSave} style={{ marginTop: '20px' }}>
+          <Button
+            type="primary"
+            onClick={handleSave}
+            style={{ marginTop: '20px' }}
+          >
             Сохранить изменения
           </Button>
         </div>

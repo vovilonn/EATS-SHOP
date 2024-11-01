@@ -1,10 +1,10 @@
-import AdminLayout from "@/shared/layouts/admin-layout";
-import ClientsPageContent from "@/shared/pages-content/admin/clients";
+import AdminLayout from '@/shared/layouts/admin-layout';
+import ClientsPageContent from '@/shared/admin-pages-content/clients';
 
 const DashboardPage = () => {
   return (
     <AdminLayout>
-      <ClientsPageContent/>
+      <ClientsPageContent />
     </AdminLayout>
   );
 };

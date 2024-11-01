@@ -1,7 +1,7 @@
-import { FC } from 'react'
+import { FC } from 'react';
 
-import LoginPageContent from '@/shared/pages-content/login'
+import LoginPageContent from '@/shared/admin-pages-content/login';
 
-const AdminPage: FC = () => <LoginPageContent />
+const AdminPage: FC = () => <LoginPageContent />;
 
-export default AdminPage
+export default AdminPage;

@@ -1,18 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
 import { useRouter } from 'next/router';
-import { Form, Input, Button, message, Modal, Spin } from 'antd';
 import { useDispatch } from 'react-redux';
 import { TypeDispatch } from '@/shared/store';
+
+import {
+  loginAdmin,
+  sendNumberCodeAdmin,
+} from '@/shared/store/admin/auth/requests';
+
+import { Form, Input, Button, message, Modal } from 'antd';
+
 import styles from './style.module.scss';
-import { loginAdmin, sendNumberCodeAdmin } from '@/shared/store/admin/requests';
 
 const LoginPageContent = () => {
+  const dispatch = useDispatch<TypeDispatch>();
+
   const [loading, setLoading] = useState(false);
   const [codeModalVisible, setCodeModalVisible] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
+
   const [form] = Form.useForm();
   const router = useRouter();
-  const dispatch = useDispatch<TypeDispatch>();
 
   const handleSendCode = async (values: { phone: string }) => {
     setLoading(true);

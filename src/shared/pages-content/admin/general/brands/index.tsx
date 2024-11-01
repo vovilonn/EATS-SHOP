@@ -1,31 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Form, Input, Select, Button, Table, message } from 'antd';
 import styles from './style.module.scss';
-
-interface Store {
-  id: number;
-  name: string;
-  cityId: number;
-}
-
-interface City {
-  id: number;
-  name: string;
-}
+import IBrand from '@/shared/interfaces/brand.interface';
+import ICity from '@/shared/interfaces/city.interface';
 
 const { Option } = Select;
 
 const BrandsPageContent = () => {
-  const [stores, setStores] = useState<Store[]>([]);
-  const [cities, setCities] = useState<City[]>([]);
+  const [brands, setBrands] = useState<IBrand[]>([]);
+  const [cities, setCities] = useState<ICity[]>([]);
   const [loading, setLoading] = useState(false);
   const [newStoreName, setNewStoreName] = useState('');
-  const [selectedCity, setSelectedCity] = useState<number | null>(null);
 
-  useEffect(() => {
-    fetchCities();
-    fetchStores();
-  }, []);
+  const [selectedCity, setSelectedCity] = useState<number | null>(null);
 
   const fetchCities = async () => {
     try {
@@ -37,11 +24,13 @@ const BrandsPageContent = () => {
     }
   };
 
-  const fetchStores = async () => {
+  const fetchBrands = async () => {
     try {
-      const response = await fetch('https://eats.pp.ua/api/store/view'); // Примерный endpoint для магазинов
+      const response = await fetch(
+        'https://eats.pp.ua/api/menu/branded_store/view'
+      ); // Примерный endpoint для магазинов
       const data = await response.json();
-      setStores(data.data);
+      setBrands(data.data);
     } catch (error) {
       message.error('Ошибка при получении магазинов');
     }
@@ -65,7 +54,7 @@ const BrandsPageContent = () => {
 
       if (response.ok) {
         message.success('Магазин добавлен');
-        fetchStores(); // Обновляем список магазинов
+        fetchBrands(); // Обновляем список магазинов
         setNewStoreName(''); // Очищаем поле ввода
         setSelectedCity(null); // Очищаем выбор города
       } else {
@@ -77,6 +66,16 @@ const BrandsPageContent = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchCities();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCity) {
+      fetchBrands();
+    }
+  }, [selectedCity]);
 
   const columns = [
     {
@@ -93,7 +92,8 @@ const BrandsPageContent = () => {
       title: 'Город',
       dataIndex: 'cityId',
       key: 'cityId',
-      render: (cityId: number) => cities.find((city) => city.id === cityId)?.name || 'Неизвестно',
+      render: () =>
+        cities.find((city) => city.id === selectedCity)?.name || 'Неизвестно',
     },
   ];
 
@@ -129,13 +129,17 @@ const BrandsPageContent = () => {
         </Form.Item>
       </Form>
 
-      <Table
-        columns={columns}
-        dataSource={stores}
-        rowKey="id"
-        loading={loading}
-        className={styles.table}
-      />
+      {selectedCity ? (
+        <Table
+          columns={columns}
+          dataSource={brands?.filter((brand) => brand.city_id === selectedCity)}
+          rowKey="id"
+          loading={loading}
+          className={styles.table}
+        />
+      ) : (
+        <h2>Выберите город!</h2>
+      )}
     </div>
   );
 };

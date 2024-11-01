@@ -1,11 +1,10 @@
-import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import AdminLayout from '@/shared/layouts/admin-layout';
 import AdminPageContent from '@/shared/pages-content/admin';
+import StatisticPageContent from '@/shared/pages-content/admin/statistic';
 import LoginPageContent from '@/shared/pages-content/login';
 import { Spin } from 'antd';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 const AdminPage = () => {
   const savedToken =
@@ -47,6 +46,9 @@ const AdminPage = () => {
         </AdminLayout>
       )}
     </>
+    // <AdminLayout>
+    //   <StatisticPageContent />
+    // </AdminLayout>
   );
 };
 

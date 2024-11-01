@@ -69,6 +69,13 @@ const AdminPageContent = () => {
   useEffect(() => {
     if (selectedProductId) {
       fetchProductDetails();
+
+      setSelectedOptionId(null);
+      setProductDetails({
+        price: '',
+        weight: '',
+        composition: '',
+      });
     }
   }, [selectedProductId]);
 
@@ -78,13 +85,15 @@ const AdminPageContent = () => {
         (item) => item.id === selectedOptionId
       );
 
-      setProductDetails({
-        price: `${option[0].price}` || '',
-        weight: `${option[0].weight}` || '',
-        composition: oneProduct.composition || '',
-      });
+      if (option) {
+        setProductDetails({
+          price: `${option[0]?.price}` || '',
+          weight: `${option[0]?.weight}` || '',
+          composition: oneProduct?.composition || '',
+        });
+      }
     }
-  }, [selectedOptionId]);
+  }, [selectedOptionId, oneProduct]);
 
   const fetchStores = async () => {
     try {

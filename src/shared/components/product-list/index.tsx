@@ -25,7 +25,7 @@ const ProductList: FC<IProductListProps> = (props) => {
 
   useEffect(() => {
     dispatch(getCart());
-  }, []);
+  }, [dispatch]);
 
   let productsRendering;
 
@@ -60,10 +60,13 @@ const ProductList: FC<IProductListProps> = (props) => {
   }
 
   return (
-    <div className={style.products}>
-      {!props.basket ? (
-        productsRendering
-      ) : productsRendering.length !== 0 ? (
+    <div
+      className={style.products}
+      style={{
+        gridTemplateColumns: productsRendering.length === 0 ? '1fr' : '1fr 1fr 1fr',
+      }}
+    >
+      {productsRendering.length !== 0 ? (
         productsRendering
       ) : (
         <EmptyCard

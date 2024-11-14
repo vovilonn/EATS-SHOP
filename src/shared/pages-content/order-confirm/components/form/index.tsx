@@ -143,7 +143,7 @@ const OrderConfirmForm: FC = () => {
     <form className={style.form} onSubmit={handleSubmit}>
       <div className={style.delivery}>
         <h1 className={style.title}>Доставка</h1>
-        <div className={style.tabs}>{optionsDeliveryRendering}</div>
+        {/* <div className={style.tabs}>{optionsDeliveryRendering}</div> //TODO */}
         {selectedOption === 'Доставка' && (
           <div className={style.address}>
             <div className={style.field}>
@@ -151,9 +151,8 @@ const OrderConfirmForm: FC = () => {
                 Адрес доставки
               </label>
               <FormInput
-                className={`${style.input} ${
-                  errors.address ? style.errorBorder : ''
-                }`}
+                className={`${style.input} ${errors.address ? style.errorBorder : ''
+                  }`}
                 id="address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
@@ -177,9 +176,8 @@ const OrderConfirmForm: FC = () => {
                     Під’їзд
                   </label>
                   <FormInput
-                    className={`${style.input} ${
-                      errors.approach ? style.errorBorder : ''
-                    }`}
+                    className={`${style.input} ${errors.approach ? style.errorBorder : ''
+                      }`}
                     id="approach"
                     type="number"
                     value={approach}
@@ -196,9 +194,8 @@ const OrderConfirmForm: FC = () => {
                     Поверх
                   </label>
                   <FormInput
-                    className={`${style.input} ${
-                      errors.floor ? style.errorBorder : ''
-                    }`} // Условное добавление класса
+                    className={`${style.input} ${errors.floor ? style.errorBorder : ''
+                      }`} // Условное добавление класса
                     id="floor"
                     type="number" // Устанавливаем тип number
                     value={floor}
@@ -215,9 +212,8 @@ const OrderConfirmForm: FC = () => {
                     Квартира
                   </label>
                   <FormInput
-                    className={`${style.input} ${
-                      errors.apartment ? style.errorBorder : ''
-                    }`}
+                    className={`${style.input} ${errors.apartment ? style.errorBorder : ''
+                      }`}
                     id="apartment"
                     type="number"
                     value={apartment}
@@ -242,16 +238,6 @@ const OrderConfirmForm: FC = () => {
             </div>
           </div>
         )}
-
-        <div className={style.call}>
-          <FormCheckbox
-            onChange={() => setIsCallback(!isCallback)}
-            large
-            checked={isCallback}
-          >
-            Не передзвонювати
-          </FormCheckbox>
-        </div>
         <div className={style.payment}>
           <h2 className={style.title}>Спосіб оплати</h2>
           <FormCheckbox onChange={handleCashChange} large checked={cashPayment}>
@@ -266,22 +252,30 @@ const OrderConfirmForm: FC = () => {
           >
             Карткою онлайн
           </FormCheckbox>
-          {errors.payment && (
-            <span className={style.error}>{errors.payment}</span>
-          )}
+          {errors.payment && <span className={style.error}>{errors.payment}</span>}
         </div>
+        {cardPayment && (
+          <div className={style.call}>
+            <FormCheckbox
+              onChange={() => setIsCallback(!isCallback)}
+              large
+              checked={isCallback}
+            >
+              Не передзвонювати
+            </FormCheckbox>
+          </div>
+        )}
         {cashPayment && (
           <div className={style.field}>
             <label className={style.label} htmlFor="ready">
               Підготувати решту з
             </label>
             <FormInput
-              className={`${style.input} ${
-                errors.ready ? style.errorBorder : ''
-              }`}
+              className={`${style.input} ${errors.ready ? style.errorBorder : ''
+                }`}
               id="ready"
               type="number"
-              onChange={() => {}}
+              onChange={() => { }}
               onInput={handleNumberInput}
               large
             />
@@ -295,13 +289,10 @@ const OrderConfirmForm: FC = () => {
           onChange={(e) => setComment(e.target.value)}
         ></textarea>
         <div className={style.coin}>
-          <p className={style.label}>У вас {accountInfo?.balance} eatscoin</p>
-
           <div className={style.activate}>
             <input
-              className={`${style.input} ${
-                errors.promoCode ? style.errorBorder : ''
-              }`}
+              className={`${style.input} ${errors.promoCode ? style.errorBorder : ''
+                }`}
               type="text"
               placeholder="Промокод"
               value={promoCode}
@@ -311,6 +302,7 @@ const OrderConfirmForm: FC = () => {
               <span className={style.error}>{errors.promoCode}</span>
             )}
           </div>
+          <p className={style.label}>У вас {accountInfo?.balance} eatscoin</p>
           <div className={style.activate}>
             <input
               className={style.input}

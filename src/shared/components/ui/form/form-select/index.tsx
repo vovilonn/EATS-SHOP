@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { useActions } from '@/shared/hooks/use-actions';
@@ -19,10 +19,22 @@ interface IFormSelectProps {
 const FormSelect: FC<IFormSelectProps> = props => {
   const stateAuth = useTypedSelector(state => state.auth);
   const actions = useActions();
-  
-  // Используем состояние для выбранного города
-  const [selectedCityId, setSelectedCityId] = useState<number>(props.selectedOptionsId || 0);
-  const [isSelected, setSelected] = useState<boolean>(!!props.selectedOptionsId);
+
+  // Определяем ID города Мукачево
+  const mukachevoId = props.options.find(option => option.name === "Мукачево")?.id || 0;
+
+  // Инициализируем выбранный город с выбранным ID или ID города Мукачево
+  const [selectedCityId, setSelectedCityId] = useState<number>(props.selectedOptionsId || mukachevoId);
+  const [isSelected, setSelected] = useState<boolean>(!!props.selectedOptionsId || mukachevoId > 0);
+
+  useEffect(() => {
+    if (!props.selectedOptionsId && mukachevoId) {
+      setSelectedCityId(mukachevoId);
+      setSelected(true);
+      // Вызов onChange для загрузки списка магазинов
+      props.onChange && props.onChange(mukachevoId);
+    }
+  }, [props.selectedOptionsId, mukachevoId]);
 
   const classNameWraper: string = `
     ${style.wraper}
@@ -34,9 +46,9 @@ const FormSelect: FC<IFormSelectProps> = props => {
     if (props.needAuth && !stateAuth.isAuth) {
       actions.setNeedAuth(true);
     } else {
-      setSelectedCityId(id); // Обновляем выбранный город
+      setSelectedCityId(id);
       setSelected(true);
-      actions.setSelectedCityId(id); // Обновляем выбранный город в глобальном состоянии
+      actions.setSelectedCityId(id);
       props.onChange && props.onChange(id);
     }
   };
@@ -52,7 +64,7 @@ const FormSelect: FC<IFormSelectProps> = props => {
       <select
         className={style.select}
         onChange={e => onChange(Number(e.target.value))}
-        value={selectedCityId} // Отображаем выбранный город
+        value={selectedCityId}
       >
         <option value="0" disabled>
           Місто

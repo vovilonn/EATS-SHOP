@@ -37,14 +37,14 @@ const AmountToggle: FC<IAmountToggleProps> = (props) => {
     if (stateAuth.isAuth) {
       props.setAmount((prev) => {
         const calculateAmount = eval(`${prev} ${method} 1`);
-
-        if (calculateAmount < (props.minAmount || 0)) {
-          return prev;
+  
+        if (calculateAmount < (props.minAmount || 1)) {
+          return prev; 
         }
-
+  
         return calculateAmount;
       });
-
+  
       if (props.basket) {
         actions.clearProductCount(props.productId);
         actions.clearProductIngredientsCount(props.productId);

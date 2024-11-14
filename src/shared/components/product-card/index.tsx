@@ -12,9 +12,11 @@ import totalPriceUtility from '@/shared/utils/total-price.utility';
 import totalCartPrice from '@/shared/utils/total-cart-price.utility';
 
 import AmountToggle from '../ui/amount-toggle';
+import Button from '@/shared/components/ui/button';
 
 import { addToFavorite } from '@/shared/store/favorite/requests';
 import { deleteCartItem } from '@/shared/store/cart/requests';
+import { addCart } from '@/shared/store/cart/requests';
 
 import IProduct, { IOption } from '@/shared/interfaces/product.interface';
 import { IModelMenuIngredientsCart } from '@/shared/interfaces/cart-item.interface';
@@ -109,6 +111,31 @@ const ProductCard: FC<IProductCardProps> = (props) => {
     selectedOption,
   });
 
+  const ingredients = useTypedSelector(
+    (state) =>
+      state.product.productIngredientsCount.find(
+        (item) => item.product_id === props.id
+      )?.ingredients
+  );
+
+  const onBasket = () => {
+    if (stateAuth.isAuth) {
+      dispatch(
+        addCart({
+          menu_id: props.id,
+          option_id:
+            props.options.find((item) => item.name === selectedOption)?.id ?? 1,
+          count: amount,
+          ingredients: ingredients ?? [],
+        })
+      );
+      actions.clearProductCount(props.id);
+      actions.clearProductIngredientsCount(props.id);
+    } else {
+      actions.setNeedAuth(true);
+    }
+  };
+
   return (
     <article className={classNameProduct}>
       <div className={style.wrapper}>
@@ -118,7 +145,7 @@ const ProductCard: FC<IProductCardProps> = (props) => {
           style={{ backgroundImage: `url(${props.picture[0]})` }}
         />
         <div className={style.containerWrapper}>
-        <Link href={`/product/${props.id}`}>
+          <Link href={`/product/${props.id}`}>
             <div className={style.container}>
               <div className={style.row}>
                 <h1 className={style.title}>
@@ -160,23 +187,28 @@ const ProductCard: FC<IProductCardProps> = (props) => {
 
             </div>
           </Link>
-              {!props.basket && (
-                <div className={style.options}>{optionsRendering}</div>
-              )}
+          {!props.basket && (
+            <div className={style.options}>{optionsRendering}</div>
+          )}
           <footer className={style.footer}>
-            <h2 className={style.price}>
-              {props.basket ? cartTotalPrice + totalPrice : totalPrice} грн
-            </h2>
-            {props.basket && <button className={style.edit}>Змінити</button>}
-            <AmountToggle
-              cartId={props.cart_id}
-              productId={props.id}
-              setAmount={setAmount}
-              amount={amount}
-              basket={props.basket}
-              minAmount={props.minAmount}
-              full={props.toggleAmountFull}
-            />
+            <div className={style.actions}>
+              <h2 className={style.price}>
+                {props.basket ? cartTotalPrice + totalPrice : totalPrice} грн
+              </h2>
+              {props.basket && <button className={style.edit}>Змінити</button>}
+              <AmountToggle
+                cartId={props.cart_id}
+                productId={props.id}
+                setAmount={setAmount}
+                amount={amount}
+                basket={props.basket}
+                minAmount={props.minAmount}
+                full={props.toggleAmountFull}
+              />
+            </div>
+            <Button className={style.btn} onClick={onBasket} basket>
+              В кошик
+            </Button>
           </footer>
         </div>
       </div>

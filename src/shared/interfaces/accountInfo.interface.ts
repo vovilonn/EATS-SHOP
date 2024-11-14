@@ -14,4 +14,5 @@ export default interface IAccountInfo {
   referral_id?: string;
   date_birthday?: string;
   balance: number;
+  totalSpent?: number;
 }

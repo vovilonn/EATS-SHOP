@@ -17,6 +17,42 @@ interface ProfileCardProps {
   onImageUpload?: (file: File) => void;
 }
 
+const calculateProgress = (totalAmountSpent: number) => {
+  let progressPercentage, name, percentage, progressLabel, currentLevelMax, nextLevelMax;
+
+  if (totalAmountSpent < 5000) {
+    progressPercentage = totalAmountSpent / 5000;
+    progressLabel = Math.floor(progressPercentage * 100);
+    name = 'Bronze';
+    percentage = '0%';
+    currentLevelMax = 0;
+    nextLevelMax = 5000;
+  } else if (totalAmountSpent < 10000) {
+    progressPercentage = (totalAmountSpent - 5000) / (10000 - 5000);
+    progressLabel = Math.floor(progressPercentage * 100);
+    name = 'Silver';
+    percentage = '0.5%';
+    currentLevelMax = 5000;
+    nextLevelMax = 10000;
+  } else if (totalAmountSpent < 30000) {
+    progressPercentage = (totalAmountSpent - 10000) / (30000 - 10000);
+    progressLabel = Math.floor(progressPercentage * 100);
+    name = 'Gold';
+    percentage = '0.75%';
+    currentLevelMax = 10000;
+    nextLevelMax = 30000;
+  } else {
+    progressPercentage = 1;
+    progressLabel = 100;
+    name = 'Diamond';
+    percentage = '1%';
+    currentLevelMax = 30000;
+    nextLevelMax = 0; // No further level
+  }
+
+  return { progress: progressPercentage * 100, progressLabel, name, percentage, currentLevelMax, nextLevelMax };
+};
+
 const ProfileCard: FC<ProfileCardProps> = (props) => {
   const dispatch = useDispatch<TypeDispatch>();
   const { accountInfo } = useTypedSelector((state) => state.accountInfo);
@@ -50,6 +86,9 @@ const ProfileCard: FC<ProfileCardProps> = (props) => {
   useEffect(() => {
     dispatch(getAccountInfo());
   }, []);
+
+  // Используем функцию для получения данных уровня и прогресса
+  const { progress, progressLabel, name, percentage, currentLevelMax, nextLevelMax } = calculateProgress(accountInfo?.totalSpent || 0);
 
   return (
     <article className={style.profile}>
@@ -92,21 +131,26 @@ const ProfileCard: FC<ProfileCardProps> = (props) => {
           </div>
           <div className={style.progress}>
             <label className={style.number} htmlFor="progress">
-              37 %
+              {progressLabel} %
             </label>
             <progress
               className={style.value}
               id="progress"
               max="100"
-              value="37"
+              value={progress}
             />
           </div>
           <p className={style.level}>
-            <b>Рівень:</b> Bronze
+            <b>Рівень:</b> {name}
           </p>
           <p className={style.cashback}>
-            <b>Кешбек:</b> 1%
+            <b>Кешбек:</b> {percentage}
           </p>
+          {nextLevelMax > 0 && (
+            <p className={style.nextLevel}>
+              {`До наступного рівня: ${nextLevelMax - (accountInfo?.totalSpent || 0)} ₴`}
+            </p>
+          )}
         </div>
       </div>
     </article>

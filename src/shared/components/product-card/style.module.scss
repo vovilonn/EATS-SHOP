@@ -117,9 +117,8 @@
   .row,
   .footer {
     margin-top: 8px;
-    display: grid;
-    align-items: center;
-    grid-template-columns: 1fr max-content;
+    display: flex;
+    flex-direction: column;
     gap: 0 16px;
   }
 
@@ -157,5 +156,12 @@
         cursor: pointer;
       }
     }
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;    
+    margin-bottom: 12px;
   }
 }

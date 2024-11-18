@@ -7,12 +7,25 @@ interface ISendNumberCodeProps {
 
 export const sendNumberCodeAdmin = createAsyncThunk(
   'admin/sendNumberCode',
-  (props: ISendNumberCodeProps) => {
-    return Axios({
+  async (props: ISendNumberCodeProps, { rejectWithValue }) => {
+    const response = await Axios({
       url: '/admin/auth/send_number_code',
       method: 'post',
       data: { number: props.numberPhone },
     });
+    return response.data;
+  }
+);
+
+export const sendNumberCodeProvider = createAsyncThunk(
+  'provider/sendNumberCode',
+  async (props: ISendNumberCodeProps, { rejectWithValue }) => {
+    const response = await Axios({
+      url: '/provider/auth/send_number_code',
+      method: 'post',
+      data: { number: props.numberPhone },
+    });
+    return response.data;
   }
 );
 
@@ -26,6 +39,17 @@ export const loginAdmin = createAsyncThunk(
   (props: ILoginProps) => {
     return Axios({
       url: '/admin/auth/login',
+      method: 'post',
+      data: { number: props.numberPhone, code: props.code },
+    });
+  }
+);
+
+export const loginProvider = createAsyncThunk(
+  'provider/login',
+  (props: ILoginProps) => {
+    return Axios({
+      url: '/provider/auth/login',
       method: 'post',
       data: { number: props.numberPhone, code: props.code },
     });

@@ -1,7 +1,7 @@
 import AdminLayout from '@/shared/layouts/admin-layout';
 import ClientsPageContent from '@/shared/admin-pages-content/clients';
 
-const DashboardPage = () => {
+const ClientPage = () => {
   return (
     <AdminLayout>
       <ClientsPageContent />
@@ -9,4 +9,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default ClientPage;

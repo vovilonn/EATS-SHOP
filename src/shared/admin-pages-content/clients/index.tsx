@@ -1,92 +1,94 @@
-import { useState, useEffect } from 'react';
-import { Table, Tag, Button, Input } from 'antd';
-import { User, UserStatus } from './clients-data'; // Импорт интерфейсов для клиентов и статусов
-import styles from './style.module.scss';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
+import { TypeDispatch } from '@/shared/store';
 
-const { Search } = Input;
+import { fetchAllClients } from '@/shared/store/admin/requests';
+import IAccountInfo from '@/shared/interfaces/accountInfo.interface';
 
-// Начальные данные клиентов
-const initialClients: User[] = [
-  { id: 1, firstName: 'Иван', lastName: 'Иванов', phone: '+380123456789', address: 'г. Киев, ул. Крещатик, 12', status: UserStatus.ACTIVE },
-  { id: 2, firstName: 'Петр', lastName: 'Петров', phone: '+380987654321', address: 'г. Одесса, ул. Дерибасовская, 5', status: UserStatus.INACTIVE },
-  { id: 3, firstName: 'Анна', lastName: 'Смирнова', phone: '+380555123456', address: 'г. Львов, ул. Шевченко, 10', status: UserStatus.ACTIVE },
-];
+import { Button, Table, TableProps } from 'antd';
+import * as XLSX from 'xlsx';
 
-const ClientsPageContent = () => {
-  const [clients, setClients] = useState<User[]>(initialClients);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+const ClientsPageContent: React.FC = () => {
+  const dispatch = useDispatch<TypeDispatch>();
+  const { clients } = useTypedSelector((state) => state.adminPanel);
 
-  // Обработчик поиска по имени или телефону
-  const handleSearch = (value: string) => {
-    setSearchTerm(value);
-    const filteredClients = initialClients.filter(client =>
-      client.firstName.toLowerCase().includes(value.toLowerCase()) ||
-      client.phone.includes(value)
-    );
-    setClients(filteredClients);
-  };
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedRows, setSelectedRows] = useState<IAccountInfo[]>([]);
 
-  const handleStatusToggle = (clientId: number) => {
-    const updatedClients = clients.map(client =>
-      client.id === clientId
-        ? { ...client, status: client.status === UserStatus.ACTIVE ? UserStatus.INACTIVE : UserStatus.ACTIVE }
-        : client
-    );
-    setClients(updatedClients);
-  };
+  useEffect(() => {
+    dispatch(fetchAllClients());
+  }, [dispatch]);
 
-  const columns = [
+  const columns: TableProps<IAccountInfo>['columns'] = [
     {
       title: 'Имя',
-      dataIndex: 'firstName',
-      key: 'firstName',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text) => text || 'Неизвестно',
     },
     {
-      title: 'Фамилия',
-      dataIndex: 'lastName',
-      key: 'lastName',
+      title: 'Почта',
+      dataIndex: 'email',
+      key: 'email',
+      render: (text) => text || 'Неизвестно',
+    },
+    { title: 'Номер телефона', dataIndex: 'number', key: 'number' },
+    {
+      title: 'Город',
+      dataIndex: 'model_city',
+      key: 'model_city',
+      render: (model_city) => model_city?.name || 'Неизвестно',
     },
     {
-      title: 'Номер телефона',
-      dataIndex: 'phone',
-      key: 'phone',
-    },
-    {
-      title: 'Адрес',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: 'Статус',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: UserStatus) => (
-        <Tag color={status === UserStatus.ACTIVE ? 'green' : 'red'}>
-          {status}
-        </Tag>
-      ),
-    },
-    {
-      title: 'Действия',
-      key: 'actions',
-      render: (_: any, record: User) => (
-        <Button type="link" onClick={() => handleStatusToggle(record.id)}>
-          {record.status === UserStatus.ACTIVE ? 'Деактивировать' : 'Активировать'}
-        </Button>
-      ),
+      title: 'Дата рождения',
+      dataIndex: 'date_birthday',
+      key: 'date_birthday',
+      render: (date_birthday) => date_birthday || 'Неизвестно',
     },
   ];
 
+  const rowSelection: TableProps<IAccountInfo>['rowSelection'] = {
+    selectedRowKeys,
+    onChange: (newSelectedRowKeys, selectedRows) => {
+      setSelectedRowKeys(newSelectedRowKeys);
+      setSelectedRows(selectedRows);
+    },
+  };
+
+  const exportToExcel = () => {
+    const dataToExport = selectedRows.map((row) => ({
+      Имя: row.name || 'Неизвестно',
+      Почта: row.email || 'Неизвестно',
+      'Номер телефона': row.number || 'Неизвестно',
+      Город: row.model_city?.name || 'Неизвестно',
+      'Дата рождения': row.date_birthday || 'Неизвестно',
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Клиенты');
+    XLSX.writeFile(workbook, 'clients_data.xlsx');
+  };
+
   return (
-    <div className={styles.pageContainer}>
-      <h1 className={styles.pageTitle}>Управление клиентами</h1>
-      <Search
-        placeholder="Поиск по имени или телефону"
-        onSearch={handleSearch}
-        style={{ width: 300, marginBottom: 20 }}
+    <>
+      <Button
+        type="primary"
+        onClick={exportToExcel}
+        style={{ marginBottom: '20px' }}
+        disabled={selectedRowKeys.length === 0}
+      >
+        Импортировать
+      </Button>
+      <Table<IAccountInfo>
+        columns={columns}
+        dataSource={clients}
+        pagination={false}
+        rowSelection={{ type: 'checkbox', ...rowSelection }}
+        rowKey="id"
       />
-      <Table columns={columns} dataSource={clients} rowKey="id" />
-    </div>
+    </>
   );
 };
 

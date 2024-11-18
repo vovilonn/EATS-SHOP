@@ -8,14 +8,9 @@ import { Layout, Menu, Spin } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 import {
   UserOutlined,
-  ShopOutlined,
   DashboardOutlined,
-  TeamOutlined,
-  SettingOutlined,
   FileOutlined,
   LogoutOutlined,
-  PlusCircleOutlined,
-  EditOutlined,
 } from '@ant-design/icons';
 
 import styles from './admin-layout.module.scss';
@@ -25,7 +20,7 @@ interface AdminLayoutProps {
 }
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
-  const { tokenAdmin } = useTypedSelector((state) => state.adminPanel);
+  const { authToken, role } = useTypedSelector((state) => state.adminPanel);
 
   const [loading, setLoading] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string>('');
@@ -35,7 +30,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   const actions = useActions();
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !tokenAdmin) {
+    if (typeof window !== 'undefined' && !authToken) {
       const storedToken = localStorage.getItem('authToken');
       if (storedToken) {
         actions.setTokenAdmin(storedToken);
@@ -45,7 +40,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     } else {
       setLoading(false);
     }
-  }, [tokenAdmin, router, actions]);
+  }, [authToken, router, actions]);
 
   useEffect(() => {
     setSelectedKey(router.pathname);
@@ -64,7 +59,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     router.push('/admin/login');
   };
 
-  if (loading && !tokenAdmin) {
+  if (loading && !authToken) {
     return (
       <div
         style={{
@@ -98,42 +93,51 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           selectedKeys={[selectedKey]}
         >
           <Menu.Item key="/admin" icon={<DashboardOutlined />}>
-            Главная
+            {role === 'PROVIDER' ? 'Заведения' : 'Главная'}
           </Menu.Item>
-          <Menu.SubMenu
-            key="structure"
-            title="Структура"
-            icon={<SettingOutlined />}
+          {role === 'ADMIN' && (
+            <>
+              <Menu.Item
+                key="/admin/all-providers"
+                icon={<DashboardOutlined />}
+              >
+                Все провайдеры
+              </Menu.Item>
+              <Menu.Item key="/admin/clients" icon={<UserOutlined />}>
+                Клиенты
+              </Menu.Item>
+              <Menu.Item key="/admin/promocodes" icon={<UserOutlined />}>
+                Промокоды
+              </Menu.Item>
+            </>
+          )}
+          {role === 'PROVIDER' && (
+            <>
+              <Menu.Item
+                key="/admin/provider/categories"
+                icon={<UserOutlined />}
+              >
+                Категории
+              </Menu.Item>
+              <Menu.Item
+                key="/admin/provider/ingredients"
+                icon={<UserOutlined />}
+              >
+                Добавки
+              </Menu.Item>
+              <Menu.Item key="/admin/provider/products" icon={<UserOutlined />}>
+                Продукты
+              </Menu.Item>
+              <Menu.Item key="/admin/orders" icon={<FileOutlined />}>
+                Заказы
+              </Menu.Item>
+            </>
+          )}
+          <Menu.Item
+            onClick={handleLogout}
+            key="logout"
+            icon={<LogoutOutlined />}
           >
-            <Menu.Item
-              key="/admin/add-new-product"
-              icon={<PlusCircleOutlined />}
-            >
-              Добавить товар
-            </Menu.Item>
-            <Menu.Item key="/admin/edit-product" icon={<EditOutlined />}>
-              Редактировать товар
-            </Menu.Item>
-            <Menu.Item key="/admin/city" icon={<UserOutlined />}>
-              Город
-            </Menu.Item>
-            <Menu.Item key="/admin/brands" icon={<ShopOutlined />}>
-              Магазин
-            </Menu.Item>
-          </Menu.SubMenu>
-          <Menu.Item key="/admin/roles" icon={<TeamOutlined />}>
-            Роли
-          </Menu.Item>
-          <Menu.Item key="/admin/orders" icon={<FileOutlined />}>
-            Заказы
-          </Menu.Item>
-          <Menu.Item key="/admin/clients" icon={<UserOutlined />}>
-            Клиенты
-          </Menu.Item>
-          <Menu.Item key="/admin/promocodes" icon={<FileOutlined />}>
-            Промокоды
-          </Menu.Item>
-          <Menu.Item key="logout" icon={<LogoutOutlined />}>
             Logout
           </Menu.Item>
         </Menu>

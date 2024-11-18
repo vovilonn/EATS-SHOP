@@ -6,10 +6,12 @@ import { TypeDispatch } from '@/shared/store';
 
 import {
   loginAdmin,
+  loginProvider,
   sendNumberCodeAdmin,
+  sendNumberCodeProvider,
 } from '@/shared/store/admin/auth/requests';
 
-import { Form, Input, Button, message, Modal } from 'antd';
+import { Form, Input, Button, message, Modal, Checkbox } from 'antd';
 
 import styles from './style.module.scss';
 
@@ -19,6 +21,7 @@ const LoginPageContent = () => {
   const [loading, setLoading] = useState(false);
   const [codeModalVisible, setCodeModalVisible] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [form] = Form.useForm();
   const router = useRouter();
@@ -28,7 +31,12 @@ const LoginPageContent = () => {
     const { phone } = values;
 
     try {
-      await dispatch(sendNumberCodeAdmin({ numberPhone: phone }));
+      await dispatch(
+        isAdmin
+          ? sendNumberCodeAdmin({ numberPhone: phone })
+          : sendNumberCodeProvider({ numberPhone: phone })
+      );
+
       setPhoneNumber(phone);
       setCodeModalVisible(true);
       message.success('Код отправлен на ваш номер');
@@ -45,7 +53,9 @@ const LoginPageContent = () => {
 
     try {
       await dispatch(
-        loginAdmin({ numberPhone: phoneNumber, code: Number(code) })
+        isAdmin
+          ? loginAdmin({ numberPhone: phoneNumber, code: Number(code) })
+          : loginProvider({ numberPhone: phoneNumber, code: Number(code) })
       );
       router.push('/admin');
       message.success('Успешный вход');
@@ -73,6 +83,7 @@ const LoginPageContent = () => {
         >
           <Input placeholder="+380000000000" />
         </Form.Item>
+
         <Form.Item>
           <Button
             type="primary"
@@ -82,6 +93,15 @@ const LoginPageContent = () => {
           >
             Отправить код
           </Button>
+        </Form.Item>
+
+        <Form.Item name="remember" valuePropName="checked" noStyle>
+          <Checkbox
+            checked={isAdmin}
+            onChange={(e) => setIsAdmin(e.target.checked)}
+          >
+            Вы Админ?
+          </Checkbox>
         </Form.Item>
       </Form>
 

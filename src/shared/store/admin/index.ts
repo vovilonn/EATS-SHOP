@@ -27,6 +27,7 @@ import {
   deleteProduct,
   editCategory,
   editIngredient,
+  editProduct,
   editProviderBrand,
   fetchProviderBrands,
   fetchProviderCategories,
@@ -229,6 +230,14 @@ const adminSlice = createSlice({
         state.products = state.products.filter(
           (item) => item.id !== product.id
         );
+      }
+    });
+    build.addCase(editProduct.fulfilled, (state, action) => {
+      const productIndex = state.products.findIndex(
+        (product) => product.id === action.payload.id
+      );
+      if (productIndex !== -1) {
+        state.products[productIndex] = action.payload;
       }
     });
 

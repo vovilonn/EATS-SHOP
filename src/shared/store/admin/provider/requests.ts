@@ -242,3 +242,17 @@ export const deleteProduct = createAsyncThunk<
     useLocalStorage: true,
   });
 });
+
+export const editProduct = createAsyncThunk<IProduct, FormData>(
+  'provider/products/edit',
+  async (formData) => {
+    const { data } = await Axios({
+      method: 'patch',
+      url: '/provider/branded_store/menu/edit',
+      data: formData,
+      useLocalStorage: true,
+    });
+
+    return data;
+  }
+);

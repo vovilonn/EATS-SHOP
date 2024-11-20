@@ -1,3 +1,4 @@
+import ICategory, { IProviderCategory } from './category.interface';
 import IComponent from './component.interface';
 
 export interface IOption {
@@ -15,4 +16,6 @@ export default interface IProduct {
   picture: Array<string>;
   is_favorite: boolean;
   model_additional_components: IComponent[];
+  model_general_categories?: ICategory;
+  model_branded_store_categories?: IProviderCategory;
 }

@@ -11,7 +11,6 @@ import {
   deleteIngredient,
   editIngredient,
   fetchProviderBrands,
-  fetchProviderCategories,
   fetchProviderIngredients,
 } from '@/shared/store/admin/provider/requests';
 

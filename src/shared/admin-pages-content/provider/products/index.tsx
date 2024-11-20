@@ -10,6 +10,7 @@ import {
   fetchProviderProducts,
   createNewProduct,
   deleteProduct,
+  editProduct,
 } from '@/shared/store/admin/provider/requests';
 import { fetchGeneralCategories } from '@/shared/store/admin/requests';
 
@@ -20,7 +21,7 @@ import ICategory, {
   IProviderCategory,
 } from '@/shared/interfaces/category.interface';
 
-import { DeleteOutlined, InboxOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, InboxOutlined } from '@ant-design/icons';
 
 import {
   Button,
@@ -49,6 +50,7 @@ const ProviderProductsContent: React.FC = () => {
   const [selectedOptions, setSelectedOptions] = useState<{
     [key: number]: IOption | null;
   }>({});
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
   const [file, setFile] = useState<File | null>(null);
 
   const [form] = Form.useForm();
@@ -174,6 +176,11 @@ const ProviderProductsContent: React.FC = () => {
       render: (_, record) => (
         <>
           <Button
+            type="link"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+          />
+          <Button
             type="text"
             danger
             icon={<DeleteOutlined />}
@@ -210,10 +217,20 @@ const ProviderProductsContent: React.FC = () => {
   };
 
   const handleSubmit = async (values: any) => {
+    if (!file && !selectedProduct?.picture[0]) {
+      message.error('Пожалуйста, добавьте изображение!');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('name', values.title);
     formData.append('composition', values.composition);
-    formData.append('picture', file as Blob);
+
+    if (file) {
+      formData.append('picture', file);
+    } else if (selectedProduct?.picture) {
+      formData.append('picture', selectedProduct.picture[0]);
+    }
 
     formData.append('options', JSON.stringify(values.options));
 
@@ -225,13 +242,21 @@ const ProviderProductsContent: React.FC = () => {
     }
 
     try {
-      await dispatch(createNewProduct(formData));
+      if (selectedProduct) {
+        formData.append('menu_id', `${selectedProduct.id}`);
+
+        await dispatch(editProduct(formData)).unwrap();
+        message.success('Продукт успешно обновлен');
+      } else {
+        await dispatch(createNewProduct(formData));
+        message.success('Продукт успешно создан');
+      }
+
       setIsModalOpen(false);
       form.resetFields();
       if (selectedBrand) {
         await dispatch(fetchProviderProducts(selectedBrand));
       }
-      message.success('Продукт успешно создан');
     } catch (error) {
       message.error('Ошибка при создании продукта');
     }
@@ -260,6 +285,31 @@ const ProviderProductsContent: React.FC = () => {
         }
       },
     });
+  };
+
+  const handleEdit = (product: IProduct) => {
+    dispatch(fetchGeneralCategories());
+    if (selectedBrand) {
+      dispatch(fetchProviderCategories(selectedBrand));
+      dispatch(fetchProviderIngredients(selectedBrand));
+    }
+
+    setSelectedProduct(product);
+
+    form.setFieldsValue({
+      title: product.name,
+      composition: product.composition,
+      options: product.options,
+      generalCategory: product.model_general_categories?.id,
+      category: product.model_branded_store_categories?.id,
+      ingredients: product.model_additional_components.map(
+        (component: IComponent) => component.id
+      ),
+      file: file ? file : product.picture[0],
+    });
+
+    setFile(null);
+    setIsModalOpen(true);
   };
 
   return (
@@ -412,6 +462,18 @@ const ProviderProductsContent: React.FC = () => {
               name="file"
               beforeUpload={() => false}
               onChange={handleFileChange}
+              defaultFileList={
+                selectedProduct
+                  ? [
+                      {
+                        uid: selectedProduct.id.toString(),
+                        name: selectedProduct.name,
+                        status: 'done',
+                        url: selectedProduct.picture[0],
+                      },
+                    ]
+                  : []
+              }
             >
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />

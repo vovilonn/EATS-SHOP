@@ -1,5 +1,4 @@
 import { useState } from 'react';
-
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { TypeDispatch } from '@/shared/store';
@@ -7,7 +6,6 @@ import { TypeDispatch } from '@/shared/store';
 import {
   loginAdmin,
   loginProvider,
-  sendNumberCodeAdmin,
   sendNumberCodeProvider,
 } from '@/shared/store/admin/auth/requests';
 

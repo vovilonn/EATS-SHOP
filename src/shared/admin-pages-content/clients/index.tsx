@@ -4,10 +4,12 @@ import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { TypeDispatch } from '@/shared/store';
 
 import { fetchAllClients } from '@/shared/store/admin/requests';
+
 import IAccountInfo from '@/shared/interfaces/accountInfo.interface';
 
-import { Button, Table, TableProps } from 'antd';
 import * as XLSX from 'xlsx';
+
+import { Button, Table, TableProps } from 'antd';
 
 const ClientsPageContent: React.FC = () => {
   const dispatch = useDispatch<TypeDispatch>();
@@ -22,29 +24,29 @@ const ClientsPageContent: React.FC = () => {
 
   const columns: TableProps<IAccountInfo>['columns'] = [
     {
-      title: 'Имя',
+      title: "Ім'я",
       dataIndex: 'name',
       key: 'name',
-      render: (text) => text || 'Неизвестно',
+      render: (text) => text || 'Невідомо',
     },
     {
-      title: 'Почта',
+      title: 'Пошта',
       dataIndex: 'email',
       key: 'email',
-      render: (text) => text || 'Неизвестно',
+      render: (text) => text || 'Невідомо',
     },
-    { title: 'Номер телефона', dataIndex: 'number', key: 'number' },
+    { title: 'Номер телефону', dataIndex: 'number', key: 'number' },
     {
-      title: 'Город',
+      title: 'Місто',
       dataIndex: 'model_city',
       key: 'model_city',
-      render: (model_city) => model_city?.name || 'Неизвестно',
+      render: (model_city) => model_city?.name || 'Невідомо',
     },
     {
-      title: 'Дата рождения',
+      title: 'Дата народження',
       dataIndex: 'date_birthday',
       key: 'date_birthday',
-      render: (date_birthday) => date_birthday || 'Неизвестно',
+      render: (date_birthday) => date_birthday || 'Невідомо',
     },
   ];
 
@@ -58,16 +60,16 @@ const ClientsPageContent: React.FC = () => {
 
   const exportToExcel = () => {
     const dataToExport = selectedRows.map((row) => ({
-      Имя: row.name || 'Неизвестно',
-      Почта: row.email || 'Неизвестно',
-      'Номер телефона': row.number || 'Неизвестно',
-      Город: row.model_city?.name || 'Неизвестно',
-      'Дата рождения': row.date_birthday || 'Неизвестно',
+      "Ім'я": row.name || 'Невідомо',
+      Пошта: row.email || 'Невідомо',
+      'Номер телефону': row.number || 'Невідомо',
+      Місто: row.model_city?.name || 'Невідомо',
+      'Дата народження': row.date_birthday || 'Невідомо',
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Клиенты');
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Клієнти');
     XLSX.writeFile(workbook, 'clients_data.xlsx');
   };
 
@@ -79,7 +81,7 @@ const ClientsPageContent: React.FC = () => {
         style={{ marginBottom: '20px' }}
         disabled={selectedRowKeys.length === 0}
       >
-        Импортировать
+        Імпортувати
       </Button>
       <Table<IAccountInfo>
         columns={columns}

@@ -26,30 +26,30 @@ const ProviderIngredientsContent: React.FC = () => {
 
   const columns: TableProps<IOrdersHistory>['columns'] = [
     {
-      title: 'Почта',
+      title: 'Пошта',
       dataIndex: 'email',
       key: 'email',
       render: (_, record) => record.model_account.email,
     },
     {
-      title: 'Город',
+      title: 'Місто',
       dataIndex: 'city_id',
       key: 'city_id',
       render: (city_id: number) => {
         const city = cities.find((item) => item.id === city_id);
-        return city ? city.name : 'Неизвестно';
+        return city ? city.name : 'Невідомо';
       },
     },
     {
-      title: 'Тип оплаты',
+      title: 'Тип оплати',
       dataIndex: 'type_payment',
       key: 'type_payment',
       render: (type_payment: string) =>
         type_payment === 'CASH'
-          ? 'Наличными'
+          ? 'Готівкою'
           : type_payment === 'ONLINE'
           ? 'Онлайн'
-          : 'Неизвестно',
+          : 'Невідомо',
     },
     {
       title: 'Статус',
@@ -61,13 +61,11 @@ const ProviderIngredientsContent: React.FC = () => {
       },
     },
     {
-      title: 'Общая сумма',
+      title: 'Загальна сума',
       dataIndex: 'cost_order',
       key: 'cost_order',
       render: (_, record: IOrdersHistory) =>
-        record.cost_total_order
-          ? record.cost_total_order + ' грн'
-          : 'Неизвестно',
+        record.cost_total_order ? record.cost_total_order + ' грн' : 'Невідомо',
     },
   ];
 
@@ -97,11 +95,11 @@ const ProviderIngredientsContent: React.FC = () => {
     switch (status_order) {
       case 'CREATED':
         color = 'blue';
-        text = 'Заказ создан';
+        text = 'Замовлення створено';
         break;
       case 'WAITINGPAYMENT':
         color = 'orange';
-        text = 'Ожидается оплата';
+        text = 'Очікується оплата';
         break;
       case 'DELIVERY':
         color = 'purple';
@@ -113,7 +111,7 @@ const ProviderIngredientsContent: React.FC = () => {
         break;
       default:
         color = 'default';
-        text = 'Неизвестно';
+        text = 'Невідомо';
     }
 
     return { color, text };
@@ -153,19 +151,19 @@ const ProviderIngredientsContent: React.FC = () => {
             >
               <div>
                 <p>
-                  Имя:{' '}
+                  Ім'я:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
                     {selectedRecord.model_account.name}
                   </span>
                 </p>
                 <p>
-                  Почта:{' '}
+                  Пошта:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
                     {selectedRecord.model_account.email || 'Неизвестно'}
                   </span>
                 </p>
                 <p>
-                  Номер телефона:{' '}
+                  Номер телефону:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
                     {selectedRecord.model_account.number || 'Неизвестно'}
                   </span>
@@ -177,19 +175,19 @@ const ProviderIngredientsContent: React.FC = () => {
                   </span>
                 </p>
                 <p>
-                  Подъезд:{' '}
+                  Під'їзд:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
                     {selectedRecord.entrance}
                   </span>
                 </p>
                 <p>
-                  Этаж:{' '}
+                  Поверх:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
                     {selectedRecord.floor}
                   </span>
                 </p>
                 <p>
-                  № Квартиры:{' '}
+                  № Квартири:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
                     {selectedRecord.apartment}
                   </span>
@@ -197,25 +195,25 @@ const ProviderIngredientsContent: React.FC = () => {
               </div>
               <div>
                 <p>
-                  Город:{' '}
+                  Місто:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
                     {selectedRecord.model_account.model_city.name}
                   </span>
                 </p>
                 <p>
-                  Комментарий:{' '}
+                  Коментар:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
                     {selectedRecord.comment || 'Пусто'}
                   </span>
                 </p>
                 <p>
-                  Способ оплаты:{' '}
+                  Спосіб оплати:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
                     {selectedRecord.type_payment === 'CASH'
-                      ? 'Наличными'
+                      ? 'Готівкою'
                       : selectedRecord.type_payment === 'ONLINE'
                       ? 'Онлайн'
-                      : 'Неизвестно'}
+                      : 'Невідомо'}
                   </span>
                 </p>
                 <p>
@@ -225,7 +223,7 @@ const ProviderIngredientsContent: React.FC = () => {
                   </span>
                 </p>
                 <p>
-                  Скидка с промокода:{' '}
+                  Знижка з промокодом:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
                     {selectedRecord.discount_promo_code
                       ? selectedRecord.discount_promo_code + '%'
@@ -233,7 +231,7 @@ const ProviderIngredientsContent: React.FC = () => {
                   </span>
                 </p>
                 <p>
-                  Страница оплаты:{' '}
+                  Сторінка оплати:{' '}
                   <a href={selectedRecord.payment_url} target="_blank">
                     Перейти
                   </a>
@@ -290,35 +288,35 @@ const ProviderIngredientsContent: React.FC = () => {
                     }}
                   >
                     <p>
-                      Заведение:{' '}
+                      Заклад:{' '}
                       <span style={{ fontWeight: 'bold' }}>
                         {item.model_menu.model_branded_store?.name}
                       </span>
                     </p>
                     <p>
-                      Количество:{' '}
+                      Кількість:{' '}
                       <span style={{ fontWeight: 'bold' }}>{item.count}</span>
                     </p>
                     <p>
-                      Основная категория:{' '}
+                      Основна категорія:{' '}
                       <span style={{ fontWeight: 'bold' }}>
                         {item.model_menu.model_general_categories?.name}
                       </span>
                     </p>
                     <p>
-                      Категория Заведения:{' '}
+                      Категорія Закладу:{' '}
                       <span style={{ fontWeight: 'bold' }}>
                         {item.model_menu.model_branded_store_categories?.name}
                       </span>
                     </p>
                     <p>
-                      Размер:{' '}
+                      Розмір:{' '}
                       <span style={{ fontWeight: 'bold' }}>
                         {item.model_options.name}
                       </span>
                     </p>
                     <p>
-                      Вес:{' '}
+                      Вага:{' '}
                       <span style={{ fontWeight: 'bold' }}>
                         {item.model_options.weight} гр
                       </span>
@@ -335,14 +333,14 @@ const ProviderIngredientsContent: React.FC = () => {
                           ))}
                         </ul>
                         <p style={{ fontWeight: 'bold' }}>
-                          Общая сумма Добавок:{' '}
+                          Загальна сума Добавок:{' '}
                           {totalSumIngredients(
                             item.model_menu_ingredients_cart
                           )}
                         </p>
                       </>
                     ) : (
-                      <p style={{ color: 'gray' }}>Добавок нету</p>
+                      <p style={{ color: 'gray' }}>Добавок немає</p>
                     )}
                   </div>
                   <div
@@ -377,7 +375,7 @@ const ProviderIngredientsContent: React.FC = () => {
                 Всего: <span>{selectedRecord.cost_total_order} грн</span>
               </p>
               <p style={{ color: 'gray', fontSize: '12px' }}>
-                Сумма с учётом всех доступных скидок
+                Сума з урахуванням усіх доступних знижок
               </p>
             </div>
           </div>

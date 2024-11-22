@@ -49,7 +49,7 @@ const PromocodesPageContent = () => {
 
   const columns: TableProps<IPromocode>['columns'] = [
     {
-      title: 'Название',
+      title: 'Назва',
       dataIndex: 'description',
       key: 'description',
       render: (_, record: IPromocode) => {
@@ -59,7 +59,7 @@ const PromocodesPageContent = () => {
               name="description"
               style={{ margin: 0 }}
               initialValue={record.description}
-              rules={[{ required: true, message: 'Заполните это поле!' }]}
+              rules={[{ required: true, message: 'Заповніть це поле!' }]}
             >
               <Input />
             </Form.Item>
@@ -67,9 +67,7 @@ const PromocodesPageContent = () => {
         }
         return (
           record.description || (
-            <span style={{ color: 'gray', fontStyle: 'italic' }}>
-              Неизвестно
-            </span>
+            <span style={{ color: 'gray', fontStyle: 'italic' }}>Невідомо</span>
           )
         );
       },
@@ -85,7 +83,7 @@ const PromocodesPageContent = () => {
               name="code"
               style={{ margin: 0 }}
               initialValue={record.code}
-              rules={[{ required: true, message: 'Заполните это поле!' }]}
+              rules={[{ required: true, message: 'Заповніть це поле!' }]}
             >
               <Input />
             </Form.Item>
@@ -95,7 +93,7 @@ const PromocodesPageContent = () => {
       },
     },
     {
-      title: 'Количество',
+      title: 'Кількість',
       dataIndex: 'count',
       key: 'count',
       render: (_, record: IPromocode) => {
@@ -105,7 +103,7 @@ const PromocodesPageContent = () => {
               name="count"
               style={{ margin: 0 }}
               initialValue={record.value_all_start}
-              rules={[{ required: true, message: 'Заполните это поле!' }]}
+              rules={[{ required: true, message: 'Заповніть це поле!' }]}
             >
               <Input />
             </Form.Item>
@@ -115,7 +113,7 @@ const PromocodesPageContent = () => {
       },
     },
     {
-      title: 'Скидка',
+      title: 'Знижка',
       dataIndex: 'value',
       key: 'value',
       render: (_, record: IPromocode) => {
@@ -125,7 +123,7 @@ const PromocodesPageContent = () => {
               name="value"
               style={{ margin: 0 }}
               initialValue={record.value}
-              rules={[{ required: true, message: 'Заполните это поле!' }]}
+              rules={[{ required: true, message: 'Заповніть це поле!' }]}
             >
               <Input />
             </Form.Item>
@@ -140,12 +138,12 @@ const PromocodesPageContent = () => {
       key: 'is_active',
       render: (isActive: boolean) => (
         <Tag color={!isActive ? 'red' : 'green'}>
-          {!isActive ? 'Неактивный' : 'Активный'}
+          {!isActive ? 'Неактивний' : 'Активний'}
         </Tag>
       ),
     },
     {
-      title: 'Действия',
+      title: 'Дії',
       key: 'actions',
       render: (_: any, record: IPromocode) => {
         const editable = isEditing(record);
@@ -155,9 +153,9 @@ const PromocodesPageContent = () => {
               onClick={() => save(record.id)}
               style={{ marginRight: 8 }}
             >
-              Сохранить
+              Зберегти
             </Typography.Link>
-            <Typography.Link onClick={cancel}>Отмена</Typography.Link>
+            <Typography.Link onClick={cancel}>Скасувати</Typography.Link>
           </span>
         ) : (
           <>
@@ -223,12 +221,12 @@ const PromocodesPageContent = () => {
           type: 'Disposable',
         })
       ).unwrap();
-      message.success('Промокод успешно обновлен');
+      message.success('Промокод успішно оновлено');
       setEditingKey(null);
       dispatch(fetchAllPromocodes());
       editForm.resetFields();
     } catch (error) {
-      message.error('Не удалось обновить промокод');
+      message.error('Не вдалося оновити промокод');
     }
   };
 
@@ -243,28 +241,28 @@ const PromocodesPageContent = () => {
     };
     try {
       await dispatch(createPromocode(newPromocode)).unwrap();
-      message.success('Промокод успешно создан');
+      message.success('Промокод успішно створено');
       form.resetFields();
       setIsModalOpen(false);
       await dispatch(fetchAllPromocodes());
     } catch (error) {
-      message.error('Не удалось создать промокод');
+      message.error('Не вдалося створити промокод');
     }
   };
 
   const handleDelete = async (id: number) => {
     Modal.confirm({
-      title: 'Вы уверены, что хотите удалить промокод?',
-      okText: 'Да',
+      title: 'Ви впевнені, що хочете видалити промокод?',
+      okText: 'Так',
       okType: 'danger',
-      cancelText: 'Нет',
+      cancelText: 'Ні',
       onOk: async () => {
         try {
           await dispatch(deletePromocode(id)).unwrap();
-          message.success('Промокод успешно удален');
+          message.success('Промокод успішно видалено');
           await dispatch(fetchAllPromocodes());
         } catch (error) {
-          message.error('Не удалось удалить промокод');
+          message.error('Не вдалося видалити промокод');
         }
       },
     });
@@ -277,7 +275,7 @@ const PromocodesPageContent = () => {
         onClick={showModal}
         style={{ marginBottom: '20px' }}
       >
-        Создать новый промокод
+        Створити новий промокод
       </Button>
       <Form form={editForm} component={false}>
         <Table columns={columns} dataSource={promocodes} rowKey="id" />
@@ -286,37 +284,37 @@ const PromocodesPageContent = () => {
       <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item
-            label="Название"
+            label="Назва"
             name="description"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
-            <Input placeholder="Введите название" />
+            <Input placeholder="Введіть назву" />
           </Form.Item>
           <Form.Item
             label="Код"
             name="code"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
-            <Input placeholder="Введите промокод" />
+            <Input placeholder="Введіть промокод" />
           </Form.Item>
           <Form.Item
-            label="Количество"
+            label="Кількість"
             name="count"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
-            <Input placeholder="Введите количество" type="number" />
+            <Input placeholder="Введіть кількість" type="number" />
           </Form.Item>
           <Form.Item
-            label="Скидка"
+            label="Знижка"
             name="value"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
-            <Input placeholder="Введите процент скидки" type="number" />
+            <Input placeholder="Введіть відсоток знижки" type="number" />
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Сохранить
+              Зберегти
             </Button>
           </Form.Item>
         </Form>

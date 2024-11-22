@@ -4,6 +4,16 @@ import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { TypeDispatch } from '@/shared/store';
 
 import {
+  blockProvider,
+  createNewProvider,
+  deleteProvider,
+  fetchAllProviders,
+  fetchBrands,
+} from '@/shared/store/admin/requests';
+
+import IProvider from '@/shared/interfaces/provider.interface';
+
+import {
   CheckCircleOutlined,
   DeleteOutlined,
   StopOutlined,
@@ -20,14 +30,6 @@ import {
   TableProps,
   Tag,
 } from 'antd';
-import IProvider from '@/shared/interfaces/provider.interface';
-import {
-  blockProvider,
-  createNewProvider,
-  deleteProvider,
-  fetchAllProviders,
-  fetchBrands,
-} from '@/shared/store/admin/requests';
 
 const { Option } = Select;
 
@@ -46,19 +48,19 @@ const AllProvidersPageContent: React.FC = () => {
 
   const columns: TableProps<IProvider>['columns'] = [
     {
-      title: 'Имя',
+      title: "Ім'я",
       dataIndex: 'name',
       key: 'name',
       render: (text) => text,
     },
     {
-      title: 'Номер телефона',
+      title: 'Номер телефону',
       dataIndex: 'number',
       key: 'number',
       render: (text) => text,
     },
     {
-      title: 'Заведения',
+      title: 'Заклади',
       dataIndex: 'id',
       key: 'id',
       render: (id: number) => {

@@ -26,42 +26,52 @@ const LoginPageContent = () => {
   const [form] = Form.useForm();
   const router = useRouter();
 
-  const handleSendCode = async (values: { phone: string }) => {
+  const handleSendCode = async (values: {
+    phone: string;
+    password: string;
+  }) => {
     setLoading(true);
-    const { phone } = values;
+    const { phone, password } = values;
 
-    try {
-      await dispatch(
-        isAdmin
-          ? sendNumberCodeAdmin({ numberPhone: phone })
-          : sendNumberCodeProvider({ numberPhone: phone })
-      );
+    if (isAdmin) {
+      try {
+        await dispatch(loginAdmin({ numberPhone: phone, password }));
+        message.success('Успішний вхід');
+        router.push('/admin');
+      } catch (error) {
+        message.error('Ошибка при входе');
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      try {
+        await dispatch(sendNumberCodeProvider({ numberPhone: phone }));
 
-      setPhoneNumber(phone);
-      setCodeModalVisible(true);
-      message.success('Код отправлен на ваш номер');
-    } catch (error) {
-      message.error('Ошибка при отправке кода');
-    } finally {
-      setLoading(false);
+        setPhoneNumber(phone);
+        setCodeModalVisible(true);
+        message.success('Код відправлено на ваш номер');
+      } catch (error) {
+        message.error('Помилка при відправленні коду');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
   const handleLogin = async (values: { code: string }) => {
     setLoading(true);
+
     const { code } = values;
 
     try {
       await dispatch(
-        isAdmin
-          ? loginAdmin({ numberPhone: phoneNumber, code: Number(code) })
-          : loginProvider({ numberPhone: phoneNumber, code: Number(code) })
+        loginProvider({ numberPhone: phoneNumber, code: Number(code) })
       );
       router.push('/admin');
-      message.success('Успешный вход');
+      message.success('Успішний вхід');
       setCodeModalVisible(false);
     } catch (error) {
-      message.error('Ошибка при входе');
+      message.error('Помилка при вході');
     } finally {
       setLoading(false);
     }
@@ -69,7 +79,7 @@ const LoginPageContent = () => {
 
   return (
     <div className={styles.loginContainer}>
-      <h1 className={styles.header}>Вход в админку</h1>
+      <h1 className={styles.header}>Вхід в адмінку</h1>
       <Form
         onFinish={handleSendCode}
         layout="vertical"
@@ -77,12 +87,21 @@ const LoginPageContent = () => {
         autoComplete="off"
       >
         <Form.Item
-          label="Номер телефона"
+          label="Номер телефону"
           name="phone"
-          rules={[{ required: true, message: 'Введите номер телефона' }]}
+          rules={[{ required: true, message: 'Введіть номер телефону' }]}
         >
           <Input placeholder="+380000000000" />
         </Form.Item>
+        {isAdmin && (
+          <Form.Item
+            label="Пароль"
+            name="password"
+            rules={[{ required: true, message: 'Введіть пароль' }]}
+          >
+            <Input type="password" placeholder="Введите пароль" />
+          </Form.Item>
+        )}
 
         <Form.Item>
           <Button
@@ -91,7 +110,7 @@ const LoginPageContent = () => {
             loading={loading}
             className={styles.submitButton}
           >
-            Отправить код
+            {!isAdmin ? 'Відправити код' : 'Войти'}
           </Button>
         </Form.Item>
 
@@ -100,14 +119,14 @@ const LoginPageContent = () => {
             checked={isAdmin}
             onChange={(e) => setIsAdmin(e.target.checked)}
           >
-            Вы Админ?
+            Головний Адмін
           </Checkbox>
         </Form.Item>
       </Form>
 
       <Modal
         open={codeModalVisible}
-        title="Введите код"
+        title="Введіть код"
         onCancel={() => setCodeModalVisible(false)}
         footer={null}
       >
@@ -120,9 +139,9 @@ const LoginPageContent = () => {
           <Form.Item
             label="Код"
             name="code"
-            rules={[{ required: true, message: 'Введите код из СМС' }]}
+            rules={[{ required: true, message: 'Введіть код із СМС' }]}
           >
-            <Input placeholder="Введите код" />
+            <Input placeholder="Введіть код" />
           </Form.Item>
           <Form.Item>
             <Button
@@ -131,7 +150,7 @@ const LoginPageContent = () => {
               loading={loading}
               className={styles.submitButton}
             >
-              Войти
+              Увійти
             </Button>
           </Form.Item>
         </Form>

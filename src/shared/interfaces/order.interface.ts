@@ -1,3 +1,4 @@
+import IAccountInfo from './accountInfo.interface';
 import { ICartItem } from './cart-item.interface';
 
 export default interface IOrder {
@@ -62,4 +63,5 @@ export interface IOrdersHistory {
   status_payment: string;
   createdAt: number;
   city_id: string | null;
+  model_account: IAccountInfo;
 }

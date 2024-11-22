@@ -31,7 +31,8 @@ export const sendNumberCodeProvider = createAsyncThunk(
 
 interface ILoginProps {
   numberPhone: string;
-  code: number;
+  code?: number;
+  password?: string;
 }
 
 export const loginAdmin = createAsyncThunk(
@@ -40,7 +41,7 @@ export const loginAdmin = createAsyncThunk(
     return Axios({
       url: '/admin/auth/login',
       method: 'post',
-      data: { number: props.numberPhone, code: props.code },
+      data: { number: props.numberPhone, password: props.password },
     });
   }
 );

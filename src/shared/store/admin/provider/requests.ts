@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '@/shared/utils/axios.utility';
 
 import IBrand from '@/shared/interfaces/brand.interface';
-import IOrder from '@/shared/interfaces/order.interface';
+import { IOrdersHistory } from '@/shared/interfaces/order.interface';
 import { IProviderCategory } from '@/shared/interfaces/category.interface';
 import IComponent from '@/shared/interfaces/component.interface';
 import IProduct from '@/shared/interfaces/product.interface';
@@ -124,7 +124,7 @@ export const editCategory = createAsyncThunk<
   });
 });
 
-export const fetchProviderOrders = createAsyncThunk<IOrder[]>(
+export const fetchProviderOrders = createAsyncThunk<IOrdersHistory[]>(
   'provider/orders',
   async () => {
     return (

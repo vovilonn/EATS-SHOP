@@ -85,7 +85,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
         collapsedWidth={80}
         className={styles.sider}
       >
-        <div className={styles.logo}>{collapsed ? 'AP' : 'Admin Panel'}</div>
+        <div className={styles.logo}>{collapsed ? 'AP' : 'Адмін Панель'}</div>
         <Menu
           theme="dark"
           mode="inline"
@@ -93,7 +93,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           selectedKeys={[selectedKey]}
         >
           <Menu.Item key="/admin" icon={<DashboardOutlined />}>
-            {role === 'PROVIDER' ? 'Заведения' : 'Главная'}
+            {role === 'PROVIDER' ? 'Заклади' : 'Головна'}
           </Menu.Item>
           {role === 'ADMIN' && (
             <>
@@ -101,13 +101,13 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
                 key="/admin/all-providers"
                 icon={<DashboardOutlined />}
               >
-                Все провайдеры
+                Всі провайдери
               </Menu.Item>
               <Menu.Item key="/admin/clients" icon={<UserOutlined />}>
-                Клиенты
+                Клієнти
               </Menu.Item>
               <Menu.Item key="/admin/promocodes" icon={<UserOutlined />}>
-                Промокоды
+                Промокоди
               </Menu.Item>
             </>
           )}
@@ -117,19 +117,19 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
                 key="/admin/provider/categories"
                 icon={<UserOutlined />}
               >
-                Категории
+                Категорії
               </Menu.Item>
               <Menu.Item
                 key="/admin/provider/ingredients"
                 icon={<UserOutlined />}
               >
-                Добавки
+                Додатки
               </Menu.Item>
               <Menu.Item key="/admin/provider/products" icon={<UserOutlined />}>
-                Продукты
+                Продукти
               </Menu.Item>
               <Menu.Item key="/admin/orders" icon={<FileOutlined />}>
-                Заказы
+                Замовлення
               </Menu.Item>
             </>
           )}
@@ -138,14 +138,14 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
             key="logout"
             icon={<LogoutOutlined />}
           >
-            Logout
+            Вийти
           </Menu.Item>
         </Menu>
       </Sider>
       <Layout>
-        <Header className={styles.header}>Admin Panel</Header>
+        <Header className={styles.header}>Адмін Панель</Header>
         <Content className={styles.content}>{children}</Content>
-        <Footer className={styles.footer}>© 2024 Admin Panel</Footer>
+        <Footer className={styles.footer}>© 2024 Адмін Панель</Footer>
       </Layout>
     </Layout>
   );

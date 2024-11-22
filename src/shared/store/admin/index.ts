@@ -39,7 +39,7 @@ import {
 import ICity from '@/shared/interfaces/city.interface';
 import IBrand from '@/shared/interfaces/brand.interface';
 import IProduct from '@/shared/interfaces/product.interface';
-import IOrder from '@/shared/interfaces/order.interface';
+import { IOrdersHistory } from '@/shared/interfaces/order.interface';
 import ICategory from '@/shared/interfaces/category.interface';
 import IComponent from '@/shared/interfaces/component.interface';
 import IProvider from '@/shared/interfaces/provider.interface';
@@ -59,7 +59,7 @@ export interface IInitialState {
   promocodes: IPromocode[];
   oneProduct: IProduct | null;
   role: 'ADMIN' | 'PROVIDER' | null;
-  orders: IOrder[];
+  orders: IOrdersHistory[];
 }
 
 const initialState: IInitialState = {

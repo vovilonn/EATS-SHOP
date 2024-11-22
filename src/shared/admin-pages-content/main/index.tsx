@@ -30,7 +30,7 @@ const MainPageContent = () => {
   return (
     <div className={styles.pageContainer}>
       <h1 className={styles.pageTitle}>
-        {role === 'PROVIDER' ? 'Мои заведения' : 'Главная страница'}
+        {role === 'PROVIDER' ? 'Мої заклади' : 'Головна сторінка'}
       </h1>
       {role === 'PROVIDER' ? (
         <MainPageProviderContent />
@@ -40,7 +40,7 @@ const MainPageContent = () => {
             <Col span={8}>
               <Card>
                 <Statistic
-                  title="Клиенты"
+                  title="Клієнти"
                   value={clientCount}
                   prefix={<UserOutlined />}
                 />
@@ -49,7 +49,7 @@ const MainPageContent = () => {
             <Col span={8}>
               <Card>
                 <Statistic
-                  title="Активные заказы"
+                  title=" Активні замовлення"
                   value={orderCount}
                   prefix={<ShoppingCartOutlined />}
                 />
@@ -58,7 +58,7 @@ const MainPageContent = () => {
             <Col span={8}>
               <Card>
                 <Statistic
-                  title="Активные промокоды"
+                  title="Активні промокоди"
                   value={activePromocodes}
                   prefix={<TagOutlined />}
                 />
@@ -66,7 +66,7 @@ const MainPageContent = () => {
             </Col>
           </Row>
           <div className={styles.salesChart}>
-            <h2>Продажи за последние 5 дней</h2>
+            <h2> Продажі за останні 5 днів</h2>
           </div>
         </>
       )}

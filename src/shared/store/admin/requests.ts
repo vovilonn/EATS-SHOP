@@ -148,7 +148,7 @@ export const fetchAllPromocodes = createAsyncThunk<IPromocode[]>(
 
 export const createPromocode = createAsyncThunk<void, IPromocodeCreateOrUpd>(
   'admin/promocodes/create',
-  async ({ type, count, is_active, code }) => {
+  async ({ type, count, is_active, code, description, value }) => {
     await Axios({
       method: 'post',
       url: '/admin/promo_code/create',
@@ -157,6 +157,8 @@ export const createPromocode = createAsyncThunk<void, IPromocodeCreateOrUpd>(
         count,
         is_active,
         code,
+        value,
+        description,
       },
       useLocalStorage: true,
     });
@@ -179,7 +181,15 @@ export const deletePromocode = createAsyncThunk<void, number>(
 
 export const editPromocode = createAsyncThunk<void, IPromocodeCreateOrUpd>(
   'admin/promocodes/edit',
-  async ({ promo_code_id, count, code, is_active, type }) => {
+  async ({
+    promo_code_id,
+    count,
+    code,
+    is_active,
+    type,
+    description,
+    value,
+  }) => {
     await Axios({
       method: 'put',
       url: '/admin/promo_code/edit',
@@ -189,6 +199,9 @@ export const editPromocode = createAsyncThunk<void, IPromocodeCreateOrUpd>(
         type,
         code,
         is_active,
+        description,
+        value,
+        value_all_start: count,
       },
       useLocalStorage: true,
     });

@@ -49,6 +49,32 @@ const PromocodesPageContent = () => {
 
   const columns: TableProps<IPromocode>['columns'] = [
     {
+      title: 'Название',
+      dataIndex: 'description',
+      key: 'description',
+      render: (_, record: IPromocode) => {
+        if (isEditing(record)) {
+          return (
+            <Form.Item
+              name="description"
+              style={{ margin: 0 }}
+              initialValue={record.description}
+              rules={[{ required: true, message: 'Заполните это поле!' }]}
+            >
+              <Input />
+            </Form.Item>
+          );
+        }
+        return (
+          record.description || (
+            <span style={{ color: 'gray', fontStyle: 'italic' }}>
+              Неизвестно
+            </span>
+          )
+        );
+      },
+    },
+    {
       title: 'Код',
       dataIndex: 'code',
       key: 'code',
@@ -78,14 +104,34 @@ const PromocodesPageContent = () => {
             <Form.Item
               name="count"
               style={{ margin: 0 }}
-              initialValue={record.count}
+              initialValue={record.value_all_start}
               rules={[{ required: true, message: 'Заполните это поле!' }]}
             >
               <Input />
             </Form.Item>
           );
         }
-        return record.count;
+        return `${record.count}/${record.value_all_start}`;
+      },
+    },
+    {
+      title: 'Скидка',
+      dataIndex: 'value',
+      key: 'value',
+      render: (_, record: IPromocode) => {
+        if (isEditing(record)) {
+          return (
+            <Form.Item
+              name="value"
+              style={{ margin: 0 }}
+              initialValue={record.value}
+              rules={[{ required: true, message: 'Заполните это поле!' }]}
+            >
+              <Input />
+            </Form.Item>
+          );
+        }
+        return record.value + '%';
       },
     },
     {
@@ -149,6 +195,8 @@ const PromocodesPageContent = () => {
     editForm.setFieldsValue({
       code: record.code,
       count: record.count,
+      description: record.description,
+      value: record.value,
     });
   };
 
@@ -161,9 +209,13 @@ const PromocodesPageContent = () => {
     try {
       const code = editForm.getFieldValue('code');
       const count = editForm.getFieldValue('count');
+      const value = editForm.getFieldValue('value');
+      const description = editForm.getFieldValue('description');
 
       await dispatch(
         editPromocode({
+          description,
+          value,
           promo_code_id: id,
           code,
           count,
@@ -182,9 +234,11 @@ const PromocodesPageContent = () => {
 
   const handleSubmit = async (values: IPromocodeCreateOrUpd) => {
     const newPromocode = {
+      description: values.description,
       code: values.code,
       type: 'Disposable',
       count: values.count,
+      value: values.value,
       is_active: true,
     };
     try {
@@ -223,7 +277,7 @@ const PromocodesPageContent = () => {
         onClick={showModal}
         style={{ marginBottom: '20px' }}
       >
-        Создать новый продукт
+        Создать новый промокод
       </Button>
       <Form form={editForm} component={false}>
         <Table columns={columns} dataSource={promocodes} rowKey="id" />
@@ -232,18 +286,32 @@ const PromocodesPageContent = () => {
       <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item
+            label="Название"
+            name="description"
+            rules={[{ required: true, message: 'Заполните это поле!' }]}
+          >
+            <Input placeholder="Введите название" />
+          </Form.Item>
+          <Form.Item
             label="Код"
             name="code"
             rules={[{ required: true, message: 'Заполните это поле!' }]}
           >
-            <Input placeholder="Введите название" />
+            <Input placeholder="Введите промокод" />
           </Form.Item>
           <Form.Item
             label="Количество"
             name="count"
             rules={[{ required: true, message: 'Заполните это поле!' }]}
           >
-            <Input placeholder="Введите название" type="number" />
+            <Input placeholder="Введите количество" type="number" />
+          </Form.Item>
+          <Form.Item
+            label="Скидка"
+            name="value"
+            rules={[{ required: true, message: 'Заполните это поле!' }]}
+          >
+            <Input placeholder="Введите процент скидки" type="number" />
           </Form.Item>
 
           <Form.Item>

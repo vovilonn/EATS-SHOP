@@ -136,9 +136,9 @@ const Navbar: FC = () => {
             </Link>
           ))}
         </div>
-        <a className={style.phone} href="tel:050 72 38 600">
+        <a className={style.phone} href="tel:099 000 57 58">
           <PhoneIcon />
-          050 72 38 600
+          099 000 57 58
         </a>
       </div>
     </nav>

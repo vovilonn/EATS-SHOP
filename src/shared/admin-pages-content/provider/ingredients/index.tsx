@@ -55,7 +55,7 @@ const ProviderIngredientsContent: React.FC = () => {
 
   const columns: TableProps<IComponent>['columns'] = [
     {
-      title: 'Изображение',
+      title: 'Зображення',
       dataIndex: 'picture',
       key: 'picture',
       render: (picture: string) => (
@@ -63,40 +63,40 @@ const ProviderIngredientsContent: React.FC = () => {
           width={50}
           height={50}
           src={picture}
-          alt="Ingredient"
+          alt="Інгредієнт"
           style={{ objectFit: 'cover', borderRadius: '4px' }}
         />
       ),
     },
     {
-      title: 'Название',
+      title: 'Назва',
       dataIndex: 'name',
       key: 'name',
       render: (text) => text,
     },
     {
-      title: 'Заведение',
+      title: 'Заклад',
       dataIndex: 'branded_store',
       key: 'branded_store',
       render: (branded_store: number) => {
         const brand = brands.find((brand) => brand.id === branded_store);
-        return brand?.name || 'Неизвестно';
+        return brand?.name || 'Невідомо';
       },
     },
     {
-      title: 'Цена',
+      title: 'Ціна',
       dataIndex: 'price',
       key: 'price',
       render: (text) => text + ' грн',
     },
     {
-      title: 'Опция',
+      title: 'Опція',
       dataIndex: 'options',
       key: 'options',
       render: (text) => text,
     },
     {
-      title: 'Действия',
+      title: 'Дії',
       key: 'actions',
       render: (_, record) => (
         <>
@@ -131,7 +131,7 @@ const ProviderIngredientsContent: React.FC = () => {
 
   const onFinish = async (values: any) => {
     if (!file && !selectedIngredient?.picture) {
-      message.error('Пожалуйста, добавьте изображение!');
+      message.error('Будь ласка, додайте зображення!');
       return;
     }
 
@@ -155,29 +155,29 @@ const ProviderIngredientsContent: React.FC = () => {
           formData.append('id_ingredient', `${selectedIngredient.id}`);
 
           await dispatch(editIngredient(formData)).unwrap();
-          message.success('Добавка успешно обновлена');
+          message.success('Додавку успішно оновлено');
         } else {
           await dispatch(createNewIngredient(formData)).unwrap();
-          message.success('Добавка успешно создана');
+          message.success('Додавку успішно створено');
         }
 
         form.resetFields();
         setIsModalOpen(false);
         dispatch(fetchProviderIngredients(selectedBrand));
       } catch (error) {
-        message.error('Не удалось сохранить добавку');
+        message.error('Не вдалося зберегти добавку');
       }
     } else {
-      message.warning('Выберите заведение для создания добавки');
+      message.warning('Виберіть заклад для створення добавки');
     }
   };
 
   const handleDelete = async (ingredientId: number) => {
     Modal.confirm({
-      title: 'Вы уверены, что хотите удалить категорию?',
-      okText: 'Да',
+      title: 'Ви впевнені, що хочете видалити категорію?',
+      okText: 'Так',
       okType: 'danger',
-      cancelText: 'Нет',
+      cancelText: 'Ні',
       onOk: async () => {
         try {
           if (selectedBrand) {
@@ -187,11 +187,11 @@ const ProviderIngredientsContent: React.FC = () => {
                 branded_store_id: selectedBrand,
               })
             ).unwrap();
-            message.success('Добавка успешно удалена');
+            message.success('Додавку успішно видалено');
             dispatch(fetchProviderIngredients(selectedBrand));
           }
         } catch (error) {
-          message.error('Не удалось удалить добавку');
+          message.error('Не вдалося видалити добавку');
         }
       },
     });
@@ -212,9 +212,9 @@ const ProviderIngredientsContent: React.FC = () => {
   return (
     <>
       <Form layout="vertical">
-        <Form.Item label="Заведение">
+        <Form.Item label="Заклад">
           <Select
-            placeholder="Выберите заведение"
+            placeholder="Оберіть заклад"
             onChange={(value) => setSelectedBrand(value)}
             value={selectedBrand}
           >
@@ -227,6 +227,7 @@ const ProviderIngredientsContent: React.FC = () => {
           </Select>
         </Form.Item>
       </Form>
+
       {selectedBrand && (
         <Table<IComponent>
           columns={columns}
@@ -236,35 +237,35 @@ const ProviderIngredientsContent: React.FC = () => {
       )}
 
       <Button type="primary" onClick={showModal} style={{ marginTop: '20px' }}>
-        Создать добавку
+        Створити добавку
       </Button>
       <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Form.Item
-            label="Название"
+            label="Назва"
             name="title"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
-            <Input placeholder="Введите название" />
+            <Input placeholder="Введіть назву" />
           </Form.Item>
           <Form.Item
-            label="Цена"
+            label="Ціна"
             name="price"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
-            <Input placeholder="Цена" type="number" />
+            <Input placeholder="Ціна" type="number" />
           </Form.Item>
           <Form.Item
-            label="Опция"
+            label="Опція"
             name="option"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
-            <Input placeholder="Введите опцию" />
+            <Input placeholder="Введіть опцію" />
           </Form.Item>
           <Form.Item
             label="Фото"
             name="file"
-            rules={[{ required: true, message: 'Добавьте фото' }]}
+            rules={[{ required: true, message: 'Додайте фото' }]}
           >
             <Upload.Dragger
               name="file"
@@ -287,13 +288,13 @@ const ProviderIngredientsContent: React.FC = () => {
                 <InboxOutlined />
               </p>
               <p className="ant-upload-text">
-                Нажмите или перетащите файл для загрузки
+                Натисніть або перетягніть файл для завантаження
               </p>
             </Upload.Dragger>
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Сохранить
+              Зберегти
             </Button>
           </Form.Item>
         </Form>

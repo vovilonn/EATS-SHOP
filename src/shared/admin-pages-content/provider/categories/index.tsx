@@ -67,13 +67,13 @@ const ProviderCategoriesContent: React.FC = () => {
       const name = form.getFieldValue('name');
 
       await dispatch(editCategory({ category_id: id, name })).unwrap();
-      message.success('Категория успешно обновлена');
+      message.success('Категорію успішно оновлено');
       setEditingKey(null);
       if (selectedBrand) {
         dispatch(fetchProviderCategories(selectedBrand));
       }
     } catch (error) {
-      message.error('Не удалось обновить категорию');
+      message.error('Не вдалося оновити категорію');
     }
   };
 
@@ -85,35 +85,35 @@ const ProviderCategoriesContent: React.FC = () => {
       };
       try {
         await dispatch(createNewCategory(newCategory)).unwrap();
-        message.success('Категория успешно создана');
+        message.success('Категорію успішно створено');
         form.resetFields();
         setIsModalOpen(false);
         if (selectedBrand) {
           dispatch(fetchProviderCategories(selectedBrand));
         }
       } catch (error) {
-        message.error('Не удалось создать категорию');
+        message.error('Не вдалося створити категорію');
       }
     } else {
-      message.warning('Выберите заведение для создания категории');
+      message.warning('Виберіть заклад для створення категорії');
     }
   };
 
   const handleDelete = async (categoryId: number) => {
     Modal.confirm({
-      title: 'Вы уверены, что хотите удалить категорию?',
-      okText: 'Да',
+      title: 'Ви впевнені, що хочете видалити категорію?',
+      okText: 'Так',
       okType: 'danger',
-      cancelText: 'Нет',
+      cancelText: 'Ні',
       onOk: async () => {
         try {
           await dispatch(deleteCategory(categoryId)).unwrap();
-          message.success('Категория успешно удалена');
+          message.success('Категорію успішно видалено');
           if (selectedBrand) {
             dispatch(fetchProviderCategories(selectedBrand));
           }
         } catch (error) {
-          message.error('Не удалось удалить категорию');
+          message.error('Не вдалося видалити категорію');
         }
       },
     });
@@ -121,7 +121,7 @@ const ProviderCategoriesContent: React.FC = () => {
 
   const columns: TableProps<IProviderCategory>['columns'] = [
     {
-      title: 'Название',
+      title: 'Назва',
       dataIndex: 'name',
       key: 'name',
       render: (_: any, record: IProviderCategory) => {
@@ -130,7 +130,7 @@ const ProviderCategoriesContent: React.FC = () => {
             <Form.Item
               name="name"
               style={{ margin: 0 }}
-              rules={[{ required: true, message: 'Заполните это поле!' }]}
+              rules={[{ required: true, message: 'Заповніть це поле!' }]}
             >
               <Input />
             </Form.Item>
@@ -140,16 +140,16 @@ const ProviderCategoriesContent: React.FC = () => {
       },
     },
     {
-      title: 'Заведение',
+      title: 'Заклад',
       dataIndex: 'branded_store_id',
       key: 'branded_store_id',
       render: (branded_store_id: number) => {
         const brand = brands.find((brand) => brand.id === branded_store_id);
-        return brand?.name || 'Неизвестно';
+        return brand?.name || 'Невідомо';
       },
     },
     {
-      title: 'Действия',
+      title: 'Дії',
       key: 'actions',
       render: (_: any, record: IProviderCategory) => {
         const editable = isEditing(record);
@@ -159,9 +159,9 @@ const ProviderCategoriesContent: React.FC = () => {
               onClick={() => save(record.id)}
               style={{ marginRight: 8 }}
             >
-              Сохранить
+              Зберегти
             </Typography.Link>
-            <Typography.Link onClick={cancel}>Отмена</Typography.Link>
+            <Typography.Link onClick={cancel}>Скасувати</Typography.Link>
           </span>
         ) : (
           <>
@@ -187,9 +187,9 @@ const ProviderCategoriesContent: React.FC = () => {
   return (
     <>
       <Form layout="vertical">
-        <Form.Item label="Заведение">
+        <Form.Item label="Заклад">
           <Select
-            placeholder="Выберите заведение"
+            placeholder="Виберіть заклад"
             onChange={(value) => setSelectedBrand(value)}
             value={selectedBrand}
           >
@@ -217,7 +217,7 @@ const ProviderCategoriesContent: React.FC = () => {
         onClick={() => setIsModalOpen(true)}
         style={{ marginTop: '20px' }}
       >
-        Создать категорию
+        Створити категорію
       </Button>
       <Modal
         open={isModalOpen}
@@ -226,15 +226,15 @@ const ProviderCategoriesContent: React.FC = () => {
       >
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Form.Item
-            label="Название"
+            label="Назва"
             name="title"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
-            <Input placeholder="Введите название" />
+            <Input placeholder="Введіть назву" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Сохранить
+              Зберегти
             </Button>
           </Form.Item>
         </Form>

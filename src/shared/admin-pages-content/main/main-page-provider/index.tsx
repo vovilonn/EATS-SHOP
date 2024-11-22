@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import { TypeDispatch } from '@/shared/store';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 
+import Image from 'next/image';
+
 import {
   fetchProviderBrands,
   fetchProviderOrders,
@@ -13,6 +15,7 @@ import {
 import { fetchCities } from '@/shared/store/admin/requests';
 
 import IBrand from '@/shared/interfaces/brand.interface';
+
 import {
   Button,
   Form,
@@ -26,7 +29,6 @@ import {
 import type { TableProps } from 'antd';
 
 import { DeleteOutlined, EditOutlined, InboxOutlined } from '@ant-design/icons';
-import Image from 'next/image';
 
 const { Option } = Select;
 
@@ -50,7 +52,7 @@ const MainPageProviderContent: React.FC = () => {
 
   const columns: TableProps<IBrand>['columns'] = [
     {
-      title: 'Изображение',
+      title: 'Зображення',
       dataIndex: 'picture',
       key: 'picture',
       render: (picture: string) => (
@@ -58,34 +60,34 @@ const MainPageProviderContent: React.FC = () => {
           width={50}
           height={50}
           src={picture}
-          alt="Brand"
+          alt="Бренд"
           style={{ objectFit: 'cover', borderRadius: '4px' }}
         />
       ),
     },
     {
-      title: 'Название',
+      title: 'Назва',
       dataIndex: 'name',
       key: 'name',
       render: (text) => text,
     },
     {
-      title: 'Город',
+      title: 'Місто',
       dataIndex: 'city_id',
       key: 'city_id',
       render: (city_id: number) => {
         const city = cities.find((city) => city.id === city_id);
-        return city?.name || 'Неизвестно';
+        return city?.name || 'Невідомо';
       },
     },
     {
-      title: 'Кол-во заказов',
+      title: 'Кількість замовлень',
       dataIndex: 'orders',
       key: 'orders',
       render: () => orders?.length || 0,
     },
     {
-      title: 'Действия',
+      title: 'Дії',
       key: 'actions',
       render: (_, record: IBrand) => (
         <>
@@ -132,7 +134,7 @@ const MainPageProviderContent: React.FC = () => {
 
   const onFinish = async (values: any) => {
     if (!file && !selectedBrand?.picture) {
-      message.error('Пожалуйста, добавьте изображение');
+      message.error('Будь ласка, додайте зображення');
       return;
     }
 
@@ -151,10 +153,10 @@ const MainPageProviderContent: React.FC = () => {
       if (selectedBrand) {
         formData.append('store_id', `${selectedBrand.id}`);
         await dispatch(editProviderBrand(formData)).unwrap();
-        message.success('Бренд успешно обновлён');
+        message.success('Бренд успішно оновлено');
       } else {
         await dispatch(createNewBrand(formData)).unwrap();
-        message.success('Бренд успешно создан');
+        message.success('Бренд успішно створено');
       }
 
       form.resetFields();
@@ -163,23 +165,23 @@ const MainPageProviderContent: React.FC = () => {
       setIsModalOpen(false);
       dispatch(fetchProviderBrands());
     } catch (error) {
-      message.error('Не удалось сохранить бренд');
+      message.error('Не вдалося зберегти бренд');
     }
   };
 
   const handleDelete = (id: number) => {
     Modal.confirm({
-      title: 'Вы уверены, что хотите удалить заведение?',
-      okText: 'Да',
+      title: 'Ви впевнені, що хочете видалити заклад?',
+      okText: 'Так',
       okType: 'danger',
-      cancelText: 'Нет',
+      cancelText: 'Ні',
       onOk: async () => {
         try {
           await dispatch(deleteBrand(id)).unwrap();
-          message.success('Бренд успешно удалён');
+          message.success('Бренд успішно видалено');
           dispatch(fetchProviderBrands());
         } catch (error) {
-          message.error('Не удалось удалить бренд');
+          message.error('Не вдалося видалити бренд');
         }
       },
     });
@@ -197,23 +199,23 @@ const MainPageProviderContent: React.FC = () => {
         }}
         style={{ marginTop: '20px' }}
       >
-        Создать заведение
+        Створити заклад
       </Button>
       <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Form.Item
-            label="Название"
+            label="Назва"
             name="title"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
-            <Input placeholder="Введите название" />
+            <Input placeholder="Введіть назву" />
           </Form.Item>
           <Form.Item
-            label="Город"
+            label="Місто"
             name="city"
-            rules={[{ required: true, message: 'Выберите город!' }]}
+            rules={[{ required: true, message: 'Виберіть місто!' }]}
           >
-            <Select placeholder="Выберите город">
+            <Select placeholder="Виберіть місто">
               {cities.map((city) => (
                 <Option key={city.id} value={city.id}>
                   {city.name}
@@ -224,7 +226,7 @@ const MainPageProviderContent: React.FC = () => {
           <Form.Item
             label="Фото"
             name="file"
-            rules={[{ required: !selectedBrand, message: 'Добавьте фото' }]}
+            rules={[{ required: !selectedBrand, message: 'Додайте фото' }]}
           >
             <Upload.Dragger
               name="file"
@@ -248,14 +250,14 @@ const MainPageProviderContent: React.FC = () => {
                   <InboxOutlined />
                 </p>
                 <p className="ant-upload-text">
-                  Нажмите или перетащите файл для загрузки
+                  Натисніть або перетягніть файл для завантаження
                 </p>
               </>
             </Upload.Dragger>
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Сохранить
+              Зберегти
             </Button>
           </Form.Item>
         </Form>

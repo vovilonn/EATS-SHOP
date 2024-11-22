@@ -65,7 +65,7 @@ const ProviderProductsContent: React.FC = () => {
 
   const columns: TableProps<IProduct>['columns'] = [
     {
-      title: 'Изображение',
+      title: 'Зображення',
       dataIndex: 'picture',
       key: 'picture',
       render: (picture: string[]) => (
@@ -79,44 +79,44 @@ const ProviderProductsContent: React.FC = () => {
       ),
     },
     {
-      title: 'Название',
+      title: 'Назва',
       dataIndex: 'name',
       key: 'name',
       render: (text) => text,
     },
     {
-      title: 'Заведение',
+      title: 'Заклад',
       dataIndex: 'model_branded_store',
       key: 'model_branded_store',
       render: (model_branded_store: IBrand) => {
         const brand = brands.find(
           (brand) => brand.id === model_branded_store.id
         );
-        return brand?.name || 'Неизвестно';
+        return brand?.name || 'Невідомо';
       },
     },
     {
-      title: 'Основная категория',
+      title: 'Основна категорія',
       dataIndex: 'model_general_categories',
       key: 'model_general_categories',
       render: (category: ICategory) => {
-        return category?.name || 'Неизвестно';
+        return category?.name || 'Невідомо';
       },
     },
     {
-      title: 'Категория магазина',
+      title: 'Категорія магазину',
       dataIndex: 'model_branded_store_categories',
       key: 'model_branded_store_categories',
       render: (category: IProviderCategory) => {
-        return category?.name || 'Неизвестно';
+        return category?.name || 'Невідомо';
       },
     },
     {
-      title: 'Состав',
+      title: 'Склад',
       dataIndex: 'composition',
       key: 'composition',
       render: (record: string) => {
-        return record || 'Неизвестно';
+        return record || 'Невідомо';
       },
     },
     {
@@ -137,12 +137,12 @@ const ProviderProductsContent: React.FC = () => {
       ),
     },
     {
-      title: 'Опции',
+      title: 'Опції',
       dataIndex: 'options',
       key: 'options',
       render: (_: any, record: IProduct) => (
         <Select
-          placeholder="Выберите опцию"
+          placeholder="Виберіть опцію"
           onChange={(value) => handleOptionChange(record.id, value)}
           style={{ width: 120 }}
         >
@@ -155,23 +155,23 @@ const ProviderProductsContent: React.FC = () => {
       ),
     },
     {
-      title: 'Детали опции',
+      title: 'Деталі опції',
       key: 'optionDetails',
       render: (_: any, record: IProduct) => {
         const selectedOption = selectedOptions[record.id];
         return selectedOption ? (
           <div>
-            <p>Размер: {selectedOption.name}</p>
-            <p>Вес: {selectedOption.weight} г</p>
-            <p>Цена: {selectedOption.price} грн</p>
+            <p>Розмір: {selectedOption.name}</p>
+            <p>Вага: {selectedOption.weight} г</p>
+            <p>Ціна: {selectedOption.price} грн</p>
           </div>
         ) : (
-          <span>Выберите опцию</span>
+          <span>Виберіть опцію</span>
         );
       },
     },
     {
-      title: 'Действия',
+      title: 'Дії',
       key: 'actions',
       render: (_, record) => (
         <>
@@ -218,7 +218,7 @@ const ProviderProductsContent: React.FC = () => {
 
   const handleSubmit = async (values: any) => {
     if (!file && !selectedProduct?.picture[0]) {
-      message.error('Пожалуйста, добавьте изображение!');
+      message.error('Будь ласка, додайте зображення!');
       return;
     }
 
@@ -246,10 +246,10 @@ const ProviderProductsContent: React.FC = () => {
         formData.append('menu_id', `${selectedProduct.id}`);
 
         await dispatch(editProduct(formData)).unwrap();
-        message.success('Продукт успешно обновлен');
+        message.success('Продукт успішно оновлено');
       } else {
         await dispatch(createNewProduct(formData));
-        message.success('Продукт успешно создан');
+        message.success('Продукт успішно створено');
       }
 
       setIsModalOpen(false);
@@ -258,16 +258,16 @@ const ProviderProductsContent: React.FC = () => {
         await dispatch(fetchProviderProducts(selectedBrand));
       }
     } catch (error) {
-      message.error('Ошибка при создании продукта');
+      message.error('Помилка при створенні продукту');
     }
   };
 
   const handleDelete = (productId: number) => {
     Modal.confirm({
-      title: 'Вы уверены, что хотите удалить этот продукт?',
-      okText: 'Да',
+      title: 'Ви впевнені, що хочете видалити цей продукт?',
+      okText: 'Так',
       okType: 'danger',
-      cancelText: 'Нет',
+      cancelText: 'Ні',
       onOk: async () => {
         try {
           if (selectedBrand) {
@@ -277,11 +277,11 @@ const ProviderProductsContent: React.FC = () => {
                 brandId: selectedBrand,
               })
             ).unwrap();
-            message.success('Продукт успешно удалена');
+            message.success('Продукт успішно видалено');
             dispatch(fetchProviderProducts(selectedBrand));
           }
         } catch (error) {
-          message.error('Не удалось удалить продукт');
+          message.error('Не вдалося видалити продукт');
         }
       },
     });
@@ -320,12 +320,12 @@ const ProviderProductsContent: React.FC = () => {
         style={{ marginBottom: '20px' }}
         disabled={!selectedBrand}
       >
-        Создать новый продукт
+        Створити новий продукт
       </Button>
       <Form layout="vertical">
-        <Form.Item label="Заведение">
+        <Form.Item label="Заклад">
           <Select
-            placeholder="Выберите заведение"
+            placeholder="Оберіть заклад"
             onChange={(value) => setSelectedBrand(value)}
             value={selectedBrand}
           >
@@ -338,6 +338,7 @@ const ProviderProductsContent: React.FC = () => {
           </Select>
         </Form.Item>
       </Form>
+
       {selectedBrand && (
         <Table<IProduct>
           columns={columns}
@@ -350,16 +351,16 @@ const ProviderProductsContent: React.FC = () => {
       <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
           <Form.Item
-            label="Название"
+            label="Назва"
             name="title"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
-            <Input placeholder="Введите название" />
+            <Input placeholder="Введіть назву" />
           </Form.Item>
           <Form.Item
-            label="Состав"
+            label="Склад"
             name="composition"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
             <TextArea rows={4} />
           </Form.Item>
@@ -375,25 +376,25 @@ const ProviderProductsContent: React.FC = () => {
                     <Form.Item
                       {...restField}
                       name={[name, 'name']}
-                      rules={[{ required: true, message: 'Введите опцию!' }]}
+                      rules={[{ required: true, message: 'Введіть опцію!' }]}
                     >
-                      <Input placeholder="Опция" />
+                      <Input placeholder="Опція" />
                     </Form.Item>
                     <Form.Item
                       {...restField}
                       name={[name, 'price']}
-                      rules={[{ required: true, message: 'Укажите цену!' }]}
+                      rules={[{ required: true, message: 'Вкажіть ціну!' }]}
                       normalize={(value) => Number(value)}
                     >
-                      <Input placeholder="Цена" type="number" />
+                      <Input placeholder="Ціна" type="number" />
                     </Form.Item>
                     <Form.Item
                       {...restField}
                       name={[name, 'weight']}
-                      rules={[{ required: true, message: 'Укажите вес!' }]}
+                      rules={[{ required: true, message: 'Вкажіть вагу!' }]}
                       normalize={(value) => Number(value)}
                     >
-                      <Input placeholder="Вес" type="number" />
+                      <Input placeholder="Вага" type="number" />
                     </Form.Item>
                     <Button danger onClick={() => remove(name)}>
                       <DeleteOutlined />
@@ -402,20 +403,18 @@ const ProviderProductsContent: React.FC = () => {
                 ))}
                 <Form.Item>
                   <Button type="dashed" onClick={() => add()} block>
-                    Добавить опцию
+                    Додати опцію
                   </Button>
                 </Form.Item>
               </>
             )}
           </Form.List>
           <Form.Item
-            label="Основная категория"
+            label="Основна категорія"
             name="generalCategory"
-            rules={[
-              { required: true, message: 'Выберите основную категорию!' },
-            ]}
+            rules={[{ required: true, message: 'Оберіть основну категорію!' }]}
           >
-            <Select placeholder="Выберите основную категорию">
+            <Select placeholder="Оберіть основну категорію">
               {generalCategories &&
                 generalCategories.map((item: ICategory) => (
                   <Option key={item.id} value={item.id}>
@@ -425,11 +424,11 @@ const ProviderProductsContent: React.FC = () => {
             </Select>
           </Form.Item>
           <Form.Item
-            label="Категория заведения"
+            label="Категорія закладу"
             name="category"
-            rules={[{ required: true, message: 'Выберите категорию!' }]}
+            rules={[{ required: true, message: 'Оберіть категорію!' }]}
           >
-            <Select placeholder="Выберите категорию">
+            <Select placeholder="Оберіть категорію">
               {categories &&
                 categories.map((item: IProviderCategory) => (
                   <Option key={item.id} value={item.id}>
@@ -441,9 +440,9 @@ const ProviderProductsContent: React.FC = () => {
           <Form.Item
             label="Добавки"
             name="ingredients"
-            rules={[{ required: true, message: 'Выберите добавки!' }]}
+            rules={[{ required: true, message: 'Оберіть добавки!' }]}
           >
-            <Select placeholder="Выберите добавки" mode="multiple">
+            <Select placeholder="Оберіть добавки" mode="multiple">
               {ingredients &&
                 ingredients.map((item: IComponent) => (
                   <Option key={item.id} value={item.id}>
@@ -456,7 +455,7 @@ const ProviderProductsContent: React.FC = () => {
           <Form.Item
             label="Фото"
             name="file"
-            rules={[{ required: true, message: 'Добавьте фото' }]}
+            rules={[{ required: true, message: 'Додайте фото' }]}
           >
             <Upload.Dragger
               name="file"
@@ -479,14 +478,14 @@ const ProviderProductsContent: React.FC = () => {
                 <InboxOutlined />
               </p>
               <p className="ant-upload-text">
-                Нажмите или перетащите файл для загрузки
+                Натисніть або перетягніть файл для завантаження
               </p>
             </Upload.Dragger>
           </Form.Item>
 
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Сохранить
+              Зберегти
             </Button>
           </Form.Item>
         </Form>

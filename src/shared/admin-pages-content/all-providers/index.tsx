@@ -65,7 +65,7 @@ const AllProvidersPageContent: React.FC = () => {
       key: 'id',
       render: (id: number) => {
         return (
-          <Select placeholder="Все Заведения" style={{ width: 180 }}>
+          <Select placeholder="Всі заклади" style={{ width: 180 }}>
             {brands
               .filter((brand) => brand.creator_id === id)
               .map((option) => (
@@ -83,12 +83,12 @@ const AllProvidersPageContent: React.FC = () => {
       key: 'is_block',
       render: (isBlock: boolean) => (
         <Tag color={isBlock ? 'red' : 'green'}>
-          {isBlock ? 'Неактивный' : 'Активный'}
+          {isBlock ? 'Неактивний' : 'Активний'}
         </Tag>
       ),
     },
     {
-      title: 'Действия',
+      title: 'Дії',
       key: 'actions',
       render: (_, record) => (
         <>
@@ -130,22 +130,22 @@ const AllProvidersPageContent: React.FC = () => {
 
     try {
       await dispatch(createNewProvider(newProvider)).unwrap();
-      message.success('Провайдер успешно создан');
+      message.success('Провайдер успішно створений');
       form.resetFields();
       setIsModalOpen(false);
       dispatch(fetchAllProviders());
     } catch (error) {
-      message.error('Не удалось создать добавку');
+      message.error('Не вдалося створити добавку');
     }
   };
 
   const handleDelete = async (providerId: number) => {
     try {
       await dispatch(deleteProvider(providerId)).unwrap();
-      message.success('Провайдер успешно удален');
+      message.success('Провайдера успішно видалено');
       dispatch(fetchAllProviders());
     } catch (error) {
-      message.error('Не удалось удалить провайдера');
+      message.error('Не вдалося видалити провайдера');
     }
   };
 
@@ -159,11 +159,11 @@ const AllProvidersPageContent: React.FC = () => {
     try {
       await dispatch(blockProvider({ is_block: !is_block, id_user })).unwrap();
       message.success(
-        `Провайдер успешно ${is_block ? 'разблокирован' : 'заблокирован'}`
+        `Провайдера успішно ${is_block ? 'розблоковано' : 'заблоковано'}`
       );
       dispatch(fetchAllProviders());
     } catch (error) {
-      message.error('Не удалось изменить статус провайдера');
+      message.error('Не вдалося змінити статус провайдера');
     }
   };
 
@@ -176,27 +176,27 @@ const AllProvidersPageContent: React.FC = () => {
       />
 
       <Button type="primary" onClick={showModal} style={{ marginTop: '20px' }}>
-        Создать нового провайдера
+        Створити нового провайдера
       </Button>
       <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Form.Item
-            label="Имя"
+            label="Ім'я"
             name="name"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
-            <Input placeholder="Введите имя провайдера" />
+            <Input placeholder="Введіть ім'я провайдера" />
           </Form.Item>
           <Form.Item
-            label="Номер телефона"
+            label="Номер телефону"
             name="number"
-            rules={[{ required: true, message: 'Заполните это поле!' }]}
+            rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
-            <Input placeholder="Введите номер телефона" />
+            <Input placeholder="Введіть номер телефону" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Сохранить
+              Зберегти
             </Button>
           </Form.Item>
         </Form>

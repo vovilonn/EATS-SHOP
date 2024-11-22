@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 import IProduct from '@/shared/interfaces/product.interface'
 
@@ -11,15 +11,26 @@ interface IProductsProductListProps {
   products: Array<IProduct>
 }
 
-const ProductsProductList: FC<IProductsProductListProps> = props => {
+const ProductsProductList: FC<IProductsProductListProps> = ({ products }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Отображаем первые 6 продуктов, если список не раскрыт
+  const displayedProducts = isExpanded ? products : products.slice(0, 6);
+
   return (
     <section className={style.products}>
-      <ProductList products={props.products} />
-      <Button className={style.view} view>
-        Дивитися все
-      </Button>
+      <ProductList products={displayedProducts} />
+      {!isExpanded && (
+        <Button
+          className={style.view}
+          view
+          onClick={() => setIsExpanded(true)}
+        >
+          Дивитися все
+        </Button>
+      )}
     </section>
   )
 }
 
-export default ProductsProductList
+export default ProductsProductList;

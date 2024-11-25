@@ -1,24 +1,29 @@
+'use client';
+
 import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
-
-import optionsRenderingUtility from '@/shared/utils/options-rendering.utility';
-import Institution from '@/shared/components/institution';
-import Button from '@/shared/components/ui/button';
-import FormInput from '@/shared/components/ui/form/form-input';
-import Map from '@/shared/components/map';
-import FormCheckbox from '@/shared/components/ui/form/form-checkbox';
-
-import style from './style.module.scss';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { useDispatch } from 'react-redux';
 import { TypeDispatch } from '@/shared/store';
+
 import { getCart } from '@/shared/store/cart/requests';
 import { createOrder, getOrderOption } from '@/shared/store/orders/requests';
 import { getAccountInfo } from '@/shared/store/account/requests';
+
 import { IOrderCreate } from '@/shared/interfaces/order.interface';
+
+import Institution from '@/shared/components/institution';
+import Button from '@/shared/components/ui/button';
+import FormInput from '@/shared/components/ui/form/form-input';
+import FormCheckbox from '@/shared/components/ui/form/form-checkbox';
+import Map from '@/shared/components/map';
+
+import style from './style.module.scss';
+import AddressMapPicker from '@/shared/components/map';
 
 const OrderConfirmForm: FC = () => {
   const dispatch = useDispatch<TypeDispatch>();
+
   const { accountInfo } = useTypedSelector((state) => state.accountInfo);
   const { total_cost } = useTypedSelector((state) => state.cart);
   const { delivery_price, min_delivery_not_price } = useTypedSelector(
@@ -28,9 +33,7 @@ const OrderConfirmForm: FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const deliveryList = [{ name: 'Доставка' }, { name: 'Самовивіз' }];
   const [deliveryPrice, setDeliveryPrice] = useState(0);
-  const [selectedOption, setOption] = useState<string>('Доставка');
   const [cashPayment, setCashPayment] = useState<boolean>(false);
   const [cardPayment, setCardPayment] = useState<boolean>(false);
 
@@ -45,16 +48,12 @@ const OrderConfirmForm: FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [formError, setFormError] = useState<string>('');
 
-  const onSelectOption = (option: any) => {
-    setOption(option.name);
-  };
-
-  const optionsDeliveryRendering = optionsRenderingUtility({
-    style,
-    options: deliveryList,
-    onSelectOption,
-    selectedOption,
-  });
+  useEffect(() => {
+    dispatch(getCart());
+    dispatch(getOrderOption());
+    dispatch(getAccountInfo());
+    setDeliveryPrice(total_cost >= min_delivery_not_price ? 0 : delivery_price);
+  }, []);
 
   const handleCashChange = () => {
     setCashPayment(true);
@@ -79,16 +78,16 @@ const OrderConfirmForm: FC = () => {
     const newErrors: { [key: string]: string } = {};
     setFormError('');
 
-    if (selectedOption === 'Доставка' && !address) {
+    if (!address) {
       newErrors.address = "Адреса доставки обов'язкова";
     }
-    if (selectedOption === 'Доставка' && !approach) {
+    if (!approach) {
       newErrors.approach = "Під’їзд обов'язковий";
     }
-    if (selectedOption === 'Доставка' && !floor) {
+    if (!floor) {
       newErrors.floor = "Поверх обов'язковий";
     }
-    if (selectedOption === 'Доставка' && !apartment) {
+    if (!apartment) {
       newErrors.apartment = "Квартира обов'язкова";
     }
     if (!cashPayment && !cardPayment) {
@@ -112,8 +111,7 @@ const OrderConfirmForm: FC = () => {
           floor,
           apartment,
           type_payment: cashPayment ? 'CASH' : 'ONLINE',
-          type_delivery:
-            selectedOption === 'Доставка' ? 'DELIVERY' : 'SELF-DELIVERY',
+          type_delivery: 'DELIVERY',
           count_eats_coin: eatsCoins,
           comment: comment,
           promo_code_id: promoCode,
@@ -132,112 +130,107 @@ const OrderConfirmForm: FC = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(getCart());
-    dispatch(getOrderOption());
-    dispatch(getAccountInfo());
-    setDeliveryPrice(total_cost >= min_delivery_not_price ? delivery_price : 0);
-  }, []);
-
   return (
     <form className={style.form} onSubmit={handleSubmit}>
       <div className={style.delivery}>
         <h1 className={style.title}>Доставка</h1>
-        {/* <div className={style.tabs}>{optionsDeliveryRendering}</div> //TODO */}
-        {selectedOption === 'Доставка' && (
-          <div className={style.address}>
-            <div className={style.field}>
-              <label className={style.label} htmlFor="address">
-                Адрес доставки
-              </label>
-              <FormInput
-                className={`${style.input} ${errors.address ? style.errorBorder : ''
+        <div className={style.address}>
+          <div className={style.field}>
+            <label className={style.label} htmlFor="address">
+              Адрес доставки
+            </label>
+            <FormInput
+              className={`${style.input} ${
+                errors.address ? style.errorBorder : ''
+              }`}
+              id="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              large
+            />
+            {errors.address && (
+              <span className={style.error}>{errors.address}</span>
+            )}
+          </div>
+          <Button className={style.select} basket>
+            Обрати на карті
+          </Button>
+          <div className={style.map}>
+            <Link className={style.change} href="">
+              Змінити адрес
+            </Link>
+            <Map />
+
+            <div className={style.detailed}>
+              <div className={style.field}>
+                <label className={style.label} htmlFor="approach">
+                  Під’їзд
+                </label>
+                <FormInput
+                  className={`${style.input} ${
+                    errors.approach ? style.errorBorder : ''
                   }`}
-                id="address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                large
-              />
-              {errors.address && (
-                <span className={style.error}>{errors.address}</span>
-              )}
-            </div>
-            <Button className={style.select} basket>
-              Обрати на карті
-            </Button>
-            <div className={style.map}>
-              <Link className={style.change} href="">
-                Змінити адрес
-              </Link>
-              <Map className={style.iframe} />
-              <div className={style.detailed}>
-                <div className={style.field}>
-                  <label className={style.label} htmlFor="approach">
-                    Під’їзд
-                  </label>
-                  <FormInput
-                    className={`${style.input} ${errors.approach ? style.errorBorder : ''
-                      }`}
-                    id="approach"
-                    type="number"
-                    value={approach}
-                    onChange={(e) => setApproach(e.target.value)}
-                    onInput={handleNumberInput}
-                    large
-                  />
-                  {errors.approach && (
-                    <span className={style.error}>{errors.approach}</span>
-                  )}
-                </div>
-                <div className={style.field}>
-                  <label className={style.label} htmlFor="floor">
-                    Поверх
-                  </label>
-                  <FormInput
-                    className={`${style.input} ${errors.floor ? style.errorBorder : ''
-                      }`} // Условное добавление класса
-                    id="floor"
-                    type="number" // Устанавливаем тип number
-                    value={floor}
-                    onChange={(e) => setFloor(e.target.value)} // Используйте e.target.value
-                    onInput={handleNumberInput} // Добавляем обработчик для валидации ввода
-                    large
-                  />
-                  {errors.floor && (
-                    <span className={style.error}>{errors.floor}</span>
-                  )}
-                </div>
-                <div className={style.field}>
-                  <label className={style.label} htmlFor="apartment">
-                    Квартира
-                  </label>
-                  <FormInput
-                    className={`${style.input} ${errors.apartment ? style.errorBorder : ''
-                      }`}
-                    id="apartment"
-                    type="number"
-                    value={apartment}
-                    onChange={(e) => setApartment(e.target.value)}
-                    onInput={handleNumberInput}
-                    large
-                  />
-                  {errors.apartment && (
-                    <span className={style.error}>{errors.apartment}</span>
-                  )}
-                </div>
+                  id="approach"
+                  type="number"
+                  value={approach}
+                  onChange={(e) => setApproach(e.target.value)}
+                  onInput={handleNumberInput}
+                  large
+                />
+                {errors.approach && (
+                  <span className={style.error}>{errors.approach}</span>
+                )}
+              </div>
+              <div className={style.field}>
+                <label className={style.label} htmlFor="floor">
+                  Поверх
+                </label>
+                <FormInput
+                  className={`${style.input} ${
+                    errors.floor ? style.errorBorder : ''
+                  }`}
+                  id="floor"
+                  type="number"
+                  value={floor}
+                  onChange={(e) => setFloor(e.target.value)}
+                  onInput={handleNumberInput}
+                  large
+                />
+                {errors.floor && (
+                  <span className={style.error}>{errors.floor}</span>
+                )}
+              </div>
+              <div className={style.field}>
+                <label className={style.label} htmlFor="apartment">
+                  Квартира
+                </label>
+                <FormInput
+                  className={`${style.input} ${
+                    errors.apartment ? style.errorBorder : ''
+                  }`}
+                  id="apartment"
+                  type="number"
+                  value={apartment}
+                  onChange={(e) => setApartment(e.target.value)}
+                  onInput={handleNumberInput}
+                  large
+                />
+                {errors.apartment && (
+                  <span className={style.error}>{errors.apartment}</span>
+                )}
               </div>
             </div>
-            <div className={style.institution}>
-              <Button className={style.select} basket>
-                Обрати заклад
-              </Button>
-              <Link className={style.change} href="">
-                Змінити адрес
-              </Link>
-              <Institution />
-            </div>
           </div>
-        )}
+          <div className={style.institution}>
+            <Button className={style.select} basket>
+              Обрати заклад
+            </Button>
+            <Link className={style.change} href="">
+              Змінити адрес
+            </Link>
+            <Institution />
+          </div>
+        </div>
         <div className={style.payment}>
           <h2 className={style.title}>Спосіб оплати</h2>
           <FormCheckbox onChange={handleCashChange} large checked={cashPayment}>
@@ -252,7 +245,9 @@ const OrderConfirmForm: FC = () => {
           >
             Карткою онлайн
           </FormCheckbox>
-          {errors.payment && <span className={style.error}>{errors.payment}</span>}
+          {errors.payment && (
+            <span className={style.error}>{errors.payment}</span>
+          )}
         </div>
         {cardPayment && (
           <div className={style.call}>
@@ -271,11 +266,12 @@ const OrderConfirmForm: FC = () => {
               Підготувати решту з
             </label>
             <FormInput
-              className={`${style.input} ${errors.ready ? style.errorBorder : ''
-                }`}
+              className={`${style.input} ${
+                errors.ready ? style.errorBorder : ''
+              }`}
               id="ready"
               type="number"
-              onChange={() => { }}
+              onChange={() => {}}
               onInput={handleNumberInput}
               large
             />
@@ -291,8 +287,9 @@ const OrderConfirmForm: FC = () => {
         <div className={style.coin}>
           <div className={style.activate}>
             <input
-              className={`${style.input} ${errors.promoCode ? style.errorBorder : ''
-                }`}
+              className={`${style.input} ${
+                errors.promoCode ? style.errorBorder : ''
+              }`}
               type="text"
               placeholder="Промокод"
               value={promoCode}

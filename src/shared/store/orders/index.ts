@@ -16,7 +16,7 @@ interface IOrdersInitialState {
 const initialState: IOrdersInitialState = {
   ordersHistory: [],
   orderOption: {
-    delivery_price: 0,
+    delivery_price: 50,
     min_delivery_not_price: 0,
   },
   loading: 'idle',

@@ -123,18 +123,26 @@ const ProviderProductsContent: React.FC = () => {
       title: 'Добавки',
       dataIndex: 'model_additional_components',
       key: 'model_additional_components',
-      render: (ingredients: IComponent[]) => (
-        <Select
-          value={ingredients.length > 0 ? ingredients[0].id : undefined}
-          style={{ width: 120 }}
-        >
-          {ingredients.map((item) => (
-            <Option key={item.id} value={item.id}>
-              {item.name}
-            </Option>
-          ))}
-        </Select>
-      ),
+      render: (ingredients: IComponent[]) => {
+        if (ingredients.length) {
+          return (
+            <Select
+              value={ingredients.length > 0 ? ingredients[0].id : undefined}
+              style={{ width: 120 }}
+            >
+              {ingredients.map((item) => (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              ))}
+            </Select>
+          );
+        } else {
+          return (
+            <p style={{ color: 'gray', fontStyle: 'italic' }}>Добавок нету</p>
+          );
+        }
+      },
     },
     {
       title: 'Опції',
@@ -202,6 +210,7 @@ const ProviderProductsContent: React.FC = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
     form.resetFields();
+    setSelectedProduct(null);
   };
 
   const handleFileChange = (info: any) => {
@@ -236,7 +245,9 @@ const ProviderProductsContent: React.FC = () => {
 
     formData.append('general_categories_id', values.generalCategory);
     formData.append('branded_store_categories_id', values.category);
-    formData.append('additional_components', `${values.ingredients}`);
+    if (values.ingredients) {
+      formData.append('additional_components', `${values.ingredients}`);
+    }
     if (selectedBrand) {
       formData.append('branded_store_id', `${selectedBrand}`);
     }
@@ -437,11 +448,7 @@ const ProviderProductsContent: React.FC = () => {
                 ))}
             </Select>
           </Form.Item>
-          <Form.Item
-            label="Добавки"
-            name="ingredients"
-            rules={[{ required: true, message: 'Оберіть добавки!' }]}
-          >
+          <Form.Item label="Добавки" name="ingredients">
             <Select placeholder="Оберіть добавки" mode="multiple">
               {ingredients &&
                 ingredients.map((item: IComponent) => (

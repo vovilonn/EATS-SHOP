@@ -51,6 +51,7 @@ const ProviderProductsContent: React.FC = () => {
     [key: number]: IOption | null;
   }>({});
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+  const [editing, setEditing] = useState(false);
   const [file, setFile] = useState<File | null>(null);
 
   const [form] = Form.useForm();
@@ -211,6 +212,7 @@ const ProviderProductsContent: React.FC = () => {
     setIsModalOpen(false);
     form.resetFields();
     setSelectedProduct(null);
+    setEditing(false);
   };
 
   const handleFileChange = (info: any) => {
@@ -245,15 +247,18 @@ const ProviderProductsContent: React.FC = () => {
 
     formData.append('general_categories_id', values.generalCategory);
     formData.append('branded_store_categories_id', values.category);
-    if (values.ingredients) {
-      formData.append('additional_components', `${values.ingredients}`);
+    if (values.ingredients && values.ingredients.length !== 0) {
+      formData.append(
+        'additional_components',
+        JSON.stringify(values.ingredients)
+      );
     }
     if (selectedBrand) {
       formData.append('branded_store_id', `${selectedBrand}`);
     }
 
     try {
-      if (selectedProduct) {
+      if (selectedProduct && editing) {
         formData.append('menu_id', `${selectedProduct.id}`);
 
         await dispatch(editProduct(formData)).unwrap();
@@ -306,6 +311,7 @@ const ProviderProductsContent: React.FC = () => {
     }
 
     setSelectedProduct(product);
+    setEditing(true);
 
     form.setFieldsValue({
       title: product.name,

@@ -93,7 +93,12 @@ const ProviderIngredientsContent: React.FC = () => {
       title: 'Опція',
       dataIndex: 'options',
       key: 'options',
-      render: (text) => text,
+      render: (text) =>
+        text === '*' ? (
+          <p style={{ color: 'gray', fontStyle: 'italic' }}>Пусто</p>
+        ) : (
+          text
+        ),
     },
     {
       title: 'Дії',
@@ -123,6 +128,7 @@ const ProviderIngredientsContent: React.FC = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
     form.resetFields();
+    setSelectedIngredient(null);
   };
 
   const handleFileChange = (info: any) => {
@@ -135,6 +141,8 @@ const ProviderIngredientsContent: React.FC = () => {
       return;
     }
 
+    console.log(values);
+
     if (selectedBrand) {
       const formData = new FormData();
       formData.append('name', values.title);
@@ -142,7 +150,12 @@ const ProviderIngredientsContent: React.FC = () => {
         formData.append('branded_store_id', `${selectedBrand}`);
       }
       formData.append('price', values.price);
-      formData.append('options', values.option);
+
+      if (values.option) {
+        formData.append('options', values.option);
+      } else {
+        formData.append('options', '*');
+      }
 
       if (file) {
         formData.append('picture', file);
@@ -202,7 +215,7 @@ const ProviderIngredientsContent: React.FC = () => {
     form.setFieldsValue({
       title: ingredient.name,
       price: ingredient.price,
-      option: ingredient.options,
+      option: ingredient.options === '*' ? '' : ingredient.options,
       file: ingredient.picture,
     });
     setFile(null);
@@ -255,11 +268,7 @@ const ProviderIngredientsContent: React.FC = () => {
           >
             <Input placeholder="Ціна" type="number" />
           </Form.Item>
-          <Form.Item
-            label="Опція"
-            name="option"
-            rules={[{ required: true, message: 'Заповніть це поле!' }]}
-          >
+          <Form.Item label="Опція" name="option">
             <Input placeholder="Введіть опцію" />
           </Form.Item>
           <Form.Item

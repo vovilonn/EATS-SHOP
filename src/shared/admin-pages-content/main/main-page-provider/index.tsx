@@ -15,6 +15,7 @@ import {
 import { fetchCities } from '@/shared/store/admin/requests';
 
 import IBrand from '@/shared/interfaces/brand.interface';
+import { IOrdersHistory } from '@/shared/interfaces/order.interface';
 
 import {
   Button,
@@ -41,6 +42,7 @@ const MainPageProviderContent: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [selectedBrand, setSelectedBrand] = useState<IBrand | null>(null);
+  const [countOrders, setCountOrders] = useState<Record<number, number>>({});
 
   const [form] = Form.useForm();
 
@@ -49,6 +51,27 @@ const MainPageProviderContent: React.FC = () => {
     dispatch(fetchProviderOrders());
     dispatch(fetchProviderBrands());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (orders) {
+      setCountOrders(totalOrdersForBrands(orders));
+    }
+  }, [orders]);
+
+  const totalOrdersForBrands = (orders: IOrdersHistory[]) => {
+    const brandOrdersCount: Record<number, number> = {};
+
+    orders.forEach((order) => {
+      const brandId =
+        order.cart.cart_items[0]?.model_menu.model_branded_store?.id;
+
+      if (brandId) {
+        brandOrdersCount[brandId] = (brandOrdersCount[brandId] || 0) + 1;
+      }
+    });
+
+    return brandOrdersCount;
+  };
 
   const columns: TableProps<IBrand>['columns'] = [
     {
@@ -84,7 +107,7 @@ const MainPageProviderContent: React.FC = () => {
       title: 'Кількість замовлень',
       dataIndex: 'orders',
       key: 'orders',
-      render: () => orders?.length || 0,
+      render: (_, record) => countOrders[record.id] || 0,
     },
     {
       title: 'Дії',

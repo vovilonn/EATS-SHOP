@@ -1,9 +1,7 @@
 import { ReactNode, useEffect, useState } from 'react';
-
 import { useRouter } from 'next/router';
 import { useActions } from '../hooks/use-actions';
 import { useTypedSelector } from '../hooks/use-typed-selector';
-
 import { Layout, Menu, Spin } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 import {
@@ -12,7 +10,6 @@ import {
   FileOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
-
 import styles from './admin-layout.module.scss';
 
 interface AdminLayoutProps {
@@ -21,11 +18,9 @@ interface AdminLayoutProps {
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { authToken, role } = useTypedSelector((state) => state.adminPanel);
-
   const [loading, setLoading] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string>('');
   const [collapsed, setCollapsed] = useState<boolean>(false);
-
   const router = useRouter();
   const actions = useActions();
 
@@ -75,6 +70,63 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     );
   }
 
+  const menuItems = [
+    {
+      key: '/admin',
+      icon: <DashboardOutlined />,
+      label: role === 'PROVIDER' ? 'Заклади' : 'Головна',
+    },
+    ...(role === 'ADMIN'
+      ? [
+          {
+            key: '/admin/all-providers',
+            icon: <DashboardOutlined />,
+            label: 'Всі провайдери',
+          },
+          {
+            key: '/admin/clients',
+            icon: <UserOutlined />,
+            label: 'Клієнти',
+          },
+          {
+            key: '/admin/promocodes',
+            icon: <UserOutlined />,
+            label: 'Промокоди',
+          },
+        ]
+      : []),
+    ...(role === 'PROVIDER'
+      ? [
+          {
+            key: '/admin/provider/categories',
+            icon: <UserOutlined />,
+            label: 'Категорії',
+          },
+          {
+            key: '/admin/provider/ingredients',
+            icon: <UserOutlined />,
+            label: 'Додатки',
+          },
+          {
+            key: '/admin/provider/products',
+            icon: <UserOutlined />,
+            label: 'Продукти',
+          },
+          {
+            key: '/admin/orders',
+            icon: <FileOutlined />,
+            label: 'Замовлення',
+          },
+        ]
+      : []),
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: 'Вийти',
+      onClick: handleLogout,
+    },
+  ];
+
   return (
     <Layout className={styles.adminLayout}>
       <Sider
@@ -91,56 +143,8 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           mode="inline"
           onClick={handleMenuClick}
           selectedKeys={[selectedKey]}
-        >
-          <Menu.Item key="/admin" icon={<DashboardOutlined />}>
-            {role === 'PROVIDER' ? 'Заклади' : 'Головна'}
-          </Menu.Item>
-          {role === 'ADMIN' && (
-            <>
-              <Menu.Item
-                key="/admin/all-providers"
-                icon={<DashboardOutlined />}
-              >
-                Всі провайдери
-              </Menu.Item>
-              <Menu.Item key="/admin/clients" icon={<UserOutlined />}>
-                Клієнти
-              </Menu.Item>
-              <Menu.Item key="/admin/promocodes" icon={<UserOutlined />}>
-                Промокоди
-              </Menu.Item>
-            </>
-          )}
-          {role === 'PROVIDER' && (
-            <>
-              <Menu.Item
-                key="/admin/provider/categories"
-                icon={<UserOutlined />}
-              >
-                Категорії
-              </Menu.Item>
-              <Menu.Item
-                key="/admin/provider/ingredients"
-                icon={<UserOutlined />}
-              >
-                Додатки
-              </Menu.Item>
-              <Menu.Item key="/admin/provider/products" icon={<UserOutlined />}>
-                Продукти
-              </Menu.Item>
-              <Menu.Item key="/admin/orders" icon={<FileOutlined />}>
-                Замовлення
-              </Menu.Item>
-            </>
-          )}
-          <Menu.Item
-            onClick={handleLogout}
-            key="logout"
-            icon={<LogoutOutlined />}
-          >
-            Вийти
-          </Menu.Item>
-        </Menu>
+          items={menuItems}
+        />
       </Sider>
       <Layout>
         <Header className={styles.header}>Адмін Панель</Header>

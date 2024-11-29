@@ -212,7 +212,12 @@ const MainPageProviderContent: React.FC = () => {
 
   return (
     <>
-      <Table<IBrand> columns={columns} dataSource={brands} pagination={false} />
+      <Table<IBrand>
+        rowKey="id"
+        columns={columns}
+        dataSource={brands}
+        pagination={false}
+      />
 
       <Button
         type="primary"

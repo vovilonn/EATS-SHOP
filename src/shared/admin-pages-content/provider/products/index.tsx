@@ -362,6 +362,7 @@ const ProviderProductsContent: React.FC = () => {
           dataSource={products}
           pagination={false}
           scroll={{ x: 1500 }}
+          rowKey="id"
         />
       )}
 

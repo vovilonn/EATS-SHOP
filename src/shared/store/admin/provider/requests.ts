@@ -203,7 +203,7 @@ export const fetchProviderProducts = createAsyncThunk<IProduct[], number>(
   async (brand_id: number) => {
     const { data } = await Axios({
       method: 'get',
-      url: `/provider/branded_store/menu/view?branded_store_id=${brand_id}`,
+      url: `/provider/branded_store/menu/view?page=1&limit=1000000000000&branded_store_id=${brand_id}`,
       useLocalStorage: true,
     });
 

@@ -34,7 +34,7 @@ const Footer: FC = () => {
     href: '/profile/personal-info'
   }, {
     name: 'Правова інформація',
-    href: '/'
+    href: '/profile/privacy'
   }]
 
   return (

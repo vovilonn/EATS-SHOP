@@ -16,6 +16,10 @@ const ProductComponentList: FC<IProductComponentListProps> = props => {
     return <ComponentCard key={component.id} {...component} />
   })
 
+  if (componentsRendering.length === 0) {
+    return null
+  }
+
   return (
     <section>
       <Title className={style.title} large>

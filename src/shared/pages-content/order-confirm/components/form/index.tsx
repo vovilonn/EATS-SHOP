@@ -152,14 +152,14 @@ const OrderConfirmForm: FC = () => {
               <span className={style.error}>{errors.address}</span>
             )}
           </div>
-          <Button className={style.select} basket>
+          {/* <Button className={style.select} basket>
             Обрати на карті
-          </Button>
+          </Button> */}
           <div className={style.map}>
-            <Link className={style.change} href="">
+            {/* <Link className={style.change} href="">
               Змінити адрес
-            </Link>
-            <Map />
+            </Link> */}
+            {/* <Map /> TODO */}
 
             <div className={style.detailed}>
               <div className={style.field}>
@@ -222,13 +222,13 @@ const OrderConfirmForm: FC = () => {
             </div>
           </div>
           <div className={style.institution}>
-            <Button className={style.select} basket>
+            {/* <Button className={style.select} basket>
               Обрати заклад
-            </Button>
-            <Link className={style.change} href="">
+            </Button> */}
+            {/* <Link className={style.change} href="">
               Змінити адрес
-            </Link>
-            <Institution />
+            </Link> */}
+            {/* <Institution /> */}
           </div>
         </div>
         <div className={style.payment}>

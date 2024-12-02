@@ -23,8 +23,6 @@ const ProductPictures: FC<IProductPicturesProps> = props => {
         id='product-swiper'
         spaceBetween={10}
         slidesPerView={1}
-        pagination={{ clickable: true }}
-        modules={[Pagination]}
       >
         {renderingPictures}
       </Swiper>

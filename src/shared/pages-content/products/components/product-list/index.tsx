@@ -14,13 +14,12 @@ interface IProductsProductListProps {
 const ProductsProductList: FC<IProductsProductListProps> = ({ products }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Отображаем первые 6 продуктов, если список не раскрыт
   const displayedProducts = isExpanded ? products : products.slice(0, 6);
 
   return (
     <section className={style.products}>
       <ProductList products={displayedProducts} />
-      {!isExpanded && (
+      {products.length > 6 && !isExpanded && ( 
         <Button
           className={style.view}
           view

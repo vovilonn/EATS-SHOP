@@ -25,6 +25,7 @@ import LikeIcon from '@/shared/assets/icons/like-icon.svg';
 import RemoveIcon from '@/shared/assets/icons/remove-icon.svg';
 
 import style from './style.module.scss';
+import { useRouter } from 'next/router';
 
 interface IProductCardProps extends IProduct {
   cart_id?: number;
@@ -63,6 +64,9 @@ const ProductCard: FC<IProductCardProps> = (props) => {
   const cartTotalPrice = totalCartPrice(
     props.model_menu_ingredients_cart ?? []
   );
+
+  const router = useRouter(); 
+  const isBasketPage = router.pathname === '/profile/basket';
 
   const classNameProduct: string = `
     ${style.product}
@@ -179,8 +183,12 @@ const ProductCard: FC<IProductCardProps> = (props) => {
 
               {props.basket && (
                 <>
-                  <p className={style.composition}>(30 см), 490 гр</p>
-                  <p className={style.components}>+ шинка королівська (23 грн)</p>
+                  <p className={style.composition}>({props.model_options?.name}), {props.model_options?.weight} гр.</p>
+                  {
+                    props.model_menu_ingredients_cart && props.model_menu_ingredients_cart.map((ingredient, i) =>
+                    <p className={style.components}>+ {ingredient.count} {ingredient.model_menu_ingredients.name} ({ingredient.model_menu_ingredients.price * ingredient.count})</p>)
+                  }
+                
                 </>
               )}
 
@@ -195,7 +203,7 @@ const ProductCard: FC<IProductCardProps> = (props) => {
               <h2 className={style.price}>
                 {props.basket ? cartTotalPrice + totalPrice : totalPrice} грн
               </h2>
-              {props.basket && <button className={style.edit}>Змінити</button>}
+              {/* {props.basket && <button className={style.edit}>Змінити</button>} TODO */}
               <AmountToggle
                 cartId={props.cart_id}
                 productId={props.id}
@@ -206,9 +214,11 @@ const ProductCard: FC<IProductCardProps> = (props) => {
                 full={props.toggleAmountFull}
               />
             </div>
-            <Button className={style.btn} onClick={onBasket} basket>
-              В кошик
-            </Button>
+            {!isBasketPage && ( // Скрываем кнопку на странице корзины
+              <Button className={style.btn} onClick={onBasket} basket>
+                В кошик
+              </Button>
+            )}
           </footer>
         </div>
       </div>

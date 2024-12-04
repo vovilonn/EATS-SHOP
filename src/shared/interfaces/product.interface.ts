@@ -9,6 +9,7 @@ export interface IOption {
 }
 
 export default interface IProduct {
+  brandName: string;
   id: number;
   name: string;
   composition: string;

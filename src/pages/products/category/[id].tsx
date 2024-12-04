@@ -1,10 +1,7 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-
 import IProduct from '@/shared/interfaces/product.interface';
 import ICategory from '@/shared/interfaces/category.interface';
-
 import Axios from '@/shared/utils/axios.utility';
-
 import ProductsPageContent from '@/shared/pages-content/products';
 
 interface IProductsCategoryPageProps {
@@ -28,7 +25,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     const response = await Axios({ method: 'get', url: '/menu/general_categories/view' });
     const categories = response.data;
 
-    // Проверяем, что categories — это массив объектов с полем id
     if (!Array.isArray(categories) || !categories.length) {
       throw new Error('Не удалось загрузить категории');
     }
@@ -55,19 +51,17 @@ export const getStaticProps: GetStaticProps = async (props) => {
 
   try {
     const [productsResponse, categoriesResponse] = await Promise.all([
-      Axios({ method: 'get', url: `/menu/view?page=1&general_categories_id=${categoryId}` }),
+      Axios({ method: 'get', url: `/menu/view?limit=6&page=1&general_categories_id=${categoryId}` }),
       Axios({ method: 'get', url: '/menu/general_categories/view' }),
     ]);
 
-    const products = productsResponse.data;
+    const products = productsResponse.data || []; // Если продуктов нет, возвращаем пустой массив
     const categories = categoriesResponse.data;
 
-    // Найдем категорию по переданному ID
     const category = categories.find(
       (category: ICategory) => category.id === Number(categoryId)
     );
 
-    // Проверяем наличие категории
     if (!category) {
       return { notFound: true };
     }
@@ -79,7 +73,7 @@ export const getStaticProps: GetStaticProps = async (props) => {
   } catch (error) {
     console.error('Ошибка при загрузке данных:', error);
     return {
-      notFound: true, // Показываем страницу 404, если возникла ошибка
+      notFound: true, // Показываем страницу 404 в случае ошибки
     };
   }
 };

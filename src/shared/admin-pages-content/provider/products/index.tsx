@@ -66,6 +66,12 @@ const ProviderProductsContent: React.FC = () => {
 
   const columns: TableProps<IProduct>['columns'] = [
     {
+      title: '№',
+      dataIndex: 'index',
+      key: 'index',
+      render: (_: any, __: any, index: number) => index + 1,
+    },
+    {
       title: 'Зображення',
       dataIndex: 'picture',
       key: 'picture',

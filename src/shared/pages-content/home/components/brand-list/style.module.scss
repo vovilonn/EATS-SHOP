@@ -6,9 +6,12 @@
   grid-template-columns: 1fr 1fr 0.65fr 1fr 0.66fr;
   gap: 24px;
   grid-template-areas:
-    'one one two two three'
-    'one one five six six'
-    'four four five six six';
+    // 'one one two two three'
+    // 'one one five six six'
+    // 'four four five six six';
+
+    'one one two three three'
+    'four five five six six';
   @media screen and (max-width: 768px) {
     display: grid;
     justify-items: center;
@@ -17,9 +20,9 @@
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-template-areas:
-      'one one five'
-      'two two two'
-      'three four four'
+      'one one two'
+      'three three three'
+      'four five five'
       'six six six';
     gap: 10px;
     margin: 10px;
@@ -32,6 +35,7 @@
     background-position: center bottom;
     background-size: contain;
     background-repeat: no-repeat;
+    max-height: 170px;
 
     &:before {
       content: '';
@@ -110,77 +114,5 @@
         height: 170px;
       }
     }
-
-    // &:nth-child(7) {
-    //   grid-area: seven;
-    //   width: 503px;
-    //   height: 463px;
-    // }
-
-    // &:nth-child(8) {
-    //   grid-area: eight;
-    //   width: 503px;
-    //   height: 252px;
-    // }
-
-    // &:nth-child(9) {
-    //   grid-area: nine;
-    //   width: 186px;
-    //   height: 252px;
-    // }
-
-    // &:nth-child(10) {
-    //   grid-area: ten;
-    //   width: 503px;
-    //   height: 252px;
-    // }
-
-    // &:nth-child(11) {
-    //   grid-area: eleven;
-    //   width: 186px;
-    //   height: 463px;
-    // }
-
-    // &:nth-child(12) {
-    //   grid-area: twelve;
-    //   width: 503px;
-    //   height: 463px;
-    // }
-
-    // &:nth-child(13) {
-    //   grid-area: thirteen;
-    //   width: 503px;
-    //   height: 463px;
-    // }
-
-    // &:nth-child(14) {
-    //   grid-area: fourteen;
-    //   width: 503px;
-    //   height: 252px;
-    // }
-
-    // &:nth-child(15) {
-    //   grid-area: fifteen;
-    //   width: 186px;
-    //   height: 252px;
-    // }
-
-    // &:nth-child(16) {
-    //   grid-area: sixteen;
-    //   width: 503px;
-    //   height: 252px;
-    // }
-
-    // &:nth-child(17) {
-    //   grid-area: seventeen;
-    //   width: 186px;
-    //   height: 463px;
-    // }
-
-    // &:nth-child(18) {
-    //   grid-area: eighteen;
-    //   width: 503px;
-    //   height: 463px;
-    // }
   }
 }

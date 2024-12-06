@@ -11,7 +11,7 @@ import ProductsPageContent from '@/shared/pages-content/products';
 interface IProductsBrandPageProps {
   products: IProduct[];
   categories: ICategory[];
-  brand: { icon: string };
+  brandName: string;
 }
 
 const ProductsBrandPage: NextPage<IProductsBrandPageProps> = (props) => {
@@ -19,7 +19,7 @@ const ProductsBrandPage: NextPage<IProductsBrandPageProps> = (props) => {
     <ProductsPageContent
       products={props.products}
       categories={props.categories}
-      brand={props.brand}
+      brandName={props.brandName}
     />
   );
 };
@@ -42,6 +42,18 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async (props) => {
   const brandId = props.params?.id;
 
+  const allBrands = (
+    await Axios({ method: 'get', url: '/menu/branded_store/view' })
+  ).data;
+
+  const brand = allBrands.find((b: IBrand) => String(b.id) === brandId);
+
+  if (!brand) {
+    return {
+      notFound: true,
+    };
+  }
+
   const getCategories = Axios({
     method: 'post',
     url: '/menu/branded_store_categories/view',
@@ -52,10 +64,8 @@ export const getStaticProps: GetStaticProps = async (props) => {
 
   const getProducts = Axios({
     method: 'get',
-    url: `/menu/view?page=1&branded_store_id=${brandId}`,
+    url: `/menu/view?page=1&branded_store_id=${brandId}&limit=1000000000000`,
   });
-
-  const brand = { icon: 'https://iili.io/d8w8w0X.png' };
 
   const data = await Promise.all([getCategories, getProducts]).then((data) => ({
     categories: data[0].data,
@@ -63,7 +73,10 @@ export const getStaticProps: GetStaticProps = async (props) => {
   }));
 
   return {
-    props: { ...data, brand },
+    props: {
+      ...data,
+      brandName: brand.name,
+    },
     revalidate: 200,
   };
 };

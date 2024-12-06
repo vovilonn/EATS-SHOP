@@ -11,22 +11,22 @@ interface IProductsPageContentProps {
   products: IProduct[];
   categories: ICategory[];
   category?: ICategory;
-  brand?: { icon: string };
+  brandName?: string;
 }
 
 const ProductsPageContent: FC<IProductsPageContentProps> = (props) => {
   return (
     <Layout>
-      {Boolean(props.products.length) && props.category && (
+      {Boolean(props.products.length) && props.categories && (
         <>
           <ProductsHeader
             category={props.category}
             categories={props.categories}
-            brand={props.brand}
+            brandName={props.brandName}
           />
-          <ProductsProductList 
-            products={props.products} 
-            categoryId={props.category.id} // Передаем categoryId
+          <ProductsProductList
+            products={props.products}
+            // categoryId={props.category.id}
           />
         </>
       )}

@@ -63,7 +63,8 @@ const ProductList: FC<IProductListProps> = (props) => {
     <div
       className={style.products}
       style={{
-        gridTemplateColumns: productsRendering.length === 0 ? '1fr' : '1fr 1fr 1fr',
+        gridTemplateColumns:
+          productsRendering.length === 0 ? '1fr' : '1fr 1fr 1fr',
       }}
     >
       {productsRendering.length !== 0 ? (

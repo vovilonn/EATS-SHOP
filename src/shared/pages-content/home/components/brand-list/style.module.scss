@@ -6,12 +6,12 @@
   grid-template-columns: 1fr 1fr 0.65fr 1fr 0.66fr;
   gap: 24px;
   grid-template-areas:
-    // 'one one two two three'
-    // 'one one five six six'
-    // 'four four five six six';
+    'one one two two three'
+    'one one five six six'
+    'four four five six six';
 
-    'one one two three three'
-    'four five five six six';
+  // 'one one two three three'
+  // 'four five five six six';
   @media screen and (max-width: 768px) {
     display: grid;
     justify-items: center;

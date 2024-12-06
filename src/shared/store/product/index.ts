@@ -95,11 +95,11 @@ const productSlice = createSlice({
         );
 
         if (existingIngredient) {
-          existingIngredient.count += ingredients_count;
+          existingIngredient.count += 1;
         } else {
           existingProductIngredient.ingredients.push({
             menu_ingredients_id: ingredients_id,
-            count: 1,
+            count: ingredients_count,
           });
         }
       } else {
@@ -108,7 +108,7 @@ const productSlice = createSlice({
           ingredients: [
             {
               menu_ingredients_id: ingredients_id,
-              count: 1,
+              count: ingredients_count === 0 ? 1 : ingredients_count, // Используем переданное значение
             },
           ],
         });

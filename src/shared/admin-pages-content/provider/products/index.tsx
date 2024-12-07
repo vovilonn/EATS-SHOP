@@ -95,9 +95,10 @@ const ProviderProductsContent: React.FC = () => {
       title: 'Заклад',
       dataIndex: 'model_branded_store',
       key: 'model_branded_store',
-      render: (model_branded_store: IBrand) => {
+      render: (model_branded_store_categories) => {
         const brand = brands.find(
-          (brand) => brand.id === model_branded_store.id
+          (brand) =>
+            brand.id === model_branded_store_categories?.branded_store_id
         );
         return brand?.name || 'Невідомо';
       },

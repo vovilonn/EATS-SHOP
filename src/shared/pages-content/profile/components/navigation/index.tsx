@@ -28,9 +28,9 @@ const ProfileNavigation: FC = () => {
     { name: 'Гаманець', icon: WalletIcon, href: '/profile/wallet' },
     { name: 'Досягнення', icon: StarIcon, href: '/profile/achievements' },
     { name: 'Друзі', icon: FriendsIcon, href: '/profile/friends' },
-    { name: 'Про нас', icon: AboutIcon, href: '/profile/about' },
+    { name: 'Про нас', icon: AboutIcon, href: '/about' },
     { name: 'Налаштування', icon: SettingsIcon, href: '/profile/personal-info', },
-    { name: 'Правова інформація', icon: AboutIcon, href: '/profile/rules' },
+    { name: 'Правова інформація', icon: AboutIcon, href: '/privacy' },
     { name: 'Вийти', icon: ExitIcon, href: '/', exit: true },
   ];
 

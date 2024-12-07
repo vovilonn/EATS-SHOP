@@ -28,13 +28,13 @@ const Footer: FC = () => {
     href: '/profile/friends'
   }, {
     name: 'Про нас',
-    href: '/profile/about'
+    href: '/about'
   }, {
     name: 'Налаштування',
     href: '/profile/personal-info'
   }, {
     name: 'Правова інформація',
-    href: '/profile/privacy'
+    href: '/privacy'
   }]
 
   return (

@@ -26,6 +26,7 @@ import {
   Table,
   TableProps,
   Upload,
+  UploadFile,
 } from 'antd';
 import Image from 'next/image';
 
@@ -39,7 +40,7 @@ const ProviderIngredientsContent: React.FC = () => {
   const [selectedBrand, setSelectedBrand] = useState<number | null>(null);
   const [selectedIngredient, setSelectedIngredient] =
     useState<IComponent | null>(null);
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<UploadFile | null>(null);
 
   const [form] = Form.useForm();
 
@@ -127,22 +128,24 @@ const ProviderIngredientsContent: React.FC = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
-    form.resetFields();
     setSelectedIngredient(null);
+    form.resetFields();
+    setFile(null);
   };
 
   const handleFileChange = (info: any) => {
-    setFile(info.file);
+    const file = info.file.originFileObj || info.file;
+    const newFile: UploadFile = {
+      uid: file.uid || String(new Date().getTime()),
+      name: file.name,
+      status: 'done',
+      url: URL.createObjectURL(file),
+      originFileObj: file,
+    };
+    setFile(newFile);
   };
 
   const onFinish = async (values: any) => {
-    if (!file && !selectedIngredient?.picture) {
-      message.error('Будь ласка, додайте зображення!');
-      return;
-    }
-
-    console.log(values);
-
     if (selectedBrand) {
       const formData = new FormData();
       formData.append('name', values.title);
@@ -157,10 +160,11 @@ const ProviderIngredientsContent: React.FC = () => {
         formData.append('options', '*');
       }
 
-      if (file) {
-        formData.append('picture', file);
-      } else if (selectedIngredient?.picture) {
-        formData.append('picture', selectedIngredient.picture);
+      if (file && file.originFileObj) {
+        formData.append('picture', file.originFileObj);
+      } else {
+        message.error('Будь ласка, додайте зображення!');
+        return;
       }
 
       try {
@@ -173,10 +177,12 @@ const ProviderIngredientsContent: React.FC = () => {
           await dispatch(createNewIngredient(formData)).unwrap();
           message.success('Додавку успішно створено');
         }
+        await dispatch(fetchProviderIngredients(selectedBrand));
 
-        form.resetFields();
         setIsModalOpen(false);
-        dispatch(fetchProviderIngredients(selectedBrand));
+        setSelectedIngredient(null);
+        form.resetFields();
+        setFile(null);
       } catch (error) {
         message.error('Не вдалося зберегти добавку');
       }
@@ -212,14 +218,24 @@ const ProviderIngredientsContent: React.FC = () => {
 
   const handleEdit = (ingredient: IComponent) => {
     setSelectedIngredient(ingredient);
+    setIsModalOpen(true);
+
     form.setFieldsValue({
       title: ingredient.name,
       price: ingredient.price,
       option: ingredient.options === '*' ? '' : ingredient.options,
-      file: ingredient.picture,
     });
-    setFile(null);
-    setIsModalOpen(true);
+
+    const existingFile: UploadFile = {
+      uid: '-1',
+      name: (ingredient.name +
+        '.' +
+        ingredient.picture.split('/').pop()?.split('.').pop()) as string,
+      status: 'done',
+      url: ingredient.picture,
+    };
+
+    setFile(existingFile);
   };
 
   return (
@@ -280,18 +296,7 @@ const ProviderIngredientsContent: React.FC = () => {
               name="file"
               beforeUpload={() => false}
               onChange={handleFileChange}
-              defaultFileList={
-                selectedIngredient
-                  ? [
-                      {
-                        uid: selectedIngredient.id.toString(),
-                        name: selectedIngredient.name,
-                        status: 'done',
-                        url: selectedIngredient.picture,
-                      },
-                    ]
-                  : []
-              }
+              fileList={file ? [file] : []}
             >
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />

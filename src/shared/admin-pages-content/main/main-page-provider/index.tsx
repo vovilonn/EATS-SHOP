@@ -27,7 +27,7 @@ import {
   Table,
   Upload,
 } from 'antd';
-import type { TableProps } from 'antd';
+import type { TableProps, UploadFile } from 'antd';
 
 import { DeleteOutlined, EditOutlined, InboxOutlined } from '@ant-design/icons';
 
@@ -40,7 +40,7 @@ const MainPageProviderContent: React.FC = () => {
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<UploadFile | null>(null);
   const [selectedBrand, setSelectedBrand] = useState<IBrand | null>(null);
   const [countOrders, setCountOrders] = useState<Record<number, number>>({});
 
@@ -142,51 +142,67 @@ const MainPageProviderContent: React.FC = () => {
   };
 
   const handleFileChange = (info: any) => {
-    setFile(info.file);
+    const file = info.file.originFileObj || info.file;
+    const newFile: UploadFile = {
+      uid: file.uid || String(new Date().getTime()),
+      name: file.name,
+      status: 'done',
+      url: URL.createObjectURL(file),
+      originFileObj: file,
+    };
+    setFile(newFile);
   };
 
   const editBrand = (brand: IBrand) => {
     setSelectedBrand(brand);
+    setIsModalOpen(true);
+
     form.setFieldsValue({
       title: brand.name,
       city: brand.city_id,
     });
-    setFile(null);
-    setIsModalOpen(true);
+
+    const existingFile: UploadFile = {
+      uid: '-1',
+      name: (brand.name +
+        '.' +
+        brand.picture.split('/').pop()?.split('.').pop()) as string,
+      status: 'done',
+      url: brand.picture,
+    };
+
+    setFile(existingFile);
   };
 
   const onFinish = async (values: any) => {
-    if (!file && !selectedBrand?.picture) {
-      message.error('Будь ласка, додайте зображення');
-      return;
-    }
-
     const formData = new FormData();
     formData.append('name', values.title);
     formData.append('city_id', values.city);
     formData.append('location', '10,7');
 
-    if (file) {
-      formData.append('picture', file);
-    } else if (selectedBrand?.picture) {
-      formData.append('picture', selectedBrand.picture);
+    if (file && file.originFileObj) {
+      formData.append('picture', file.originFileObj);
+    } else {
+      message.error('Будь ласка, додайте зображення!');
+      return;
     }
 
     try {
       if (selectedBrand) {
         formData.append('store_id', `${selectedBrand.id}`);
+
         await dispatch(editProviderBrand(formData)).unwrap();
         message.success('Бренд успішно оновлено');
       } else {
         await dispatch(createNewBrand(formData)).unwrap();
         message.success('Бренд успішно створено');
       }
+      await dispatch(fetchProviderBrands());
 
+      setIsModalOpen(false);
       form.resetFields();
       setFile(null);
       setSelectedBrand(null);
-      setIsModalOpen(false);
-      dispatch(fetchProviderBrands());
     } catch (error) {
       message.error('Не вдалося зберегти бренд');
     }
@@ -260,18 +276,7 @@ const MainPageProviderContent: React.FC = () => {
               name="file"
               beforeUpload={() => false}
               onChange={handleFileChange}
-              defaultFileList={
-                selectedBrand
-                  ? [
-                      {
-                        uid: selectedBrand.id.toString(),
-                        name: selectedBrand.name,
-                        status: 'done',
-                        url: selectedBrand.picture,
-                      },
-                    ]
-                  : []
-              }
+              fileList={file ? [file] : []}
             >
               <>
                 <p className="ant-upload-drag-icon">

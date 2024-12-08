@@ -3,7 +3,9 @@ import Axios from '@/shared/utils/axios.utility';
 
 import IBrand from '@/shared/interfaces/brand.interface';
 import { IOrdersHistory } from '@/shared/interfaces/order.interface';
-import { IProviderCategory } from '@/shared/interfaces/category.interface';
+import ICategory, {
+  IProviderCategory,
+} from '@/shared/interfaces/category.interface';
 import IComponent from '@/shared/interfaces/component.interface';
 import IProduct from '@/shared/interfaces/product.interface';
 
@@ -256,3 +258,31 @@ export const editProduct = createAsyncThunk<IProduct, FormData>(
     return data;
   }
 );
+
+export const fetchProviderGeneralCategories = createAsyncThunk<ICategory[]>(
+  'provider/general-categories',
+  async () => {
+    const { data } = await Axios({
+      method: 'get',
+      url: '/menu/general_categories/view',
+      dontNeedToken: true,
+    });
+
+    return data;
+  }
+);
+
+export const editPositionForProduct = createAsyncThunk<
+  void,
+  { menu_id: number; position: number }
+>('provider/edit-position', async ({ menu_id, position }) => {
+  await Axios({
+    method: 'post',
+    url: '/provider/branded_store/menu/position',
+    data: {
+      menu_id,
+      position,
+    },
+    useLocalStorage: true,
+  });
+});

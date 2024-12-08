@@ -2,14 +2,20 @@ import { ReactNode, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useActions } from '../hooks/use-actions';
 import { useTypedSelector } from '../hooks/use-typed-selector';
+
 import { Layout, Menu, Spin } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
+
 import {
   UserOutlined,
-  DashboardOutlined,
   FileOutlined,
   LogoutOutlined,
+  HomeOutlined,
+  UnorderedListOutlined,
+  TeamOutlined,
+  TagsOutlined,
 } from '@ant-design/icons';
+
 import styles from './admin-layout.module.scss';
 
 interface AdminLayoutProps {
@@ -73,15 +79,20 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   const menuItems = [
     {
       key: '/admin',
-      icon: <DashboardOutlined />,
+      icon: <HomeOutlined />,
       label: role === 'PROVIDER' ? 'Заклади' : 'Головна',
     },
     ...(role === 'ADMIN'
       ? [
           {
             key: '/admin/all-providers',
-            icon: <DashboardOutlined />,
+            icon: <TeamOutlined />,
             label: 'Всі провайдери',
+          },
+          {
+            key: '/admin/general-categories',
+            icon: <UnorderedListOutlined />,
+            label: 'Основные категории',
           },
           {
             key: '/admin/clients',
@@ -90,7 +101,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           },
           {
             key: '/admin/promocodes',
-            icon: <UserOutlined />,
+            icon: <TagsOutlined />,
             label: 'Промокоди',
           },
         ]

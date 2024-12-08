@@ -31,6 +31,7 @@ import {
   editProviderBrand,
   fetchProviderBrands,
   fetchProviderCategories,
+  fetchProviderGeneralCategories,
   fetchProviderIngredients,
   fetchProviderOrders,
   fetchProviderProducts,
@@ -206,6 +207,10 @@ const adminSlice = createSlice({
 
     build.addCase(fetchAllClients.fulfilled, (state, action) => {
       state.clients = action.payload;
+    });
+
+    build.addCase(fetchProviderGeneralCategories.fulfilled, (state, action) => {
+      state.generalCategories = action.payload;
     });
 
     build.addCase(fetchGeneralCategories.fulfilled, (state, action) => {

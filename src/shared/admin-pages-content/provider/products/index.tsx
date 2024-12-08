@@ -11,8 +11,9 @@ import {
   createNewProduct,
   deleteProduct,
   editProduct,
+  fetchProviderGeneralCategories,
+  editPositionForProduct,
 } from '@/shared/store/admin/provider/requests';
-import { fetchGeneralCategories } from '@/shared/store/admin/requests';
 
 import IBrand from '@/shared/interfaces/brand.interface';
 import IComponent from '@/shared/interfaces/component.interface';
@@ -66,10 +67,20 @@ const ProviderProductsContent: React.FC = () => {
 
   const columns: TableProps<IProduct>['columns'] = [
     {
-      title: '№',
-      dataIndex: 'index',
-      key: 'index',
-      render: (_: any, __: any, index: number) => index + 1,
+      title: 'Позиция',
+      dataIndex: 'position',
+      key: 'position',
+      render: (position: number, record: IProduct) => (
+        <Select
+          value={position}
+          style={{ width: 70 }}
+          onChange={(value) => handlePositionChange(record.id, value)}
+          options={Array.from({ length: products.length }, (_, i) => ({
+            value: i + 1,
+            label: i + 1,
+          }))}
+        />
+      ),
     },
     {
       title: 'Зображення',
@@ -207,8 +218,30 @@ const ProviderProductsContent: React.FC = () => {
     },
   ];
 
+  const handlePositionChange = async (id: number, newPosition: number) => {
+    try {
+      Modal.confirm({
+        title: 'Ви дійсно хочете змінити позицію продукту?',
+        okText: 'Так',
+        okType: 'danger',
+        cancelText: 'Ні',
+        onOk: async () => {
+          await dispatch(
+            editPositionForProduct({ menu_id: id, position: newPosition })
+          );
+          message.success('Позиція продукту успішно оновлена');
+          if (selectedBrand) {
+            await dispatch(fetchProviderProducts(selectedBrand));
+          }
+        },
+      });
+    } catch (error) {
+      message.error('Не вдалося оновити позицію продукту');
+    }
+  };
+
   const showModal = () => {
-    dispatch(fetchGeneralCategories());
+    dispatch(fetchProviderGeneralCategories());
     if (selectedBrand) {
       dispatch(fetchProviderCategories(selectedBrand));
     }
@@ -311,7 +344,7 @@ const ProviderProductsContent: React.FC = () => {
   };
 
   const handleEdit = (product: IProduct) => {
-    dispatch(fetchGeneralCategories());
+    dispatch(fetchProviderGeneralCategories());
     if (selectedBrand) {
       dispatch(fetchProviderCategories(selectedBrand));
       dispatch(fetchProviderIngredients(selectedBrand));

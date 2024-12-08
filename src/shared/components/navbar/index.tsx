@@ -41,7 +41,7 @@ const Navbar: FC = () => {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLFormElement>(null);
   const debouncedSearchQuery = useDebounce(searchQuery, 1000);
 
   const classNameLink = (href: string): string =>
@@ -54,6 +54,7 @@ const Navbar: FC = () => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     actions.setSearchQuery(e.target.value);
+    setLoading(true);
   };
 
   const handleClickOutside = (event: Event) => {
@@ -79,7 +80,6 @@ const Navbar: FC = () => {
 
   useEffect(() => {
     if (debouncedSearchQuery) {
-      setLoading(true);
       dispatch(fetchSearchProducts(debouncedSearchQuery)).finally(() =>
         setLoading(false)
       );
@@ -88,7 +88,7 @@ const Navbar: FC = () => {
 
   return (
     <nav className={style.navbar}>
-      <form className={style.form}>
+      <form className={style.form} ref={dropdownRef}>
         <FormInput
           icon={SearchIcon}
           placeholder="Пошук"
@@ -96,7 +96,7 @@ const Navbar: FC = () => {
           onChange={handleSearchChange}
         />
         {searchQuery && (
-          <div ref={dropdownRef} className={style.dropdown}>
+          <div className={style.dropdown}>
             {loading ? (
               <div className={style.loader}>
                 <span>.</span>

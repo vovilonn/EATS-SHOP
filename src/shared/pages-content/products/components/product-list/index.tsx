@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import {FC, useEffect, useState} from 'react';
 import IProduct from '@/shared/interfaces/product.interface';
 import ProductList from '@/shared/components/product-list';
 import Button from '@/shared/components/ui/button';
@@ -19,6 +19,13 @@ const ProductsProductList: FC<IProductsProductListProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(initialProducts.length === 6);
+
+  useEffect(() => {
+    setProducts(initialProducts);
+    setIsLoading(false);
+    setCurrentPage(1);
+    setHasMore(initialProducts.length === 6);
+  }, [initialProducts]);
 
   const loadMoreProducts = async () => {
     setIsLoading(true);

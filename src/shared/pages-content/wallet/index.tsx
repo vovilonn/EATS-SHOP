@@ -96,7 +96,7 @@ const WalletPageContent: FC = () => {
             replenishments.map((item: IWallet) => (
               <div key={item.id} className={style.item}>
                 <p>
-                  {new Date(item.createdAt).toLocaleDateString('uk-UA', {
+                  {new Date(item.createdAt * 1000).toLocaleDateString('uk-UA', {
                     day: '2-digit',
                     month: 'short',
                     year: 'numeric',

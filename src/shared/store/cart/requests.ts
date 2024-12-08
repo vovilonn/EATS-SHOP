@@ -73,3 +73,16 @@ export const editCartCount = createAsyncThunk(
     return response.data;
   }
 );
+
+export const checkPromocode = createAsyncThunk(
+  'cart/check-promocode',
+  async (code: string) => {
+    const { data } = await Axios({
+      method: 'post',
+      url: '/menu/promo_code/check',
+      data: { code },
+    });
+
+    return data;
+  },
+);

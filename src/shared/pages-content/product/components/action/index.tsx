@@ -68,13 +68,9 @@ const ProductAction: FC<IProductActionProps> = (props) => {
   };
 
   const onSelectOption = (option: IOption) => {
-    if (stateAuth.isAuth) {
-      setPrice(option.price);
-      setOption(option.name);
-      setWeight(option.weight);
-    } else {
-      actions.setNeedAuth(true);
-    }
+    setPrice(option.price);
+    setOption(option.name);
+    setWeight(option.weight);
   };
 
   const optionsRendering = optionsRenderingUtility({

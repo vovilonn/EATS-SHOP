@@ -10,21 +10,30 @@ import MenuIcon from '@/shared/assets/icons/menu-icon.svg'
 import ArrowRightIcon from '@/shared/assets/icons/arrow-right-icon.svg'
 
 import style from './style.module.scss'
+import ICategory from "@/shared/interfaces/category.interface";
+import {useRouter} from "next/router";
 
-const ProductHeader: FC = () => {
+interface IProps {
+  category: ICategory;
+  productName: string;
+}
+
+const ProductHeader: FC<IProps> = ({ category, productName }) => {
+  const { back } = useRouter();
+
   return (
     <header className={style.header}>
       <Breadcrumbs>
-        <BreadcrumbBack href='/' />
+        <BreadcrumbBack onClick={back} />
         <BreadcrumbGeneral icon={MenuIcon} name='Меню' href='/' />
         <ArrowRightIcon />
         <BreadcrumbCategory
-          icon='https://s3.eu-north-1.amazonaws.com/eats.app/general_categories/pizza.png'
-          name='Піца'
-          href='/'
+          icon={category.icon}
+          name={category.name}
+          href={`/products/category/${category.id}`}
         />
         <ArrowRightIcon />
-        <BreadcrumbName name='Італійська вегетаріана' />
+        <BreadcrumbName name={productName} />
       </Breadcrumbs>
     </header>
   )

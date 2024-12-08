@@ -100,12 +100,8 @@ const ProductCard: FC<IProductCardProps> = (props) => {
   };
 
   const onSelectOption = (option: any) => {
-    if (stateAuth.isAuth) {
-      setPrice(option.price);
-      setOption(option.name);
-    } else {
-      actions.setNeedAuth(true);
-    }
+    setPrice(option.price);
+    setOption(option.name);
   };
 
   const optionsRendering = optionsRenderingUtility({

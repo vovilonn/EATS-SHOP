@@ -151,6 +151,25 @@
         gap: 0 16px;
         transition: border-color 0.2s;
 
+        .activateContent {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 4px;
+        }
+
+        .activateBtn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 6px;
+          border-radius: 12px;
+          background-color: #ffc812;
+          width: 36px;
+          height: 36px;
+          cursor: pointer;
+        }
+
         .input {
           width: 100%;
           padding-right: 16px;

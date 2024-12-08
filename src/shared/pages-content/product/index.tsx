@@ -6,6 +6,7 @@ import Layout from '@/shared/layouts/default'
 import ProductInfo from './components/info'
 import ProductHeader from './components/header'
 import ProductComponentList from './components/component-list'
+import ICategory from "@/shared/interfaces/category.interface";
 
 interface IProductPageContentProps {
   product: IProduct
@@ -14,7 +15,7 @@ interface IProductPageContentProps {
 const ProductPageContent: FC<IProductPageContentProps> = props => {
   return (
     <Layout>
-      <ProductHeader />
+      <ProductHeader category={props.product.model_general_categories as ICategory} productName={props.product.name} />
       <ProductInfo {...props.product} />
       <ProductComponentList
         components={props.product.model_additional_components}

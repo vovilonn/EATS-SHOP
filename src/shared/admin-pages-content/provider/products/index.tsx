@@ -34,6 +34,7 @@ import {
   Table,
   TableProps,
   Upload,
+  UploadFile,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 
@@ -52,8 +53,7 @@ const ProviderProductsContent: React.FC = () => {
     [key: number]: IOption | null;
   }>({});
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
-  const [editing, setEditing] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<UploadFile | null>(null);
 
   const [form] = Form.useForm();
 
@@ -250,13 +250,21 @@ const ProviderProductsContent: React.FC = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
-    form.resetFields();
     setSelectedProduct(null);
-    setEditing(false);
+    form.resetFields();
+    setFile(null);
   };
 
   const handleFileChange = (info: any) => {
-    setFile(info.file);
+    const file = info.file.originFileObj || info.file;
+    const newFile: UploadFile = {
+      uid: file.uid || String(new Date().getTime()),
+      name: file.name,
+      status: 'done',
+      url: URL.createObjectURL(file),
+      originFileObj: file,
+    };
+    setFile(newFile);
   };
 
   const handleOptionChange = (productId: number, optionId: number) => {
@@ -268,19 +276,15 @@ const ProviderProductsContent: React.FC = () => {
   };
 
   const handleSubmit = async (values: any) => {
-    if (!file && !selectedProduct?.picture[0]) {
-      message.error('Будь ласка, додайте зображення!');
-      return;
-    }
-
     const formData = new FormData();
     formData.append('name', values.title);
     formData.append('composition', values.composition);
 
-    if (file) {
-      formData.append('picture', file);
-    } else if (selectedProduct?.picture) {
-      formData.append('picture', selectedProduct.picture[0]);
+    if (file && file.originFileObj) {
+      formData.append('picture', file.originFileObj);
+    } else {
+      message.error('Будь ласка, додайте зображення!');
+      return;
     }
 
     formData.append('options', JSON.stringify(values.options));
@@ -298,7 +302,7 @@ const ProviderProductsContent: React.FC = () => {
     }
 
     try {
-      if (selectedProduct && editing) {
+      if (selectedProduct) {
         formData.append('menu_id', `${selectedProduct.id}`);
 
         await dispatch(editProduct(formData)).unwrap();
@@ -307,12 +311,14 @@ const ProviderProductsContent: React.FC = () => {
         await dispatch(createNewProduct(formData));
         message.success('Продукт успішно створено');
       }
-
-      setIsModalOpen(false);
-      form.resetFields();
       if (selectedBrand) {
         await dispatch(fetchProviderProducts(selectedBrand));
       }
+
+      setIsModalOpen(false);
+      form.resetFields();
+      setSelectedProduct(null);
+      setFile(null);
     } catch (error) {
       message.error('Помилка при створенні продукту');
     }
@@ -351,7 +357,7 @@ const ProviderProductsContent: React.FC = () => {
     }
 
     setSelectedProduct(product);
-    setEditing(true);
+    setIsModalOpen(true);
 
     form.setFieldsValue({
       title: product.name,
@@ -362,11 +368,18 @@ const ProviderProductsContent: React.FC = () => {
       ingredients: product.model_additional_components.map(
         (component: IComponent) => component.id
       ),
-      file: file ? file : product.picture[0],
     });
 
-    setFile(null);
-    setIsModalOpen(true);
+    const existingFile: UploadFile = {
+      uid: '-1',
+      name: (product.name +
+        '.' +
+        product.picture[0].split('/').pop()?.split('.').pop()) as string,
+      status: 'done',
+      url: product.picture[0],
+    };
+
+    setFile(existingFile);
   };
 
   return (
@@ -515,18 +528,7 @@ const ProviderProductsContent: React.FC = () => {
               name="file"
               beforeUpload={() => false}
               onChange={handleFileChange}
-              defaultFileList={
-                selectedProduct
-                  ? [
-                      {
-                        uid: selectedProduct.id.toString(),
-                        name: selectedProduct.name,
-                        status: 'done',
-                        url: selectedProduct.picture[0],
-                      },
-                    ]
-                  : []
-              }
+              fileList={file ? [file] : []}
             >
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />

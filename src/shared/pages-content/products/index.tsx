@@ -17,19 +17,15 @@ interface IProductsPageContentProps {
 const ProductsPageContent: FC<IProductsPageContentProps> = (props) => {
   return (
     <Layout>
-      {Boolean(props.products.length) && props.categories && (
-        <>
-          <ProductsHeader
-            category={props.category}
-            categories={props.categories}
-            brandName={props.brandName}
-          />
-          <ProductsProductList
-            products={props.products}
-            // categoryId={props.category.id}
-          />
-        </>
-      )}
+      <ProductsHeader
+        category={props.category}
+        categories={props.categories}
+        brandName={props.brandName}
+      />
+      <ProductsProductList
+        products={props.products}
+        // categoryId={props.category.id}
+      />
     </Layout>
   );
 };

@@ -125,11 +125,47 @@ export const fetchGeneralCategories = createAsyncThunk<ICategory[]>(
   async () => {
     const { data } = await Axios({
       method: 'get',
-      url: '/menu/general_categories/view',
-      dontNeedToken: true,
+      url: '/admin/category/view',
+      useLocalStorage: true,
     });
 
     return data;
+  }
+);
+
+export const createGeneralCategory = createAsyncThunk<void, FormData>(
+  'admin/create_general_category',
+  async (formData) => {
+    await Axios({
+      method: 'post',
+      url: '/admin/category/create',
+      data: formData,
+      useLocalStorage: true,
+    });
+  }
+);
+
+export const deleteGeneralCategory = createAsyncThunk<void, number>(
+  'admin/delete_general_category',
+  async (category_id) => {
+    await Axios({
+      method: 'delete',
+      url: '/admin/category/delete',
+      data: { category_id },
+      useLocalStorage: true,
+    });
+  }
+);
+
+export const editGeneralCategory = createAsyncThunk<void, FormData>(
+  'admin/edit_general_category',
+  async (formData) => {
+    await Axios({
+      method: 'post',
+      url: '/admin/category/edit',
+      data: formData,
+      useLocalStorage: true,
+    });
   }
 );
 

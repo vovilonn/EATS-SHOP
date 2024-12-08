@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { loginAdmin, loginProvider } from './auth/requests';
 import {
   blockProvider,
-  createPromocode,
+  createGeneralCategory,
   deletePromocode,
   deleteProvider,
   fetchAllClients,
@@ -207,6 +207,7 @@ const adminSlice = createSlice({
     build.addCase(fetchAllClients.fulfilled, (state, action) => {
       state.clients = action.payload;
     });
+
     build.addCase(fetchGeneralCategories.fulfilled, (state, action) => {
       state.generalCategories = action.payload;
     });

@@ -6,7 +6,7 @@ import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { useDispatch } from 'react-redux';
 import { TypeDispatch } from '@/shared/store';
 
-import { getCart } from '@/shared/store/cart/requests';
+import {checkPromocode, getCart} from '@/shared/store/cart/requests';
 import { createOrder, getOrderOption } from '@/shared/store/orders/requests';
 import { getAccountInfo } from '@/shared/store/account/requests';
 
@@ -16,6 +16,7 @@ import Institution from '@/shared/components/institution';
 import Button from '@/shared/components/ui/button';
 import FormInput from '@/shared/components/ui/form/form-input';
 import FormCheckbox from '@/shared/components/ui/form/form-checkbox';
+import CheckIcon from '@/shared/assets/icons/checked-icon.svg';
 import Map from '@/shared/components/map';
 
 import style from './style.module.scss';
@@ -128,6 +129,10 @@ const OrderConfirmForm: FC = () => {
     } else {
       setFormError('Ви не заповнили всі обов’язкові поля');
     }
+  };
+
+  const handleCheckPromocode = () => {
+    dispatch(checkPromocode(promoCode));
   };
 
   return (
@@ -286,15 +291,20 @@ const OrderConfirmForm: FC = () => {
         ></textarea>
         <div className={style.coin}>
           <div className={style.activate}>
-            <input
-              className={`${style.input} ${
-                errors.promoCode ? style.errorBorder : ''
-              }`}
-              type="text"
-              placeholder="Промокод"
-              value={promoCode}
-              onChange={(e) => setPromoCode(e.target.value)}
-            />
+            <div className={style.activateContent}>
+              <input
+                className={`${style.input} ${
+                  errors.promoCode ? style.errorBorder : ''
+                }`}
+                type="text"
+                placeholder="Промокод"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)}
+              />
+              <button type="button" className={style.activateBtn} onClick={handleCheckPromocode}>
+                <CheckIcon />
+              </button>
+            </div>
             {errors.promoCode && (
               <span className={style.error}>{errors.promoCode}</span>
             )}

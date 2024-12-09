@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import {FC, useEffect, useMemo} from 'react';
 import { useDispatch } from 'react-redux';
 import { TypeDispatch } from '@/shared/store';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
@@ -59,6 +59,23 @@ const ProductList: FC<IProductListProps> = (props) => {
     });
   }
 
+  const content = useMemo(() => {
+    if (productsRendering.length) {
+      return productsRendering;
+    }
+
+    if (props.basket) {
+      return (
+        <EmptyCard
+          title="Ваш корзина порожня 😯"
+          text="Оберіть товар, щоб додати його в корзину"
+        />
+      );
+    }
+
+    return null;
+  }, [productsRendering]);
+
   return (
     <div
       className={style.products}
@@ -67,14 +84,7 @@ const ProductList: FC<IProductListProps> = (props) => {
           productsRendering.length === 0 ? '1fr' : '1fr 1fr 1fr',
       }}
     >
-      {productsRendering.length !== 0 ? (
-        productsRendering
-      ) : (
-        <EmptyCard
-          title="Ваш корзина порожня 😯"
-          text="Оберіть товар, щоб додати його в корзину"
-        />
-      )}
+      {content}
     </div>
   );
 };

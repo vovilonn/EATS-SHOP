@@ -6,13 +6,13 @@ import ArrowLeft from '@/shared/assets/icons/arrow-left-icon.svg'
 import style from './style.module.scss'
 
 interface IBreadcrumbBackProps {
-  href: string
+  onClick: () => void;
 }
 
-const BreadcrumbBack: FC<IBreadcrumbBackProps> = props => (
-  <Link className={style.back} href={props.href}>
+const BreadcrumbBack: FC<IBreadcrumbBackProps> = ({ onClick }) => (
+  <button className={style.back} onClick={onClick} type="button">
     <ArrowLeft className={style.icon} /> Назад
-  </Link>
+  </button>
 )
 
 export default BreadcrumbBack

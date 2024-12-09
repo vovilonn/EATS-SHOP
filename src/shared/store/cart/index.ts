@@ -79,7 +79,11 @@ const cartSlice = createSlice({
           (total, item) => total + item.count * item.model_options.price,
           0
         );
-        state.total_cart = state.cart_items.length;
+        state.total_cart = state.cart_items.reduce(
+          (total, item) => total + item.count,
+          0
+        );
+
         state.loading = 'succeeded';
         state.error = null;
       })

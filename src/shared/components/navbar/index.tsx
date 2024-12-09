@@ -22,6 +22,8 @@ import ProfileIcon from '@/shared/assets/icons/profile-icon.svg';
 import SearchIcon from '@/shared/assets/icons/search-icon.svg';
 import PhoneIcon from '@/shared/assets/icons/phone-icon.svg';
 
+import { Badge } from 'antd';
+
 import style from './style.module.scss';
 
 const navigationLinks = [
@@ -37,6 +39,8 @@ const Navbar: FC = () => {
     (state) => state.product
   );
   const stateAuth = useTypedSelector((state) => state.auth);
+  const { total_cart } = useTypedSelector((state) => state.cart);
+
   const actions = useActions();
   const router = useRouter();
 
@@ -131,7 +135,19 @@ const Navbar: FC = () => {
               href={link.href}
               onClick={(e) => link.href !== '/' && onClickLink(e, link.href)}
             >
-              <link.icon />
+              {link.href === '/profile/basket' ? (
+                <>
+                  {total_cart > 0 ? (
+                    <Badge count={total_cart}>
+                      <link.icon />
+                    </Badge>
+                  ) : (
+                    <link.icon />
+                  )}
+                </>
+              ) : (
+                <link.icon />
+              )}
               <div className={style.name}>{link.name}</div>
             </Link>
           ))}

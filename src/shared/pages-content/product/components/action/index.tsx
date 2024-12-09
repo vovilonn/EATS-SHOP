@@ -5,7 +5,7 @@ import { useActions } from '@/shared/hooks/use-actions';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 
 import { addToFavorite } from '@/shared/store/favorite/requests';
-import { addCart } from '@/shared/store/cart/requests';
+import { addCart, getCart } from '@/shared/store/cart/requests';
 
 import IProduct, { IOption } from '@/shared/interfaces/product.interface';
 
@@ -20,6 +20,7 @@ import LikeIcon from '@/shared/assets/icons/like-icon.svg';
 import RemoveIcon from '@/shared/assets/icons/remove-icon.svg';
 
 import style from './style.module.scss';
+import { message } from 'antd';
 
 interface IProductActionProps extends IProduct {}
 
@@ -80,9 +81,9 @@ const ProductAction: FC<IProductActionProps> = (props) => {
     selectedOption,
   });
 
-  const onBasket = () => {
+  const onBasket = async () => {
     if (stateAuth.isAuth) {
-      dispatch(
+      await dispatch(
         addCart({
           menu_id: props.id,
           option_id:
@@ -91,8 +92,12 @@ const ProductAction: FC<IProductActionProps> = (props) => {
           ingredients: ingredients ?? [],
         })
       );
+      await dispatch(getCart());
+
       actions.clearProductCount(props.id);
       actions.clearProductIngredientsCount(props.id);
+
+      message.success('Продукт успішно додано до кошика');
     } else {
       actions.setNeedAuth(true);
     }

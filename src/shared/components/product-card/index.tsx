@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, MouseEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { TypeDispatch } from '@/shared/store';
 import { useActions } from '@/shared/hooks/use-actions';
@@ -15,7 +15,7 @@ import AmountToggle from '../ui/amount-toggle';
 import Button from '@/shared/components/ui/button';
 
 import { addToFavorite } from '@/shared/store/favorite/requests';
-import { deleteCartItem } from '@/shared/store/cart/requests';
+import { deleteCartItem, getCart } from '@/shared/store/cart/requests';
 import { addCart } from '@/shared/store/cart/requests';
 
 import IProduct, { IOption } from '@/shared/interfaces/product.interface';
@@ -26,6 +26,7 @@ import RemoveIcon from '@/shared/assets/icons/remove-icon.svg';
 
 import style from './style.module.scss';
 import { useRouter } from 'next/router';
+import { message } from 'antd';
 
 interface IProductCardProps extends IProduct {
   cart_id?: number;
@@ -65,7 +66,7 @@ const ProductCard: FC<IProductCardProps> = (props) => {
     props.model_menu_ingredients_cart ?? []
   );
 
-  const router = useRouter(); 
+  const router = useRouter();
   const isBasketPage = router.pathname === '/profile/basket';
 
   const classNameProduct: string = `
@@ -118,9 +119,9 @@ const ProductCard: FC<IProductCardProps> = (props) => {
       )?.ingredients
   );
 
-  const onBasket = () => {
+  const onBasket = async () => {
     if (stateAuth.isAuth) {
-      dispatch(
+      await dispatch(
         addCart({
           menu_id: props.id,
           option_id:
@@ -129,8 +130,12 @@ const ProductCard: FC<IProductCardProps> = (props) => {
           ingredients: ingredients ?? [],
         })
       );
+      await dispatch(getCart());
+
       actions.clearProductCount(props.id);
       actions.clearProductIngredientsCount(props.id);
+
+      message.success('Продукт успішно додано до кошика');
     } else {
       actions.setNeedAuth(true);
     }
@@ -153,21 +158,35 @@ const ProductCard: FC<IProductCardProps> = (props) => {
                 </h1>
                 {isFavorite ||
                   (props.basket && (
-                    <RemoveIcon
-                      className={style.icon}
-                      onClick={() =>
-                        onToggleToIcon(
-                          props.basket ? props.cart_id ?? 0 : props.id
-                        )
-                      }
-                    />
+                    <div
+                      onClick={(e: MouseEvent<HTMLDivElement>) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                    >
+                      <RemoveIcon
+                        className={style.icon}
+                        onClick={() =>
+                          onToggleToIcon(
+                            props.basket ? props.cart_id ?? 0 : props.id
+                          )
+                        }
+                      />
+                    </div>
                   ))}
                 {!isFavorite ||
                   (!props.basket && (
-                    <LikeIcon
-                      className={style.icon}
-                      onClick={() => onToggleToIcon(props.id)}
-                    />
+                    <div
+                      onClick={(e: MouseEvent<HTMLDivElement>) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                    >
+                      <LikeIcon
+                        className={style.icon}
+                        onClick={() => onToggleToIcon(props.id)}
+                      />
+                    </div>
                   ))}
               </div>
 
@@ -179,16 +198,22 @@ const ProductCard: FC<IProductCardProps> = (props) => {
 
               {props.basket && (
                 <>
-                  <p className={style.composition}>({props.model_options?.name}), {props.model_options?.weight} гр.</p>
-                  {
-                    props.model_menu_ingredients_cart && props.model_menu_ingredients_cart.map((ingredient, i) =>
-                    <p className={style.components}>+ {ingredient.count} {ingredient.model_menu_ingredients.name} ({ingredient.model_menu_ingredients.price * ingredient.count})</p>)
-                  }
-                
+                  <p className={style.composition}>
+                    ({props.model_options?.name}), {props.model_options?.weight}{' '}
+                    гр.
+                  </p>
+                  {props.model_menu_ingredients_cart &&
+                    props.model_menu_ingredients_cart.map((ingredient, i) => (
+                      <p className={style.components}>
+                        + {ingredient.count}{' '}
+                        {ingredient.model_menu_ingredients.name} (
+                        {ingredient.model_menu_ingredients.price *
+                          ingredient.count}
+                        )
+                      </p>
+                    ))}
                 </>
               )}
-
-
             </div>
           </Link>
           {!props.basket && (

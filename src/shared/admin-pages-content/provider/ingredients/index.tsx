@@ -29,6 +29,7 @@ import {
   UploadFile,
 } from 'antd';
 import Image from 'next/image';
+import { RcFile } from 'antd/es/upload';
 
 const { Option } = Select;
 
@@ -226,13 +227,31 @@ const ProviderIngredientsContent: React.FC = () => {
       option: ingredient.options === '*' ? '' : ingredient.options,
     });
 
+    const fileName =
+      ingredient.name +
+      '.' +
+      (ingredient.picture.split('/').pop()?.split('.').pop() || 'jpg');
+
+    const fakeFile: RcFile = {
+      uid: '-1',
+      name: fileName,
+      size: 0,
+      type: 'image/jpeg',
+      lastModified: Date.now(),
+      lastModifiedDate: new Date(),
+      webkitRelativePath: '',
+      arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
+      slice: () => new Blob(),
+      stream: () => new ReadableStream(),
+      text: () => Promise.resolve(''),
+    };
+
     const existingFile: UploadFile = {
       uid: '-1',
-      name: (ingredient.name +
-        '.' +
-        ingredient.picture.split('/').pop()?.split('.').pop()) as string,
+      name: fileName,
       status: 'done',
       url: ingredient.picture,
+      originFileObj: fakeFile,
     };
 
     setFile(existingFile);
@@ -290,7 +309,7 @@ const ProviderIngredientsContent: React.FC = () => {
           <Form.Item
             label="Фото"
             name="file"
-            rules={[{ required: true, message: 'Додайте фото' }]}
+            rules={[{ required: !selectedIngredient, message: 'Додайте фото' }]}
           >
             <Upload.Dragger
               name="file"

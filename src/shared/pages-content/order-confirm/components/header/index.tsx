@@ -9,12 +9,15 @@ import BasketIcon from '@/shared/assets/icons/basket-icon.svg'
 import ArrowRightIcon from '@/shared/assets/icons/arrow-right-icon.svg'
 
 import style from './style.module.scss'
+import {useRouter} from "next/router";
 
 const OrderConfirmHeader: FC = () => {
+  const { back } = useRouter();
+
   return (
     <header className={style.header}>
       <Breadcrumbs>
-        <BreadcrumbBack href='/' />
+        <BreadcrumbBack onClick={back} />
         <BreadcrumbGeneral icon={BasketIcon} name='Корзина' href='/profile/basket' />
         <ArrowRightIcon />
         <BreadcrumbName name='Підтвердження замовлення' />

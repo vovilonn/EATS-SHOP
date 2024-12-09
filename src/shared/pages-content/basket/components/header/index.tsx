@@ -7,12 +7,15 @@ import BreadcrumbGeneral from '@/shared/components/ui/breadcrumbs/components/bre
 import BasketIcon from '@/shared/assets/icons/basket-icon.svg'
 
 import style from './style.module.scss'
+import {useRouter} from "next/router";
 
 const BasketHeader: FC = () => {
+  const { back } = useRouter();
+
   return (
     <header className={style.header}>
       <Breadcrumbs>
-        <BreadcrumbBack href='/' />
+        <BreadcrumbBack onClick={back} />
         <BreadcrumbGeneral icon={BasketIcon} name='Корзина' href='/profile/basket' />
       </Breadcrumbs>
     </header>

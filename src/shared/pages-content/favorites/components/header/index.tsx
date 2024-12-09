@@ -7,12 +7,15 @@ import BreadcrumbGeneral from '@/shared/components/ui/breadcrumbs/components/bre
 import LikeIcon from '@/shared/assets/icons/like-icon.svg'
 
 import style from './style.module.scss'
+import {useRouter} from "next/router";
 
 const FavoritesHeader: FC = () => {
+  const { back } = useRouter();
+
   return (
     <header className={style.header}>
       <Breadcrumbs>
-        <BreadcrumbBack href='/' />
+        <BreadcrumbBack onClick={back} />
         <BreadcrumbGeneral icon={LikeIcon} name='Улюблене' href='/' />
       </Breadcrumbs>
     </header>

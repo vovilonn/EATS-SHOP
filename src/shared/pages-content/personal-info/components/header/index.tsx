@@ -9,12 +9,15 @@ import ArrowRightIcon from '@/shared/assets/icons/arrow-right-icon.svg'
 
 import style from './style.module.scss'
 import BreadcrumbName from '@/shared/components/ui/breadcrumbs/components/breadcrumb-name'
+import {useRouter} from "next/router";
 
 const PersonalInfoHeader: FC = () => {
+  const { back } = useRouter();
+
   return (
     <header className={style.header}>
       <Breadcrumbs>
-        <BreadcrumbBack href='/' />
+        <BreadcrumbBack onClick={back} />
         <BreadcrumbGeneral icon={ProfileIcon} name='Профіль' href='/profile' />
         <ArrowRightIcon />
         <BreadcrumbName name='Особиста інформація' />

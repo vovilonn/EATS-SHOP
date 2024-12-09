@@ -27,6 +27,7 @@ import {
 import { DeleteOutlined, EditOutlined, InboxOutlined } from '@ant-design/icons';
 
 import Image from 'next/image';
+import { RcFile } from 'antd/es/upload';
 
 const GeneralCategoriesContent: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -135,13 +136,31 @@ const GeneralCategoriesContent: React.FC = () => {
       title: category.name,
     });
 
+    const fileName =
+      category.name +
+      '.' +
+      (category.icon.split('/').pop()?.split('.').pop() || 'jpg');
+
+    const fakeFile: RcFile = {
+      uid: '-1',
+      name: fileName,
+      size: 0,
+      type: 'image/jpeg',
+      lastModified: Date.now(),
+      lastModifiedDate: new Date(),
+      webkitRelativePath: '',
+      arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
+      slice: () => new Blob(),
+      stream: () => new ReadableStream(),
+      text: () => Promise.resolve(''),
+    };
+
     const existingFile: UploadFile = {
       uid: '-1',
-      name: (category.name +
-        '.' +
-        category.icon.split('/').pop()?.split('.').pop()) as string,
+      name: fileName,
       status: 'done',
       url: category.icon,
+      originFileObj: fakeFile,
     };
 
     setFile(existingFile);

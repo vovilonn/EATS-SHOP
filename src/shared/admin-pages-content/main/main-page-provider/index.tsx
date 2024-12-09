@@ -30,6 +30,7 @@ import {
 import type { TableProps, UploadFile } from 'antd';
 
 import { DeleteOutlined, EditOutlined, InboxOutlined } from '@ant-design/icons';
+import { RcFile } from 'antd/es/upload';
 
 const { Option } = Select;
 
@@ -162,13 +163,31 @@ const MainPageProviderContent: React.FC = () => {
       city: brand.city_id,
     });
 
+    const fileName =
+      brand.name +
+      '.' +
+      (brand.picture.split('/').pop()?.split('.').pop() || 'jpg');
+
+    const fakeFile: RcFile = {
+      uid: '-1',
+      name: fileName,
+      size: 0,
+      type: 'image/jpeg',
+      lastModified: Date.now(),
+      lastModifiedDate: new Date(),
+      webkitRelativePath: '',
+      arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
+      slice: () => new Blob(),
+      stream: () => new ReadableStream(),
+      text: () => Promise.resolve(''),
+    };
+
     const existingFile: UploadFile = {
       uid: '-1',
-      name: (brand.name +
-        '.' +
-        brand.picture.split('/').pop()?.split('.').pop()) as string,
+      name: fileName,
       status: 'done',
       url: brand.picture,
+      originFileObj: fakeFile,
     };
 
     setFile(existingFile);
@@ -179,6 +198,8 @@ const MainPageProviderContent: React.FC = () => {
     formData.append('name', values.title);
     formData.append('city_id', values.city);
     formData.append('location', '10,7');
+
+    console.log(file);
 
     if (file && file.originFileObj) {
       formData.append('picture', file.originFileObj);

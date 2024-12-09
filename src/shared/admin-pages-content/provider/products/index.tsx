@@ -135,7 +135,11 @@ const ProviderProductsContent: React.FC = () => {
       dataIndex: 'composition',
       key: 'composition',
       render: (record: string) => {
-        return record || 'Невідомо';
+        return (
+          record || (
+            <span style={{ color: 'gray', fontStyle: 'italic' }}>Пусто</span>
+          )
+        );
       },
     },
     {
@@ -189,7 +193,7 @@ const ProviderProductsContent: React.FC = () => {
         return selectedOption ? (
           <div>
             <p>Розмір: {selectedOption.name}</p>
-            <p>Вага: {selectedOption.weight} г</p>
+            {selectedOption.weight && <p>Вага: {selectedOption.weight} г</p>}
             <p>Ціна: {selectedOption.price} грн</p>
           </div>
         ) : (
@@ -276,9 +280,14 @@ const ProviderProductsContent: React.FC = () => {
   };
 
   const handleSubmit = async (values: any) => {
+    console.log('values', values);
+
     const formData = new FormData();
     formData.append('name', values.title);
-    formData.append('composition', values.composition);
+
+    if (values.composition) {
+      formData.append('composition', values.composition);
+    }
 
     if (file && file.originFileObj) {
       formData.append('picture', file.originFileObj);
@@ -361,7 +370,7 @@ const ProviderProductsContent: React.FC = () => {
 
     form.setFieldsValue({
       title: product.name,
-      composition: product.composition,
+      composition: product.composition ? product.composition : '',
       options: product.options,
       generalCategory: product.model_general_categories?.id,
       category: product.model_branded_store_categories?.id,
@@ -428,11 +437,7 @@ const ProviderProductsContent: React.FC = () => {
           >
             <Input placeholder="Введіть назву" />
           </Form.Item>
-          <Form.Item
-            label="Склад"
-            name="composition"
-            rules={[{ required: true, message: 'Заповніть це поле!' }]}
-          >
+          <Form.Item label="Склад" name="composition">
             <TextArea rows={4} />
           </Form.Item>
 
@@ -462,7 +467,6 @@ const ProviderProductsContent: React.FC = () => {
                     <Form.Item
                       {...restField}
                       name={[name, 'weight']}
-                      rules={[{ required: true, message: 'Вкажіть вагу!' }]}
                       normalize={(value) => Number(value)}
                     >
                       <Input placeholder="Вага" type="number" />

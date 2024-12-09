@@ -1,30 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
+import { TypeDispatch } from '@/shared/store';
+
+import {
+  fetchAllClients,
+  fetchAllPromocodes,
+} from '@/shared/store/admin/requests';
+import { fetchProviderOrders } from '@/shared/store/admin/provider/requests';
+
+import MainPageProviderContent from './main-page-provider';
+
 import { Row, Col, Card, Statistic } from 'antd';
+
 import {
   UserOutlined,
   ShoppingCartOutlined,
   TagOutlined,
 } from '@ant-design/icons';
+
 import styles from './style.module.scss';
-import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
-import MainPageProviderContent from './main-page-provider';
 
 const MainPageContent = () => {
-  const { role } = useTypedSelector((state) => state.adminPanel);
+  const dispatch = useDispatch<TypeDispatch>();
 
-  const [clientCount, setClientCount] = useState<number>(0);
-  const [orderCount, setOrderCount] = useState<number>(0);
-  const [activePromocodes, setActivePromocodes] = useState<number>(0);
-  const [salesData, setSalesData] = useState<number[]>([
-    100, 200, 150, 300, 250,
-  ]);
+  const { role, clients, orders, promocodes } = useTypedSelector(
+    (state) => state.adminPanel
+  );
 
   useEffect(() => {
-    // Здесь можно сделать запросы к API для получения реальных данных
-    setClientCount(1500); // Количество клиентов
-    setOrderCount(125); // Количество активных заказов
-    setActivePromocodes(5); // Количество активных промокодов
-    // Установим salesData после получения данных о продажах
+    dispatch(fetchAllClients());
+    dispatch(fetchProviderOrders());
+    dispatch(fetchAllPromocodes());
   }, []);
 
   return (
@@ -41,7 +48,7 @@ const MainPageContent = () => {
               <Card>
                 <Statistic
                   title="Клієнти"
-                  value={clientCount}
+                  value={clients.length}
                   prefix={<UserOutlined />}
                 />
               </Card>
@@ -50,7 +57,7 @@ const MainPageContent = () => {
               <Card>
                 <Statistic
                   title=" Активні замовлення"
-                  value={orderCount}
+                  value={orders.length}
                   prefix={<ShoppingCartOutlined />}
                 />
               </Card>
@@ -59,7 +66,7 @@ const MainPageContent = () => {
               <Card>
                 <Statistic
                   title="Активні промокоди"
-                  value={activePromocodes}
+                  value={promocodes.length}
                   prefix={<TagOutlined />}
                 />
               </Card>

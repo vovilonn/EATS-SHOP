@@ -18,7 +18,6 @@ const AboutUsHeader: FC = () => {
     <header className={style.header}>
       <Breadcrumbs>
         <BreadcrumbBack onClick={back} />
-        <BreadcrumbGeneral icon={ProfileIcon} name='Профіль' href='/profile' />
         <ArrowRightIcon />
         <BreadcrumbName name='Правова інформація' />
       </Breadcrumbs>

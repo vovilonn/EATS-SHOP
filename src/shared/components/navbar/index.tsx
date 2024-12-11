@@ -1,14 +1,15 @@
 import { FC, MouseEvent, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-
-import { useDispatch } from 'react-redux';
-import { TypeDispatch } from '@/shared/store';
-import { fetchSearchProducts } from '@/shared/store/product/requests';
-
 import { useActions } from '@/shared/hooks/use-actions';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import useDebounce from '@/shared/hooks/use-debounce';
+
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/shared/store';
+
+import { fetchSearchProducts } from '@/shared/store/product/requests';
+import { getCart } from '@/shared/store/cart/requests';
 
 import SelectCity from '../ui/select-city';
 import FormInput from '../ui/form/form-input';
@@ -90,6 +91,10 @@ const Navbar: FC = () => {
     }
   }, [debouncedSearchQuery]);
 
+  useEffect(() => {
+    dispatch(getCart());
+  }, []);
+
   return (
     <nav className={style.navbar}>
       <form className={style.form} ref={dropdownRef}>
@@ -137,7 +142,7 @@ const Navbar: FC = () => {
             >
               {link.href === '/profile/basket' ? (
                 <>
-                  {total_cart > 0 ? (
+                  {total_cart > 0 && stateAuth.isAuth ? (
                     <Badge count={total_cart}>
                       <link.icon />
                     </Badge>

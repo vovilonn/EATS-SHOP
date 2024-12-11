@@ -67,7 +67,9 @@ const ProductCard: FC<IProductCardProps> = (props) => {
   );
 
   const router = useRouter();
-  const isBasketPage = router.pathname === '/profile/basket';
+  const isBasketPage =
+    router.pathname === '/profile/basket' ||
+    router.pathname === '/profile/basket/order-confirm';
 
   const classNameProduct: string = `
     ${style.product}

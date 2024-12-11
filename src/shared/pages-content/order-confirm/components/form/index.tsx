@@ -1,32 +1,37 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { useDispatch } from 'react-redux';
 import { TypeDispatch } from '@/shared/store';
 
-import {checkPromocode, getCart} from '@/shared/store/cart/requests';
+import { checkPromocode, getCart } from '@/shared/store/cart/requests';
 import { createOrder, getOrderOption } from '@/shared/store/orders/requests';
 import { getAccountInfo } from '@/shared/store/account/requests';
 
 import { IOrderCreate } from '@/shared/interfaces/order.interface';
 
-import Institution from '@/shared/components/institution';
 import Button from '@/shared/components/ui/button';
 import FormInput from '@/shared/components/ui/form/form-input';
 import FormCheckbox from '@/shared/components/ui/form/form-checkbox';
-import CheckIcon from '@/shared/assets/icons/checked-icon.svg';
-import Map from '@/shared/components/map';
+
+import { message } from 'antd';
 
 import style from './style.module.scss';
-import AddressMapPicker from '@/shared/components/map';
+
+interface AddressSuggestion {
+  display_name: string;
+  lat: string;
+  lon: string;
+}
 
 const OrderConfirmForm: FC = () => {
   const dispatch = useDispatch<TypeDispatch>();
 
   const { accountInfo } = useTypedSelector((state) => state.accountInfo);
-  const { total_cost } = useTypedSelector((state) => state.cart);
+  const { total_cost, discount, promocode_id } = useTypedSelector(
+    (state) => state.cart
+  );
   const { delivery_price, min_delivery_not_price } = useTypedSelector(
     (state) => state.orders.orderOption
   );
@@ -43,18 +48,54 @@ const OrderConfirmForm: FC = () => {
   const [floor, setFloor] = useState<string>('');
   const [isCallback, setIsCallback] = useState<boolean>(false);
   const [eatsCoins, setEatsCoins] = useState<number>(0);
+  const [eatsCoinApprove, setEatsCoinApprove] = useState(false);
   const [apartment, setApartment] = useState<string>('');
   const [promoCode, setPromoCode] = useState<string>('');
   const [comment, setComment] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [formError, setFormError] = useState<string>('');
 
+  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   useEffect(() => {
     dispatch(getCart());
     dispatch(getOrderOption());
     dispatch(getAccountInfo());
-    setDeliveryPrice(total_cost >= min_delivery_not_price ? 0 : delivery_price);
   }, []);
+
+  const fetchSuggestions = async (query: string) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          query
+        )}`
+      );
+      const data = await response.json();
+      setSuggestions(data);
+    } catch (error) {
+      console.error('Ошибка при загрузке подсказок:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    setAddress(inputValue);
+
+    if (inputValue.trim() === '') {
+      setSuggestions([]);
+    } else if (inputValue.length > 2) {
+      await fetchSuggestions(inputValue);
+    }
+  };
+
+  const handleSelectSuggestion = (suggestion: AddressSuggestion) => {
+    setAddress(suggestion.display_name);
+    setSuggestions([]);
+  };
 
   const handleCashChange = () => {
     setCashPayment(true);
@@ -94,9 +135,6 @@ const OrderConfirmForm: FC = () => {
     if (!cashPayment && !cardPayment) {
       newErrors.payment = 'Виберіть спосіб оплати';
     }
-    if (promoCode && promoCode !== 'ваш_действительный_промокод') {
-      newErrors.promoCode = 'Неправильний промокод';
-    }
 
     setErrors(newErrors);
 
@@ -113,9 +151,9 @@ const OrderConfirmForm: FC = () => {
           apartment,
           type_payment: cashPayment ? 'CASH' : 'ONLINE',
           type_delivery: 'DELIVERY',
-          count_eats_coin: eatsCoins,
+          count_eats_coin: eatsCoinApprove ? eatsCoins : 0,
           comment: comment,
-          promo_code_id: promoCode,
+          promo_code_id: `${promocode_id}`,
           prepare_rest: null,
         };
 
@@ -131,8 +169,36 @@ const OrderConfirmForm: FC = () => {
     }
   };
 
-  const handleCheckPromocode = () => {
-    dispatch(checkPromocode(promoCode));
+  const handleCheckPromocode = async () => {
+    try {
+      await dispatch(checkPromocode(promoCode)).unwrap();
+      message.success('Промокод успешно активирован!');
+    } catch (error) {
+      message.error('Проверьте правильность кода!');
+    }
+  };
+
+  const handleCheckEatsCoins = () => {
+    if (accountInfo?.balance && accountInfo?.balance >= eatsCoins) {
+      message.success('Eats Coin успешно активированы!');
+      setEatsCoinApprove(true);
+    } else {
+      message.error('У вас недостаточно Eats Coin');
+      setEatsCoinApprove(false);
+    }
+  };
+
+  const checkTotalSumm = () => {
+    let total =
+      total_cost +
+      deliveryPrice -
+      ((total_cost + deliveryPrice) * discount) / 100;
+
+    if (eatsCoinApprove) {
+      total = total - eatsCoins;
+    }
+
+    return total;
   };
 
   return (
@@ -142,7 +208,7 @@ const OrderConfirmForm: FC = () => {
         <div className={style.address}>
           <div className={style.field}>
             <label className={style.label} htmlFor="address">
-              Адрес доставки
+              Адресa доставки
             </label>
             <FormInput
               className={`${style.input} ${
@@ -150,9 +216,25 @@ const OrderConfirmForm: FC = () => {
               }`}
               id="address"
               value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              // onBlur={() => setSuggestions([])}
+              onChange={handleInputChange}
               large
             />
+            {suggestions.length > 0 && (
+              <ul className={style.suggestions}>
+                {isLoading && <li className={style.loading}>Загрузка...</li>}
+                {!isLoading &&
+                  suggestions.map((suggestion, index) => (
+                    <li
+                      key={index}
+                      className={style.suggestionItem}
+                      onClick={() => handleSelectSuggestion(suggestion)}
+                    >
+                      {suggestion.display_name}
+                    </li>
+                  ))}
+              </ul>
+            )}
             {errors.address && (
               <span className={style.error}>{errors.address}</span>
             )}
@@ -237,7 +319,7 @@ const OrderConfirmForm: FC = () => {
           </div>
         </div>
         <div className={style.payment}>
-          <h2 className={style.title}>Спосіб оплати</h2>
+          <h3 className={style.title}>Спосіб оплати</h3>
           <FormCheckbox onChange={handleCashChange} large checked={cashPayment}>
             Готівка
           </FormCheckbox>
@@ -282,14 +364,17 @@ const OrderConfirmForm: FC = () => {
             />
           </div>
         )}
+        <div className={style.comment}>
+          <h3 className={style.title}>Коментар</h3>
+          <textarea
+            className={style.textarea}
+            onChange={(e) => setComment(e.target.value)}
+          ></textarea>
+        </div>
       </div>
-      <div className={style.comment}>
-        <h1 className={style.title}>Коментар</h1>
-        <textarea
-          className={style.textarea}
-          onChange={(e) => setComment(e.target.value)}
-        ></textarea>
+      <div className={style.right}>
         <div className={style.coin}>
+          <h3 className={style.label}>У вас {accountInfo?.balance} eatscoin</h3>
           <div className={style.activate}>
             <div className={style.activateContent}>
               <input
@@ -301,15 +386,14 @@ const OrderConfirmForm: FC = () => {
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value)}
               />
-              <button type="button" className={style.activateBtn} onClick={handleCheckPromocode}>
-                <CheckIcon />
-              </button>
+              <span
+                className={style.activateText}
+                onClick={handleCheckPromocode}
+              >
+                Активувати
+              </span>
             </div>
-            {errors.promoCode && (
-              <span className={style.error}>{errors.promoCode}</span>
-            )}
           </div>
-          <p className={style.label}>У вас {accountInfo?.balance} eatscoin</p>
           <div className={style.activate}>
             <input
               className={style.input}
@@ -317,43 +401,49 @@ const OrderConfirmForm: FC = () => {
               placeholder="Бонусні eatscoin"
               onInput={handleNumberInput}
             />
+            <span className={style.activateText} onClick={handleCheckEatsCoins}>
+              Активувати
+            </span>
           </div>
-        </div>
-        <div className={style.info}>
-          <div className={style.list}>
-            <p className={style.text}>
-              <span>Вартість замовлення</span>
-              <span>{total_cost} грн</span>
-            </p>
-            <p className={style.text}>
-              <span>Використані eatscoin</span>
-              <span>0 e</span>
-            </p>
-            <p className={style.text}>
-              <span>Знижка</span>
-              <span>0 грн</span>
-            </p>
-            <p className={style.text}>
-              <span>Вартість доставки</span>
-              <span>{deliveryPrice} грн</span>
-            </p>
-          </div>
+          <div className={style.info}>
+            <div className={style.list}>
+              <p className={style.text}>
+                <span>Вартість замовлення</span>
+                <span>{total_cost} грн</span>
+              </p>
+              <p className={style.text}>
+                <span>Використані eatscoin</span>
+                <span>{eatsCoinApprove ? eatsCoins : 0} e</span>
+              </p>
+              <p className={style.text}>
+                <span>Знижка</span>
+                <span>{discount} %</span>
+              </p>
+              <p className={style.text}>
+                <span>Вартість доставки</span>
+                <span>{deliveryPrice} грн</span>
+              </p>
+            </div>
 
-          <p className={style.total}>
-            <span>Загальна вартість</span>
-            <span>{total_cost + deliveryPrice} грн</span>
-          </p>
+            <p className={style.total}>
+              <span>Загальна вартість</span>
+              <span>
+                {checkTotalSumm()}
+                грн
+              </span>
+            </p>
+          </div>
+          <Button
+            className={style.checkout}
+            basket
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Оформлення...' : 'Оформити'}
+          </Button>
+          {formError && <span className={style.error}>{formError}</span>}
+          {submitError && <span className={style.error}>{submitError}</span>}
         </div>
-        <Button
-          className={style.checkout}
-          basket
-          type="submit"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Оформлення...' : 'Оформити'}
-        </Button>
-        {formError && <span className={style.error}>{formError}</span>}
-        {submitError && <span className={style.error}>{submitError}</span>}
       </div>
     </form>
   );

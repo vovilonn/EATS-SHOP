@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '@/shared/utils/axios.utility';
 
 import { ICartItem } from '@/shared/interfaces/cart-item.interface';
+import { IPromocode } from '@/shared/interfaces/promocode.interface';
 
 interface IIngredients {
   menu_ingredients_id: number;
@@ -74,7 +75,7 @@ export const editCartCount = createAsyncThunk(
   }
 );
 
-export const checkPromocode = createAsyncThunk(
+export const checkPromocode = createAsyncThunk<IPromocode, string>(
   'cart/check-promocode',
   async (code: string) => {
     const { data } = await Axios({
@@ -84,5 +85,5 @@ export const checkPromocode = createAsyncThunk(
     });
 
     return data;
-  },
+  }
 );

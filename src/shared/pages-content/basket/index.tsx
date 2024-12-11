@@ -21,7 +21,7 @@ const BasketPageContent: FC = () => {
         <ProductList products={[]} basket toggleAmountFull minAmount={1} />
         <Link className={style.btn} href="/profile/basket/order-confirm">
           <span className={style.total}>Загалом: {total_cost} грн</span>
-          <span className={style.title}>Оплатити</span>
+          <span className={style.title}>Замовити</span>
         </Link>
       </section>
     </LoggedLayout>

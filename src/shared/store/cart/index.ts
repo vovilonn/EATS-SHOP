@@ -1,11 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ICartItem } from '@/shared/interfaces/cart-item.interface';
-import { addCart, deleteCartItem, getCart, editCartCount } from './requests';
+import {
+  addCart,
+  deleteCartItem,
+  getCart,
+  editCartCount,
+  checkPromocode,
+} from './requests';
 
 interface ICartInitialState {
   cart_items: ICartItem[];
   total_cost: number;
   total_cart: number;
+  discount: number;
+  promocode_id: number | null;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
   error: string | null;
 }
@@ -14,6 +22,8 @@ const initialState: ICartInitialState = {
   cart_items: [],
   total_cost: 0,
   total_cart: 0,
+  discount: 0,
+  promocode_id: null,
   loading: 'idle',
   error: null,
 };
@@ -118,6 +128,15 @@ const cartSlice = createSlice({
       .addCase(editCartCount.rejected, (state, action) => {
         state.loading = 'failed';
         state.error = action.error.message || 'Failed to edit cart count';
+      })
+
+      .addCase(checkPromocode.fulfilled, (state, action) => {
+        state.discount = action.payload.value;
+        state.promocode_id = action.payload.id;
+        state.error = null;
+      })
+      .addCase(checkPromocode.rejected, (state) => {
+        state.error = 'Проверьте правильность кода!';
       });
   },
 });

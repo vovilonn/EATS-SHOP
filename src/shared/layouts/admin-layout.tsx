@@ -8,12 +8,14 @@ const { Header, Content, Footer, Sider } = Layout;
 
 import {
   UserOutlined,
-  FileOutlined,
   LogoutOutlined,
   HomeOutlined,
   UnorderedListOutlined,
   TeamOutlined,
   TagsOutlined,
+  FilterOutlined,
+  ShoppingOutlined,
+  FileDoneOutlined,
 } from '@ant-design/icons';
 
 import styles from './admin-layout.module.scss';
@@ -24,9 +26,11 @@ interface AdminLayoutProps {
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { authToken, role } = useTypedSelector((state) => state.adminPanel);
+
   const [loading, setLoading] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string>('');
   const [collapsed, setCollapsed] = useState<boolean>(false);
+
   const router = useRouter();
   const actions = useActions();
 
@@ -110,22 +114,22 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
       ? [
           {
             key: '/admin/provider/categories',
-            icon: <UserOutlined />,
+            icon: <UnorderedListOutlined />,
             label: 'Категорії',
           },
           {
             key: '/admin/provider/ingredients',
-            icon: <UserOutlined />,
+            icon: <FilterOutlined />,
             label: 'Додатки',
           },
           {
             key: '/admin/provider/products',
-            icon: <UserOutlined />,
+            icon: <ShoppingOutlined />,
             label: 'Продукти',
           },
           {
             key: '/admin/orders',
-            icon: <FileOutlined />,
+            icon: <FileDoneOutlined />,
             label: 'Замовлення',
           },
         ]
@@ -137,6 +141,8 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
       onClick: handleLogout,
     },
   ];
+
+  const siderWidth = collapsed ? 80 : 250;
 
   return (
     <Layout className={styles.adminLayout}>
@@ -157,7 +163,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           items={menuItems}
         />
       </Sider>
-      <Layout>
+      <Layout className={styles.mainLayout} style={{ marginLeft: siderWidth }}>
         <Header className={styles.header}>Адмін Панель</Header>
         <Content className={styles.content}>{children}</Content>
         <Footer className={styles.footer}>© 2024 Адмін Панель</Footer>

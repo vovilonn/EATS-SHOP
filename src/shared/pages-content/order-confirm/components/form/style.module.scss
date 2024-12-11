@@ -11,6 +11,9 @@
   }
 
   .field {
+    position: relative;
+    margin-bottom: 20px;
+
     .label {
       color: #808080;
       font-size: 14px;
@@ -21,7 +24,6 @@
     .input {
       margin-top: 6px;
     }
-
   }
   .error {
     color: #ff0000;
@@ -31,10 +33,10 @@
   }
 
   .errorBorder {
-    border: 1px solid red; 
+    border: 1px solid red;
     border-radius: 40px;
   }
-  
+
   .title {
     color: #0c0c0c;
     font-size: 24px;
@@ -120,6 +122,8 @@
   }
 
   .comment {
+    margin-top: 20px;
+
     .textarea {
       width: 100%;
       height: 96px;
@@ -130,7 +134,9 @@
       background-color: #fff;
       margin-bottom: 32px;
     }
+  }
 
+  .right {
     .coin {
       display: grid;
       gap: 12px 0;
@@ -148,7 +154,6 @@
         display: grid;
         align-items: center;
         grid-template-columns: 1fr max-content;
-        gap: 0 16px;
         transition: border-color 0.2s;
 
         .activateContent {
@@ -156,23 +161,16 @@
           justify-content: space-between;
           align-items: center;
           gap: 4px;
-        }
 
-        .activateBtn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 6px;
-          border-radius: 12px;
-          background-color: #ffc812;
-          width: 36px;
-          height: 36px;
-          cursor: pointer;
+          .activateText {
+            color: #ffc812;
+            cursor: pointer;
+            margin-left: 10px;
+          }
         }
 
         .input {
           width: 100%;
-          padding-right: 16px;
           border-right: 1px solid #e3e3e3;
           font-size: 16px;
           color: #0c0c0c;
@@ -180,6 +178,12 @@
           &::placeholder {
             color: #808080;
           }
+        }
+
+        .activateText {
+          color: #ffc812;
+          cursor: pointer;
+          margin-left: 13.9px;
         }
 
         &.active {
@@ -236,4 +240,47 @@
       width: 100%;
     }
   }
+}
+
+.suggestions {
+  position: absolute;
+  width: 100%;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  max-height: 150px;
+  overflow-y: auto;
+  border-radius: 4px;
+  z-index: 10;
+
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+.suggestions::-webkit-scrollbar {
+  width: 8px;
+}
+
+.suggestions::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.suggestions::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 4px;
+}
+
+.suggestionItem {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestionItem:hover {
+  background-color: #f0f0f0;
+}
+
+.loading {
+  text-align: center;
+  padding: 10px;
+  color: #555;
 }

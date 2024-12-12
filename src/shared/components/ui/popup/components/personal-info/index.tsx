@@ -18,9 +18,8 @@ const PopupPersonalInfo: FC<IPopupPersonalInfoProps> = (props) => {
   const dispatch = useDispatch<TypeDispatch>();
   const [name, setName] = useState<string>('');
   const [referralCode, setReferralCode] = useState<string>('');
-  const [cityId, setCityId] = useState<number>();
   const [loading, setLoading] = useState<boolean>(false);
-  const isValidField: boolean = Boolean(name.length && cityId);
+  const isValidField: boolean = Boolean(name.length);
 
   const handleInputChange = (field: 'name' | 'referralCode', value: string) => {
     if (field === 'name') {
@@ -39,7 +38,7 @@ const PopupPersonalInfo: FC<IPopupPersonalInfoProps> = (props) => {
 
       const response = await dispatch(
         fillingProfile({
-          cityId: Number(cityId),
+          cityId: 1,
           referralCode: Number(referralCode) || null,
           name,
         })
@@ -71,7 +70,7 @@ const PopupPersonalInfo: FC<IPopupPersonalInfoProps> = (props) => {
         valid={Boolean(referralCode.length)}
         large
       />
-      <SelectCity onChange={(id) => setCityId(id)} large />
+      {/* <SelectCity onChange={(id) => setCityId(id)} large /> */}
       <Button
         className={style.btn}
         type="submit"

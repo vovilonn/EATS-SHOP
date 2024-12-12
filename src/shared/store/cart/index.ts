@@ -31,7 +31,11 @@ const initialState: ICartInitialState = {
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
-  reducers: {},
+  reducers: {
+    resetDiscount: (state) => {
+      state.discount = 0;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(getCart.fulfilled, (state, action) => {

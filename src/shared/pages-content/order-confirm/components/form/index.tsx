@@ -3,6 +3,7 @@
 import { FC, useEffect, useState } from 'react';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { useDispatch } from 'react-redux';
+import { useActions } from '@/shared/hooks/use-actions';
 import { TypeDispatch } from '@/shared/store';
 
 import { checkPromocode, getCart } from '@/shared/store/cart/requests';
@@ -15,9 +16,10 @@ import Button from '@/shared/components/ui/button';
 import FormInput from '@/shared/components/ui/form/form-input';
 import FormCheckbox from '@/shared/components/ui/form/form-checkbox';
 
-import { message } from 'antd';
+import { Form, message } from 'antd';
 
 import style from './style.module.scss';
+import { useForm } from 'antd/es/form/Form';
 
 interface AddressSuggestion {
   display_name: string;
@@ -27,6 +29,7 @@ interface AddressSuggestion {
 
 const OrderConfirmForm: FC = () => {
   const dispatch = useDispatch<TypeDispatch>();
+  const actions = useActions();
 
   const { accountInfo } = useTypedSelector((state) => state.accountInfo);
   const { total_cost, discount, promocode_id } = useTypedSelector(
@@ -51,7 +54,7 @@ const OrderConfirmForm: FC = () => {
   const [eatsCoinApprove, setEatsCoinApprove] = useState(false);
   const [apartment, setApartment] = useState<string>('');
   const [promoCode, setPromoCode] = useState<string>('');
-  const [comment, setComment] = useState<string | null>(null);
+  const [comment, setComment] = useState<string>('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [formError, setFormError] = useState<string>('');
 
@@ -152,12 +155,33 @@ const OrderConfirmForm: FC = () => {
           type_payment: cashPayment ? 'CASH' : 'ONLINE',
           type_delivery: 'DELIVERY',
           count_eats_coin: eatsCoinApprove ? eatsCoins : 0,
-          comment: comment,
-          promo_code_id: `${promocode_id}`,
+          comment: comment ? comment : null,
+          promo_code_id: promocode_id ? `${promocode_id}` : null,
           prepare_rest: null,
         };
 
-        await dispatch(createOrder(orderData)).unwrap();
+        const { data } = await dispatch(createOrder(orderData)).unwrap();
+        await dispatch(getCart());
+
+        if (data.payment_url) {
+          window.open(data.payment_url, '_blank');
+        }
+
+        actions.resetDiscount();
+
+        setAddress('');
+        setApproach('');
+        setFloor('');
+        setIsCallback(false);
+        setApartment('');
+        setEatsCoins(0);
+        setEatsCoinApprove(false);
+        setPromoCode('');
+        setComment('');
+        setErrors({});
+        setFormError('');
+        setCashPayment(false);
+        setCardPayment(false);
       } catch (error) {
         setSubmitError('Помилка при оформленні замовлення. Спробуйте ще раз.');
         console.error('Ошибка при создании заказа:', error);
@@ -189,10 +213,7 @@ const OrderConfirmForm: FC = () => {
   };
 
   const checkTotalSumm = () => {
-    let total =
-      total_cost +
-      deliveryPrice -
-      ((total_cost + deliveryPrice) * discount) / 100;
+    let total = total_cost + deliveryPrice - discount;
 
     if (eatsCoinApprove) {
       total = total - eatsCoins;
@@ -368,6 +389,7 @@ const OrderConfirmForm: FC = () => {
           <h3 className={style.title}>Коментар</h3>
           <textarea
             className={style.textarea}
+            value={comment}
             onChange={(e) => setComment(e.target.value)}
           ></textarea>
         </div>
@@ -417,7 +439,7 @@ const OrderConfirmForm: FC = () => {
               </p>
               <p className={style.text}>
                 <span>Знижка</span>
-                <span>{discount} %</span>
+                <span>{discount} грн</span>
               </p>
               <p className={style.text}>
                 <span>Вартість доставки</span>

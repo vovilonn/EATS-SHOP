@@ -80,6 +80,21 @@
     height: 24px;
     cursor: pointer;
     margin-bottom: 12px;
+
+    &.deleteIcon {
+      width: 32px;
+      height: 32px;
+      padding: 4px;
+
+      border: 1px solid transparent;
+      border-radius: 100px;
+
+      transition: 0.2s ease;
+
+      &:hover {
+        border-color: #FF4548;
+      }
+    }
   }
 
   .options {

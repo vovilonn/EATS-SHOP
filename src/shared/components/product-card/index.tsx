@@ -167,7 +167,7 @@ const ProductCard: FC<IProductCardProps> = (props) => {
                       }}
                     >
                       <RemoveIcon
-                        className={style.icon}
+                        className={`${style.icon} ${style.deleteIcon}`}
                         onClick={() =>
                           onToggleToIcon(
                             props.basket ? props.cart_id ?? 0 : props.id
@@ -207,11 +207,10 @@ const ProductCard: FC<IProductCardProps> = (props) => {
                   {props.model_menu_ingredients_cart &&
                     props.model_menu_ingredients_cart.map((ingredient, i) => (
                       <p className={style.components}>
-                        + {ingredient.count}{' '}
+                        + {ingredient.count} шт{' '}
                         {ingredient.model_menu_ingredients.name} (
                         {ingredient.model_menu_ingredients.price *
-                          ingredient.count}
-                        )
+                          ingredient.count} грн)
                       </p>
                     ))}
                 </>

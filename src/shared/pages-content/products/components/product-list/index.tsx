@@ -8,12 +8,12 @@ import style from './style.module.scss';
 
 interface IProductsProductListProps {
   products: Array<IProduct>;
-  // categoryId: number;
+  categoryId?: number;
 }
 
 const ProductsProductList: FC<IProductsProductListProps> = ({
   products: initialProducts,
-  // categoryId,
+  categoryId,
 }) => {
   const [products, setProducts] = useState<IProduct[]>(initialProducts);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +34,7 @@ const ProductsProductList: FC<IProductsProductListProps> = ({
       const nextPage = currentPage + 1;
       const response = await Axios({
         method: 'get',
-        url: `/menu/view?limit=10000000000000&page=${nextPage}`,
+        url: `/menu/view?limit=6&page=${nextPage}&general_categories_id=${categoryId}`,
       });
 
       const newProducts = response.data;

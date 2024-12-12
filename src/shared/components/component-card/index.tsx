@@ -31,6 +31,12 @@ const ComponentCard: FC<IComponentCardProps> = (props) => {
   `);
 
   useEffect(() => {
+    if (!ingredient?.count) {
+      setAmount(0);
+    }
+  }, [ingredient]);
+
+  useEffect(() => {
     setClassNameComponent(`
       ${style.component}
       ${amount >= 1 && style.selected}

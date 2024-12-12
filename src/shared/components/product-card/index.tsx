@@ -192,7 +192,7 @@ const ProductCard: FC<IProductCardProps> = (props) => {
                   ))}
               </div>
 
-              {!props.basket && (
+              {!props.basket && props.composition && (
                 <p className={style.composition}>
                   Склад: {sliceTextUtility(props.composition, 35)}
                 </p>
@@ -210,7 +210,8 @@ const ProductCard: FC<IProductCardProps> = (props) => {
                         + {ingredient.count} шт{' '}
                         {ingredient.model_menu_ingredients.name} (
                         {ingredient.model_menu_ingredients.price *
-                          ingredient.count} грн)
+                          ingredient.count}{' '}
+                        грн)
                       </p>
                     ))}
                 </>

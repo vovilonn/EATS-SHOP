@@ -7,6 +7,10 @@ interface IoptionsRenderingUtilityProps {
 
 const optionsRenderingUtility = (props: IoptionsRenderingUtilityProps) => {
   return props.options.map((option: any) => {
+    if (option.name === '1' || option.name === '.' || option.name === '-') {
+      return;
+    }
+
     const key = Math.random();
 
     const classNameOption: string = `

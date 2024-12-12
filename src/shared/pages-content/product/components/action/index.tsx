@@ -115,9 +115,11 @@ const ProductAction: FC<IProductActionProps> = (props) => {
       <p className={style.composition}>
         <b>Склад:</b> {props.composition}
       </p>
-      <p className={style.weight}>
-        <b>Вага:</b> {weight} г
-      </p>
+      {weight && (
+        <p className={style.weight}>
+          <b>Вага:</b> {weight} г
+        </p>
+      )}
       <div className={style.options}>{optionsRendering}</div>
       <footer className={style.footer}>
         <h2 className={style.price}>{totalPrice} грн</h2>

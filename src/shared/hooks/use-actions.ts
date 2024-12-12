@@ -6,6 +6,7 @@ import authSlice from '../store/auth';
 import favoriteSlice from '../store/favorite';
 import productSlice from '../store/product';
 import adminSlice from '../store/admin';
+import cartSlice from '../store/cart';
 
 const actions = {
   ...authSlice.actions,
@@ -13,6 +14,7 @@ const actions = {
   ...favoriteSlice.actions,
   ...productSlice.actions,
   ...adminSlice.actions,
+  ...cartSlice.actions,
 };
 
 export const useActions = () => {

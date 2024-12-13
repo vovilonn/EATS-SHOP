@@ -107,11 +107,9 @@ const ProviderProductsContent: React.FC = () => {
       title: 'Заклад',
       dataIndex: 'model_branded_store',
       key: 'model_branded_store',
-      render: (model_branded_store_categories) => {
-        const brand = brands.find(
-          (brand) =>
-            brand.id === model_branded_store_categories?.branded_store_id
-        );
+      render: () => {
+        const brand = brands.find((brand) => brand.id === selectedBrand);
+
         return brand?.name || 'Невідомо';
       },
     },
@@ -397,6 +395,7 @@ const ProviderProductsContent: React.FC = () => {
       slice: () => new Blob(),
       stream: () => new ReadableStream(),
       text: () => Promise.resolve(''),
+      bytes: () => Promise.resolve(new Uint8Array()),
     };
 
     const existingFile: UploadFile = {

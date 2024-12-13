@@ -153,6 +153,7 @@ const GeneralCategoriesContent: React.FC = () => {
       slice: () => new Blob(),
       stream: () => new ReadableStream(),
       text: () => Promise.resolve(''),
+      bytes: () => Promise.resolve(new Uint8Array()),
     };
 
     const existingFile: UploadFile = {

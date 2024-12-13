@@ -5,7 +5,6 @@
   @media screen and (max-width: 768px) {
     margin: 0 16px;
     padding: 0 12px;
-    height: 200px;
   }
 
   .wrapper {
@@ -73,6 +72,9 @@
     line-height: 140%;
     margin-bottom: 12px;
     white-space: nowrap;
+    @media screen and (max-width: 768px) {
+      white-space: normal;
+    }
   }
 
   .icon {
@@ -188,5 +190,11 @@
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 12px;
+  }
+
+  .btn {
+    @media screen and (max-width: 768px) {
+      margin-bottom: 12px;
+    }
   }
 }

@@ -141,7 +141,7 @@ const GeneralCategoriesContent: React.FC = () => {
       '.' +
       (category.icon.split('/').pop()?.split('.').pop() || 'jpg');
 
-    const fakeFile: RcFile = {
+    const fakeFile = {
       uid: '-1',
       name: fileName,
       size: 0,
@@ -154,7 +154,7 @@ const GeneralCategoriesContent: React.FC = () => {
       stream: () => new ReadableStream(),
       text: () => Promise.resolve(''),
       bytes: () => Promise.resolve(new Uint8Array()),
-    };
+    } as RcFile;
 
     const existingFile: UploadFile = {
       uid: '-1',

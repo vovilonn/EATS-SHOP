@@ -78,12 +78,7 @@ const ProductList: FC<IProductListProps> = (props) => {
 
   return (
     <div
-      className={style.products}
-      style={{
-        gridTemplateColumns:
-          productsRendering.length === 0 ? '1fr' : '1fr 1fr 1fr',
-      }}
-    >
+      className={style.products}>
       {content}
     </div>
   );

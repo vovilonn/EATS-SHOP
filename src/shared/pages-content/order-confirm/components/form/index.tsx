@@ -20,6 +20,7 @@ import { Form, message } from 'antd';
 
 import style from './style.module.scss';
 import { useForm } from 'antd/es/form/Form';
+import useDebounce from "@/shared/hooks/use-debounce";
 
 interface AddressSuggestion {
   display_name: string;
@@ -47,6 +48,7 @@ const OrderConfirmForm: FC = () => {
   const [cardPayment, setCardPayment] = useState<boolean>(false);
 
   const [address, setAddress] = useState<string>('');
+  const [addressSelected, setAddressSelected] = useState(false);
   const [approach, setApproach] = useState<string>('');
   const [floor, setFloor] = useState<string>('');
   const [isCallback, setIsCallback] = useState<boolean>(false);
@@ -60,6 +62,8 @@ const OrderConfirmForm: FC = () => {
 
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const debouncedAddress = useDebounce(address, 500);
 
   useEffect(() => {
     dispatch(getCart());
@@ -84,18 +88,24 @@ const OrderConfirmForm: FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (debouncedAddress?.length > 2 && !addressSelected) {
+      fetchSuggestions(debouncedAddress);
+    }
+  }, [debouncedAddress, addressSelected]);
+
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     setAddress(inputValue);
+    setAddressSelected(false);
 
     if (inputValue.trim() === '') {
       setSuggestions([]);
-    } else if (inputValue.length > 2) {
-      await fetchSuggestions(inputValue);
     }
   };
 
   const handleSelectSuggestion = (suggestion: AddressSuggestion) => {
+    setAddressSelected(true);
     setAddress(suggestion.display_name);
     setSuggestions([]);
   };

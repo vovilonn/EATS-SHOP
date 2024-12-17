@@ -46,6 +46,10 @@ const AmountToggle: FC<IAmountToggleProps> = (props) => {
       });
   
       if (props.basket) {
+        if (method === '-' && props.amount === 1) {
+          return;
+        }
+
         actions.clearProductCount(props.productId);
         actions.clearProductIngredientsCount(props.productId);
         dispatch(

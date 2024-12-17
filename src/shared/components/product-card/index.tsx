@@ -201,8 +201,7 @@ const ProductCard: FC<IProductCardProps> = (props) => {
               {props.basket && (
                 <>
                   <p className={style.composition}>
-                    ({props.model_options?.name}), {props.model_options?.weight}{' '}
-                    гр.
+                    {props.model_options?.name ? `(${props.model_options?.name})` : ''}{props.model_options?.weight ? `, ${props.model_options?.weight} гр.` : ''}
                   </p>
                   {props.model_menu_ingredients_cart &&
                     props.model_menu_ingredients_cart.map((ingredient, i) => (

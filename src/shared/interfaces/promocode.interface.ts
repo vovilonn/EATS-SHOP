@@ -7,6 +7,7 @@ export interface IPromocode {
   code: string;
   description: string | null;
   value_all_start: number;
+  type_value: 'MONEY' | 'PERCENTAGE';
 }
 
 export interface IPromocodeCreateOrUpd {
@@ -17,4 +18,5 @@ export interface IPromocodeCreateOrUpd {
   is_active: boolean;
   code: string;
   value: number;
+  type_value?: 'MONEY' | 'PERCENTAGE';
 }

@@ -30,6 +30,14 @@ export interface IOrderCreate {
   prepare_rest: string | null;
 }
 
+export type StatusOrder =
+  | 'NEWORDER'
+  | 'PROGRESS'
+  | 'DELIVERY'
+  | 'WAITINGPAYMENT'
+  | 'DELIVERED'
+  | 'CANCELED';
+
 export interface IOrdersHistory {
   id: number;
   cart: {
@@ -37,7 +45,11 @@ export interface IOrdersHistory {
     total_cart: number;
     total_cost: number;
   };
-  address: string;
+  address:
+    | string
+    | {
+        formatted_address: string;
+      };
   entrance: string;
   call_back: boolean;
   floor: number;
@@ -58,7 +70,7 @@ export interface IOrdersHistory {
   };
   payment_url: string;
   prepare_rest: null;
-  status_order: string;
+  status_order: StatusOrder;
   account_id: number;
   status_payment: string;
   createdAt: number;

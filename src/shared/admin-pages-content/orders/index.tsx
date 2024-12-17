@@ -3,13 +3,43 @@ import { useDispatch } from 'react-redux';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { TypeDispatch } from '@/shared/store';
 
-import { IOrdersHistory } from '@/shared/interfaces/order.interface';
+import {
+  editOrderStatus,
+  fetchProviderOrders,
+} from '@/shared/store/admin/provider/requests';
 
-import { fetchProviderOrders } from '@/shared/store/admin/provider/requests';
-
-import { Card, Modal, Table, TableProps, Tag } from 'antd';
+import {
+  IOrdersHistory,
+  StatusOrder,
+} from '@/shared/interfaces/order.interface';
 import { IModelMenuIngredientsCart } from '@/shared/interfaces/cart-item.interface';
+
 import { formatDate } from '@/shared/utils/formatDate';
+
+import {
+  Button,
+  Card,
+  message,
+  Modal,
+  Select,
+  Table,
+  TableProps,
+  Tag,
+} from 'antd';
+import { fetchCities } from '@/shared/store/admin/requests';
+
+const { Option } = Select;
+
+const editableStatuses = ['NEWORDER', 'PROGRESS', 'DELIVERY', 'DELIVERED'];
+
+const statusPriority: Record<StatusOrder, number> = {
+  NEWORDER: 1,
+  PROGRESS: 2,
+  DELIVERY: 3,
+  WAITINGPAYMENT: 4,
+  DELIVERED: 5,
+  CANCELED: 6,
+};
 
 const ProviderIngredientsContent: React.FC = () => {
   const dispatch = useDispatch<TypeDispatch>();
@@ -19,9 +49,12 @@ const ProviderIngredientsContent: React.FC = () => {
   const [selectedRecord, setSelectedRecord] = useState<IOrdersHistory | null>(
     null
   );
+  const [showCanceled, setShowCanceled] = useState<boolean>(false);
+  const [currentStatus, setCurrentStatus] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(fetchProviderOrders());
+    dispatch(fetchCities());
   }, [dispatch]);
 
   const columns: TableProps<IOrdersHistory>['columns'] = [
@@ -71,11 +104,13 @@ const ProviderIngredientsContent: React.FC = () => {
 
   const handleRowClick = (record: IOrdersHistory) => {
     setSelectedRecord(record);
+    setCurrentStatus(record.status_order);
     setIsModalOpen(true);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    setCurrentStatus(null);
   };
 
   const totalSumIngredients = (
@@ -88,26 +123,34 @@ const ProviderIngredientsContent: React.FC = () => {
     }, 0);
   };
 
-  const checkOrderStatus = (status_order: string) => {
+  const checkOrderStatus = (status: string) => {
     let color = '';
     let text = '';
 
-    switch (status_order) {
-      case 'CREATED':
-        color = 'blue';
-        text = 'Замовлення створено';
+    switch (status) {
+      case 'NEWORDER':
+        color = 'green';
+        text = 'Нове замовлення';
         break;
       case 'WAITINGPAYMENT':
         color = 'orange';
         text = 'Очікується оплата';
+        break;
+      case 'PROGRESS':
+        color = 'blue';
+        text = 'Замовлення виконується';
         break;
       case 'DELIVERY':
         color = 'purple';
         text = 'Передано на доставку';
         break;
       case 'DELIVERED':
-        color = 'green';
+        color = 'gray';
         text = 'Доставлено';
+        break;
+      case 'CANCELED':
+        color = 'default';
+        text = 'Замовлення скасовано';
         break;
       default:
         color = 'default';
@@ -117,21 +160,66 @@ const ProviderIngredientsContent: React.FC = () => {
     return { color, text };
   };
 
+  const handleStatusChange = async (newStatus: string) => {
+    if (selectedRecord) {
+      try {
+        await dispatch(
+          editOrderStatus({ order_id: selectedRecord.id, status: newStatus })
+        );
+        // setCurrentStatus(newStatus);
+        setIsModalOpen(false);
+
+        await dispatch(fetchProviderOrders());
+
+        message.success(
+          `Статус замовлення змінено на "${checkOrderStatus(newStatus).text}"`
+        );
+      } catch (error) {
+        message.error('Щось пішло не так!');
+      }
+    }
+  };
+
+  const filterOrders = (orders: IOrdersHistory[], open: boolean) => {
+    let filteredOrders = [...orders].sort((a, b): number => {
+      const statusDiff =
+        statusPriority[a.status_order] - statusPriority[b.status_order];
+      return statusDiff;
+    });
+
+    if (!open) {
+      filteredOrders = filteredOrders.filter(
+        (order) => order.status_order !== 'CANCELED'
+      );
+    }
+
+    return filteredOrders;
+  };
+
   return (
     <>
       <Table<IOrdersHistory>
         columns={columns}
-        dataSource={orders}
+        dataSource={filterOrders(orders, showCanceled)}
         pagination={false}
         onRow={(record: IOrdersHistory) => ({
           onClick: () => handleRowClick(record),
           style: { cursor: 'pointer' },
         })}
+        rowKey="id"
       />
+
+      <div
+        style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}
+      >
+        <Button type="primary" onClick={() => setShowCanceled(!showCanceled)}>
+          {!showCanceled ? 'Показати все' : 'Приховати'}
+        </Button>
+      </div>
 
       <Modal
         width={'65%'}
-        title={`Номер заказа: №${selectedRecord?.id}`}
+        title={`Номер замовлення: №${selectedRecord?.id}`}
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
@@ -149,7 +237,7 @@ const ProviderIngredientsContent: React.FC = () => {
                 paddingTop: '30px',
               }}
             >
-              <div>
+              <div style={{ width: '60%' }}>
                 <p>
                   Ім'я:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
@@ -171,7 +259,9 @@ const ProviderIngredientsContent: React.FC = () => {
                 <p>
                   Адрес:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
-                    {selectedRecord.address}
+                    {typeof selectedRecord.address === 'string'
+                      ? selectedRecord.address
+                      : selectedRecord.address.formatted_address}
                   </span>
                 </p>
                 <p>
@@ -226,29 +316,53 @@ const ProviderIngredientsContent: React.FC = () => {
                   Знижка з промокодом:{' '}
                   <span style={{ color: 'gray', fontStyle: 'italic' }}>
                     {selectedRecord.discount_promo_code
-                      ? selectedRecord.discount_promo_code + '%'
-                      : '0%'}
+                      ? selectedRecord.discount_promo_code + ' грн'
+                      : '0 грн'}
                   </span>
                 </p>
                 <p>
-                  Сторінка оплати:{' '}
-                  <a href={selectedRecord.payment_url} target="_blank">
-                    Перейти
-                  </a>
-                </p>
-                <p>
-                  Статус:{' '}
-                  <span
-                    style={{
-                      color: `${
-                        checkOrderStatus(selectedRecord.status_order).color
-                      }`,
-                      fontStyle: 'italic',
-                    }}
-                  >
-                    {checkOrderStatus(selectedRecord.status_order).text}
+                  Доставка:{' '}
+                  <span style={{ color: 'gray', fontStyle: 'italic' }}>
+                    {selectedRecord.cost_delivery
+                      ? selectedRecord.cost_delivery + ' грн'
+                      : '0 грн'}
                   </span>
                 </p>
+                <div>
+                  <p>
+                    <strong>Поточний статус:</strong>{' '}
+                    <span
+                      style={{
+                        color: checkOrderStatus(selectedRecord.status_order)
+                          .color,
+                      }}
+                    >
+                      {checkOrderStatus(selectedRecord.status_order).text}
+                    </span>
+                  </p>
+
+                  {editableStatuses.includes(currentStatus!) ? (
+                    <>
+                      <Select
+                        value="Змінити статус"
+                        style={{ width: '100%' }}
+                        onChange={handleStatusChange}
+                      >
+                        {editableStatuses
+                          .filter((status) => status !== currentStatus)
+                          .map((status) => (
+                            <Option key={status} value={status}>
+                              {checkOrderStatus(status).text}
+                            </Option>
+                          ))}
+                      </Select>
+                    </>
+                  ) : (
+                    <p style={{ color: 'gray', fontSize: '12px' }}>
+                      Зміна статусу недоступна для цього замовлення.
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 

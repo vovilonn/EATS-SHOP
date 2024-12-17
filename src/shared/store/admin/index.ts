@@ -15,6 +15,7 @@ import {
   fetchGeneralCategories,
   fetchOneProduct,
   fetchProducts,
+  getOrderOption,
 } from './requests';
 import {
   createNewBrand,
@@ -46,6 +47,7 @@ import IComponent from '@/shared/interfaces/component.interface';
 import IProvider from '@/shared/interfaces/provider.interface';
 import IAccountInfo from '@/shared/interfaces/accountInfo.interface';
 import { IPromocode } from '@/shared/interfaces/promocode.interface';
+import IOrderOption from '@/shared/interfaces/delivery-option.interface';
 
 export interface IInitialState {
   authToken: string | null;
@@ -59,6 +61,7 @@ export interface IInitialState {
   generalCategories: ICategory[];
   promocodes: IPromocode[];
   oneProduct: IProduct | null;
+  orderOption: IOrderOption | null;
   role: 'ADMIN' | 'PROVIDER' | null;
   orders: IOrdersHistory[];
 }
@@ -75,6 +78,7 @@ const initialState: IInitialState = {
   generalCategories: [],
   promocodes: [],
   oneProduct: null,
+  orderOption: null,
   role:
     typeof window !== 'undefined'
       ? (localStorage.getItem('role') as 'ADMIN' | 'PROVIDER' | null)
@@ -253,6 +257,10 @@ const adminSlice = createSlice({
     build.addCase(deletePromocode.fulfilled, (state, action) => {
       const id = action.meta.arg;
       state.promocodes = state.promocodes.filter((promo) => promo.id !== id);
+    });
+
+    build.addCase(getOrderOption.fulfilled, (state, action) => {
+      state.orderOption = action.payload;
     });
   },
 });

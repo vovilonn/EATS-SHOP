@@ -22,26 +22,28 @@ import {
   Input,
   message,
   Modal,
+  Radio,
   Table,
   TableProps,
   Tag,
-  Typography,
 } from 'antd';
 
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 
 const PromocodesPageContent = () => {
   const dispatch = useDispatch<TypeDispatch>();
-
   const { promocodes } = useTypedSelector((state) => state.adminPanel);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingKey, setEditingKey] = useState<number | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [typePromocode, setTypePromocode] = useState<'MONEY' | 'PERCENTAGE'>(
+    'PERCENTAGE'
+  );
+  const [currentPromocode, setCurrentPromocode] = useState<IPromocode | null>(
+    null
+  );
 
   const [form] = Form.useForm();
-  const [editForm] = Form.useForm();
-
-  const isEditing = (record: IPromocode) => record.id === editingKey;
 
   useEffect(() => {
     dispatch(fetchAllPromocodes());
@@ -52,85 +54,32 @@ const PromocodesPageContent = () => {
       title: 'Назва',
       dataIndex: 'description',
       key: 'description',
-      render: (_, record: IPromocode) => {
-        if (isEditing(record)) {
-          return (
-            <Form.Item
-              name="description"
-              style={{ margin: 0 }}
-              initialValue={record.description}
-              rules={[{ required: true, message: 'Заповніть це поле!' }]}
-            >
-              <Input />
-            </Form.Item>
-          );
-        }
-        return (
-          record.description || (
-            <span style={{ color: 'gray', fontStyle: 'italic' }}>Невідомо</span>
-          )
-        );
-      },
+      render: (_, record: IPromocode) =>
+        record.description || (
+          <span style={{ color: 'gray', fontStyle: 'italic' }}>Невідомо</span>
+        ),
     },
     {
       title: 'Код',
       dataIndex: 'code',
       key: 'code',
-      render: (_, record: IPromocode) => {
-        if (isEditing(record)) {
-          return (
-            <Form.Item
-              name="code"
-              style={{ margin: 0 }}
-              initialValue={record.code}
-              rules={[{ required: true, message: 'Заповніть це поле!' }]}
-            >
-              <Input />
-            </Form.Item>
-          );
-        }
-        return record.code;
-      },
+      render: (_, record: IPromocode) => record.code,
     },
     {
       title: 'Кількість',
       dataIndex: 'count',
       key: 'count',
-      render: (_, record: IPromocode) => {
-        if (isEditing(record)) {
-          return (
-            <Form.Item
-              name="count"
-              style={{ margin: 0 }}
-              initialValue={record.value_all_start}
-              rules={[{ required: true, message: 'Заповніть це поле!' }]}
-            >
-              <Input />
-            </Form.Item>
-          );
-        }
-        return `${record.count}/${record.value_all_start}`;
-      },
+      render: (_, record: IPromocode) =>
+        `${record.count}/${record.value_all_start}`,
     },
     {
       title: 'Знижка',
       dataIndex: 'value',
       key: 'value',
-      render: (_, record: IPromocode) => {
-        if (isEditing(record)) {
-          return (
-            <Form.Item
-              name="value"
-              style={{ margin: 0 }}
-              initialValue={record.value}
-              rules={[{ required: true, message: 'Заповніть це поле!' }]}
-            >
-              <Input />
-            </Form.Item>
-          );
-        }
-        return record.value + '%';
-      },
+      render: (_, record: IPromocode) =>
+        record.type_value === 'MONEY'
+          ? `${record.value} грн`
+          : `${record.value}%`,
     },
     {
       title: 'Статус',
@@ -145,108 +94,71 @@ const PromocodesPageContent = () => {
     {
       title: 'Дії',
       key: 'actions',
-      render: (_: any, record: IPromocode) => {
-        const editable = isEditing(record);
-        return editable ? (
-          <span>
-            <Typography.Link
-              onClick={() => save(record.id)}
-              style={{ marginRight: 8 }}
-            >
-              Зберегти
-            </Typography.Link>
-            <Typography.Link onClick={cancel}>Скасувати</Typography.Link>
-          </span>
-        ) : (
-          <>
-            <Button
-              type="text"
-              icon={<EditOutlined />}
-              onClick={() => edit(record)}
-              disabled={editingKey !== null}
-            />
-            <Button
-              type="text"
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => handleDelete(record.id)}
-              disabled={editingKey !== null}
-            />
-          </>
-        );
-      },
+      render: (_, record: IPromocode) => (
+        <>
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+          />
+          <Button
+            type="text"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record.id)}
+          />
+        </>
+      ),
     },
   ];
 
   const showModal = () => {
     setIsModalOpen(true);
+    setIsEditing(false);
+    form.resetFields();
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    setCurrentPromocode(null);
     form.resetFields();
   };
 
-  const edit = (record: IPromocode) => {
-    setEditingKey(record.id);
-
-    editForm.setFieldsValue({
-      code: record.code,
-      count: record.count,
-      description: record.description,
-      value: record.value,
-    });
-  };
-
-  const cancel = () => {
-    setEditingKey(null);
-    form.resetFields();
-  };
-
-  const save = async (id: number) => {
-    try {
-      const code = editForm.getFieldValue('code');
-      const count = editForm.getFieldValue('count');
-      const value = editForm.getFieldValue('value');
-      const description = editForm.getFieldValue('description');
-
-      await dispatch(
-        editPromocode({
-          description,
-          value,
-          promo_code_id: id,
-          code,
-          count,
-          is_active: true,
-          type: 'Disposable',
-        })
-      ).unwrap();
-      message.success('Промокод успішно оновлено');
-      setEditingKey(null);
-      dispatch(fetchAllPromocodes());
-      editForm.resetFields();
-    } catch (error) {
-      message.error('Не вдалося оновити промокод');
-    }
+  const handleEdit = (promocode: IPromocode) => {
+    setCurrentPromocode(promocode);
+    setTypePromocode(promocode.type_value);
+    form.setFieldsValue(promocode);
+    setIsModalOpen(true);
+    setIsEditing(true);
   };
 
   const handleSubmit = async (values: IPromocodeCreateOrUpd) => {
-    const newPromocode = {
-      description: values.description,
-      code: values.code,
+    const promocodeData = {
+      ...values,
       type: 'Disposable',
-      count: values.count,
-      value: values.value,
+      type_value: typePromocode,
       is_active: true,
     };
+
     try {
-      await dispatch(createPromocode(newPromocode)).unwrap();
-      message.success('Промокод успішно створено');
+      if (isEditing && currentPromocode) {
+        await dispatch(
+          editPromocode({
+            ...promocodeData,
+            promo_code_id: currentPromocode.id,
+          })
+        ).unwrap();
+        message.success('Промокод успішно відредаговано');
+      } else {
+        await dispatch(createPromocode(promocodeData)).unwrap();
+        message.success('Промокод успішно створено');
+      }
       form.resetFields();
       setIsModalOpen(false);
+      setCurrentPromocode(null);
       await dispatch(fetchAllPromocodes());
     } catch (error) {
-      message.error('Не вдалося створити промокод');
+      message.error('Не вдалося зберегти промокод');
     }
   };
 
@@ -277,9 +189,7 @@ const PromocodesPageContent = () => {
       >
         Створити новий промокод
       </Button>
-      <Form form={editForm} component={false}>
-        <Table columns={columns} dataSource={promocodes} rowKey="id" />
-      </Form>
+      <Table columns={columns} dataSource={promocodes} rowKey="id" />
 
       <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Form form={form} layout="vertical" onFinish={handleSubmit}>
@@ -296,6 +206,16 @@ const PromocodesPageContent = () => {
             rules={[{ required: true, message: 'Заповніть це поле!' }]}
           >
             <Input placeholder="Введіть промокод" />
+          </Form.Item>
+          <Form.Item>
+            <Radio.Group
+              options={[
+                { label: 'В процентах', value: 'PERCENTAGE' },
+                { label: 'В гривнях', value: 'MONEY' },
+              ]}
+              onChange={(e) => setTypePromocode(e.target.value)}
+              value={typePromocode}
+            />
           </Form.Item>
           <Form.Item
             label="Кількість"

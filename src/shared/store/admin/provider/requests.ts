@@ -286,3 +286,15 @@ export const editPositionForProduct = createAsyncThunk<
     useLocalStorage: true,
   });
 });
+
+export const editOrderStatus = createAsyncThunk<
+  void,
+  { order_id: number; status: string }
+>('provider/edit_order_status', async (obj) => {
+  await Axios({
+    method: 'put',
+    url: '/provider/branded_store/oder/status',
+    data: obj,
+    useLocalStorage: true,
+  });
+});

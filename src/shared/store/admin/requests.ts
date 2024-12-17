@@ -1,3 +1,4 @@
+import { IOrderOption } from './../../interfaces/order.interface';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '@/shared/utils/axios.utility';
 
@@ -11,6 +12,7 @@ import {
   IPromocodeCreateOrUpd,
 } from '@/shared/interfaces/promocode.interface';
 import IProvider from '@/shared/interfaces/provider.interface';
+import IDeliveryOption from '@/shared/interfaces/delivery-option.interface';
 
 export const fetchCities = createAsyncThunk<ICity[]>(
   'admin/cities',
@@ -184,7 +186,7 @@ export const fetchAllPromocodes = createAsyncThunk<IPromocode[]>(
 
 export const createPromocode = createAsyncThunk<void, IPromocodeCreateOrUpd>(
   'admin/promocodes/create',
-  async ({ type, count, is_active, code, description, value }) => {
+  async ({ type, count, is_active, code, description, value, type_value }) => {
     await Axios({
       method: 'post',
       url: '/admin/promo_code/create',
@@ -195,6 +197,7 @@ export const createPromocode = createAsyncThunk<void, IPromocodeCreateOrUpd>(
         code,
         value,
         description,
+        type_value,
       },
       useLocalStorage: true,
     });
@@ -225,6 +228,7 @@ export const editPromocode = createAsyncThunk<void, IPromocodeCreateOrUpd>(
     type,
     description,
     value,
+    type_value,
   }) => {
     await Axios({
       method: 'put',
@@ -238,8 +242,34 @@ export const editPromocode = createAsyncThunk<void, IPromocodeCreateOrUpd>(
         description,
         value,
         value_all_start: count,
+        type_value,
       },
       useLocalStorage: true,
+    });
+  }
+);
+
+export const getOrderOption = createAsyncThunk<IDeliveryOption>(
+  'admin/get_order_option',
+  async () => {
+    const { data } = await Axios({
+      method: 'get',
+      url: '/admin/delivery/view_option',
+      useLocalStorage: true,
+    });
+
+    return data;
+  }
+);
+
+export const editOrderOption = createAsyncThunk<void, IDeliveryOption>(
+  'admin/edit_order_option',
+  async (orderOption) => {
+    await Axios({
+      method: 'post',
+      url: '/admin/delivery/edit',
+      useLocalStorage: true,
+      data: orderOption,
     });
   }
 );

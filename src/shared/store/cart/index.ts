@@ -13,6 +13,7 @@ interface ICartInitialState {
   total_cost: number;
   total_cart: number;
   discount: number;
+  typePromocode: 'MONEY' | 'PERCENTAGE' | null;
   promocode_id: number | null;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
   error: string | null;
@@ -23,6 +24,7 @@ const initialState: ICartInitialState = {
   total_cost: 0,
   total_cart: 0,
   discount: 0,
+  typePromocode: null,
   promocode_id: null,
   loading: 'idle',
   error: null,
@@ -34,6 +36,7 @@ const cartSlice = createSlice({
   reducers: {
     resetDiscount: (state) => {
       state.discount = 0;
+      state.typePromocode = null;
     },
   },
   extraReducers(builder) {
@@ -136,6 +139,7 @@ const cartSlice = createSlice({
 
       .addCase(checkPromocode.fulfilled, (state, action) => {
         state.discount = action.payload.value;
+        state.typePromocode = action.payload.type_value;
         state.promocode_id = action.payload.id;
         state.error = null;
       })

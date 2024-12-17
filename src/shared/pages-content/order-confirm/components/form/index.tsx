@@ -33,9 +33,8 @@ const OrderConfirmForm: FC = () => {
   const actions = useActions();
 
   const { accountInfo } = useTypedSelector((state) => state.accountInfo);
-  const { total_cost, discount, promocode_id } = useTypedSelector(
-    (state) => state.cart
-  );
+  const { total_cost, discount, promocode_id, typePromocode, cart_items } =
+    useTypedSelector((state) => state.cart);
   const { delivery_price, min_delivery_not_price } = useTypedSelector(
     (state) => state.orders.orderOption
   );
@@ -70,6 +69,14 @@ const OrderConfirmForm: FC = () => {
     dispatch(getOrderOption());
     dispatch(getAccountInfo());
   }, []);
+
+  useEffect(() => {
+    if (cart_items.length > 0) {
+      setDeliveryPrice(
+        total_cost <= min_delivery_not_price ? delivery_price : 0
+      );
+    }
+  }, [total_cost]);
 
   const fetchSuggestions = async (query: string) => {
     try {
@@ -223,7 +230,13 @@ const OrderConfirmForm: FC = () => {
   };
 
   const checkTotalSumm = () => {
-    let total = total_cost + deliveryPrice - discount;
+    let total = total_cost + deliveryPrice;
+
+    if (typePromocode === 'MONEY') {
+      total -= discount;
+    } else if (typePromocode === 'PERCENTAGE') {
+      total -= (total_cost * discount) / 100;
+    }
 
     if (eatsCoinApprove) {
       total = total - eatsCoins;
@@ -449,7 +462,14 @@ const OrderConfirmForm: FC = () => {
               </p>
               <p className={style.text}>
                 <span>Знижка</span>
-                <span>{discount} грн</span>
+                <span>
+                  {discount}{' '}
+                  {typePromocode === 'MONEY'
+                    ? `грн`
+                    : typePromocode === 'PERCENTAGE'
+                    ? `%`
+                    : ''}
+                </span>
               </p>
               <p className={style.text}>
                 <span>Вартість доставки</span>
@@ -459,10 +479,7 @@ const OrderConfirmForm: FC = () => {
 
             <p className={style.total}>
               <span>Загальна вартість</span>
-              <span>
-                {checkTotalSumm()}
-                грн
-              </span>
+              <span>{checkTotalSumm()} грн</span>
             </p>
           </div>
           <Button

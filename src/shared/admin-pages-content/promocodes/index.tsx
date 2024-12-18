@@ -36,8 +36,11 @@ const PromocodesPageContent = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [typePromocode, setTypePromocode] = useState<'MONEY' | 'PERCENTAGE'>(
-    'PERCENTAGE'
+  const [typeValuePromocode, setTypeValuePromocode] = useState<
+    'MONEY' | 'PERCENTAGE'
+  >('PERCENTAGE');
+  const [typePromocode, setTypePromocode] = useState<'DISPOSABLE' | 'ONETIME'>(
+    'DISPOSABLE'
   );
   const [currentPromocode, setCurrentPromocode] = useState<IPromocode | null>(
     null
@@ -64,6 +67,18 @@ const PromocodesPageContent = () => {
       dataIndex: 'code',
       key: 'code',
       render: (_, record: IPromocode) => record.code,
+    },
+    {
+      title: 'Тип промокода',
+      dataIndex: 'type',
+      key: 'type',
+      render: (type: 'DISPOSABLE' | 'ONETIME') => {
+        if (type === 'DISPOSABLE') {
+          return 'Многоразовый';
+        } else {
+          return 'Одноразовый';
+        }
+      },
     },
     {
       title: 'Кількість',
@@ -126,7 +141,8 @@ const PromocodesPageContent = () => {
 
   const handleEdit = (promocode: IPromocode) => {
     setCurrentPromocode(promocode);
-    setTypePromocode(promocode.type_value);
+    setTypePromocode(promocode.type);
+    setTypeValuePromocode(promocode.type_value);
     form.setFieldsValue(promocode);
     setIsModalOpen(true);
     setIsEditing(true);
@@ -135,8 +151,8 @@ const PromocodesPageContent = () => {
   const handleSubmit = async (values: IPromocodeCreateOrUpd) => {
     const promocodeData = {
       ...values,
-      type: 'Disposable',
-      type_value: typePromocode,
+      type: typePromocode,
+      type_value: typeValuePromocode,
       is_active: true,
     };
 
@@ -212,6 +228,16 @@ const PromocodesPageContent = () => {
               options={[
                 { label: 'В процентах', value: 'PERCENTAGE' },
                 { label: 'В гривнях', value: 'MONEY' },
+              ]}
+              onChange={(e) => setTypeValuePromocode(e.target.value)}
+              value={typeValuePromocode}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Radio.Group
+              options={[
+                { label: 'Многоразовый', value: 'DISPOSABLE' },
+                { label: 'Одноразовый', value: 'ONETIME' },
               ]}
               onChange={(e) => setTypePromocode(e.target.value)}
               value={typePromocode}

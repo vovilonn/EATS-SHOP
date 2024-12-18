@@ -4,7 +4,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import { loginAdmin, loginProvider } from './auth/requests';
 import {
   blockProvider,
-  createGeneralCategory,
   deletePromocode,
   deleteProvider,
   fetchAllClients,
@@ -15,6 +14,7 @@ import {
   fetchGeneralCategories,
   fetchOneProduct,
   fetchProducts,
+  getLevelOptions,
   getOrderOption,
 } from './requests';
 import {
@@ -48,6 +48,7 @@ import IProvider from '@/shared/interfaces/provider.interface';
 import IAccountInfo from '@/shared/interfaces/accountInfo.interface';
 import { IPromocode } from '@/shared/interfaces/promocode.interface';
 import IOrderOption from '@/shared/interfaces/delivery-option.interface';
+import ILevelOption from '@/shared/interfaces/level-option.interface';
 
 export interface IInitialState {
   authToken: string | null;
@@ -64,6 +65,7 @@ export interface IInitialState {
   orderOption: IOrderOption | null;
   role: 'ADMIN' | 'PROVIDER' | null;
   orders: IOrdersHistory[];
+  levelOptions: ILevelOption[] | [];
 }
 
 const initialState: IInitialState = {
@@ -79,6 +81,7 @@ const initialState: IInitialState = {
   promocodes: [],
   oneProduct: null,
   orderOption: null,
+  levelOptions: [],
   role:
     typeof window !== 'undefined'
       ? (localStorage.getItem('role') as 'ADMIN' | 'PROVIDER' | null)
@@ -261,6 +264,10 @@ const adminSlice = createSlice({
 
     build.addCase(getOrderOption.fulfilled, (state, action) => {
       state.orderOption = action.payload;
+    });
+
+    build.addCase(getLevelOptions.fulfilled, (state, action) => {
+      state.levelOptions = action.payload;
     });
   },
 });

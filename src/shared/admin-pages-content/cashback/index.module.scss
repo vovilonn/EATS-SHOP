@@ -1,0 +1,114 @@
+.container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.block {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+
+  :global(.ant-btn-primary) {
+    background-color: #1890ff;
+    border-color: #1890ff;
+
+    &:hover {
+      background-color: #40a9ff;
+      border-color: #40a9ff;
+    }
+  }
+}
+
+.level {
+  width: 100%;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 16px;
+  border: 1px solid #e9e9e9;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+  }
+}
+
+.levelTitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.levelInfo {
+  font-size: 16px;
+  color: #555;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 5px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .levelLabel {
+    font-weight: 500;
+  }
+
+  .levelValue {
+    font-weight: bold;
+    color: #333;
+  }
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.button {
+  color: #000;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.editButton {
+  border: 1px solid gray;
+}
+
+.deleteButton {
+  border: 1px solid gray;
+}

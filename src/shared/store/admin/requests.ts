@@ -1,4 +1,3 @@
-import { IOrderOption } from './../../interfaces/order.interface';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '@/shared/utils/axios.utility';
 
@@ -13,6 +12,7 @@ import {
 } from '@/shared/interfaces/promocode.interface';
 import IProvider from '@/shared/interfaces/provider.interface';
 import IDeliveryOption from '@/shared/interfaces/delivery-option.interface';
+import ILevelOption from '@/shared/interfaces/level-option.interface';
 
 export const fetchCities = createAsyncThunk<ICity[]>(
   'admin/cities',
@@ -270,6 +270,60 @@ export const editOrderOption = createAsyncThunk<void, IDeliveryOption>(
       url: '/admin/delivery/edit',
       useLocalStorage: true,
       data: orderOption,
+    });
+  }
+);
+
+export const getLevelOptions = createAsyncThunk<ILevelOption[]>(
+  'admin/get_level_options',
+  async () => {
+    const { data } = await Axios({
+      method: 'get',
+      url: '/progress_referral_system/view',
+      useLocalStorage: true,
+    });
+
+    return data;
+  }
+);
+
+export const createNewLevel = createAsyncThunk<void, ILevelOption>(
+  'admin/create_level',
+  async ({ name, min_amount, max_amount, percentage_cashback }) => {
+    await Axios({
+      method: 'post',
+      url: '/admin/progress_referral_system/create',
+      data: {
+        name,
+        min_amount,
+        max_amount,
+        percentage_cashback,
+      },
+      useLocalStorage: true,
+    });
+  }
+);
+
+export const deleteLevel = createAsyncThunk<void, number>(
+  'admin/delete_level',
+  async (id: number) => {
+    await Axios({
+      method: 'delete',
+      url: '/admin/progress_referral_system/delete',
+      data: { id },
+      useLocalStorage: true,
+    });
+  }
+);
+
+export const editLevel = createAsyncThunk<void, ILevelOption>(
+  'admin/edit_level',
+  async (editedLevel) => {
+    await Axios({
+      method: 'post',
+      url: '/admin/progress_referral_system/edit',
+      data: editedLevel,
+      useLocalStorage: true,
     });
   }
 );

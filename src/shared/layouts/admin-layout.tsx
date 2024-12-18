@@ -17,6 +17,7 @@ import {
   ShoppingOutlined,
   FileDoneOutlined,
   SettingOutlined,
+  WalletOutlined,
 } from '@ant-design/icons';
 
 import styles from './admin-layout.module.scss';
@@ -108,6 +109,11 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
             key: '/admin/promocodes',
             icon: <TagsOutlined />,
             label: 'Промокоди',
+          },
+          {
+            key: '/admin/cashback',
+            icon: <WalletOutlined />,
+            label: 'Кэшбек',
           },
           {
             key: '/admin/settings',

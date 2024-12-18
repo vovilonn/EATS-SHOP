@@ -482,11 +482,7 @@ const ProviderProductsContent: React.FC = () => {
                     >
                       <Input placeholder="Ціна" type="number" />
                     </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name={[name, 'weight']}
-                      normalize={(value) => Number(value)}
-                    >
+                    <Form.Item {...restField} name={[name, 'weight']}>
                       <Input placeholder="Вага" type="number" />
                     </Form.Item>
                     <Button danger onClick={() => remove(name)}>

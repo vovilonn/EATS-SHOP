@@ -26,7 +26,6 @@ import {
   TableProps,
   Tag,
 } from 'antd';
-import { fetchCities } from '@/shared/store/admin/requests';
 
 const { Option } = Select;
 
@@ -43,7 +42,7 @@ const statusPriority: Record<StatusOrder, number> = {
 
 const ProviderIngredientsContent: React.FC = () => {
   const dispatch = useDispatch<TypeDispatch>();
-  const { orders, cities } = useTypedSelector((state) => state.adminPanel);
+  const { orders } = useTypedSelector((state) => state.adminPanel);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<IOrdersHistory | null>(
@@ -54,24 +53,26 @@ const ProviderIngredientsContent: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchProviderOrders());
-    dispatch(fetchCities());
   }, [dispatch]);
 
   const columns: TableProps<IOrdersHistory>['columns'] = [
     {
-      title: 'Пошта',
-      dataIndex: 'email',
-      key: 'email',
-      render: (_, record) => record.model_account.email,
+      title: '№',
+      dataIndex: 'id',
+      key: 'id',
+      render: (_, record) => record.id,
     },
     {
-      title: 'Місто',
-      dataIndex: 'city_id',
-      key: 'city_id',
-      render: (city_id: number) => {
-        const city = cities.find((item) => item.id === city_id);
-        return city ? city.name : 'Невідомо';
-      },
+      title: 'Имя',
+      dataIndex: 'name',
+      key: 'name',
+      render: (_, record) => record.model_account.name,
+    },
+    {
+      title: 'Номер телефона',
+      dataIndex: 'number',
+      key: 'number',
+      render: (_, record) => record.model_account.number,
     },
     {
       title: 'Тип оплати',
@@ -213,7 +214,7 @@ const ProviderIngredientsContent: React.FC = () => {
         style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}
       >
         <Button type="primary" onClick={() => setShowCanceled(!showCanceled)}>
-          {!showCanceled ? 'Показати все' : 'Приховати'}
+          {!showCanceled ? 'Показати скасовані' : 'Приховати'}
         </Button>
       </div>
 

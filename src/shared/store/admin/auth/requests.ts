@@ -52,7 +52,11 @@ export const loginProvider = createAsyncThunk(
     return Axios({
       url: '/provider/auth/login',
       method: 'post',
-      data: { number: props.numberPhone, password: props.password },
+      data: {
+        number: props.numberPhone,
+        password: props.password,
+        code: props.code,
+      },
     });
   }
 );

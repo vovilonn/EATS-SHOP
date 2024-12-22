@@ -20,6 +20,7 @@ const LoginPageContent = () => {
   const [codeModalVisible, setCodeModalVisible] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isMainProvider, setIsMainProvider] = useState(false);
 
   const [form] = Form.useForm();
   const router = useRouter();
@@ -41,12 +42,25 @@ const LoginPageContent = () => {
       } finally {
         setLoading(false);
       }
-    } else {
+    } else if (isMainProvider) {
       try {
         await dispatch(loginProvider({ numberPhone: phone, password }));
 
         message.success('Успішний вхід');
         router.push('/admin');
+      } catch (error) {
+        message.error('Помилка при відправленні коду');
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      try {
+        await dispatch(sendNumberCodeProvider({ numberPhone: phone }));
+
+        setPhoneNumber(phone);
+        setCodeModalVisible(true);
+
+        message.success('Код успішно надіслано');
       } catch (error) {
         message.error('Помилка при відправленні коду');
       } finally {
@@ -90,9 +104,11 @@ const LoginPageContent = () => {
         >
           <Input placeholder="+380000000000" />
         </Form.Item>
-        <Form.Item label="Пароль" name="password">
-          <Input type="password" placeholder="Введите пароль" />
-        </Form.Item>
+        {(isAdmin || isMainProvider) && (
+          <Form.Item label="Пароль" name="password">
+            <Input type="password" placeholder="Введите пароль" />
+          </Form.Item>
+        )}
 
         <Form.Item>
           <Button
@@ -105,12 +121,20 @@ const LoginPageContent = () => {
           </Button>
         </Form.Item>
 
-        <Form.Item name="remember" valuePropName="checked" noStyle>
+        <Form.Item valuePropName="checked" noStyle>
           <Checkbox
             checked={isAdmin}
             onChange={(e) => setIsAdmin(e.target.checked)}
           >
             Головний Адмін
+          </Checkbox>
+        </Form.Item>
+        <Form.Item valuePropName="checked" noStyle>
+          <Checkbox
+            checked={isMainProvider}
+            onChange={(e) => setIsMainProvider(e.target.checked)}
+          >
+            Головний Провайдер
           </Checkbox>
         </Form.Item>
       </Form>

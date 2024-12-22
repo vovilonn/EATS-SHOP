@@ -43,11 +43,10 @@ const LoginPageContent = () => {
       }
     } else {
       try {
-        await dispatch(sendNumberCodeProvider({ numberPhone: phone }));
+        await dispatch(loginProvider({ numberPhone: phone, password }));
 
-        setPhoneNumber(phone);
-        setCodeModalVisible(true);
-        message.success('Код відправлено на ваш номер');
+        message.success('Успішний вхід');
+        router.push('/admin');
       } catch (error) {
         message.error('Помилка при відправленні коду');
       } finally {
@@ -91,15 +90,9 @@ const LoginPageContent = () => {
         >
           <Input placeholder="+380000000000" />
         </Form.Item>
-        {isAdmin && (
-          <Form.Item
-            label="Пароль"
-            name="password"
-            rules={[{ required: true, message: 'Введіть пароль' }]}
-          >
-            <Input type="password" placeholder="Введите пароль" />
-          </Form.Item>
-        )}
+        <Form.Item label="Пароль" name="password">
+          <Input type="password" placeholder="Введите пароль" />
+        </Form.Item>
 
         <Form.Item>
           <Button
@@ -108,7 +101,7 @@ const LoginPageContent = () => {
             loading={loading}
             className={styles.submitButton}
           >
-            {!isAdmin ? 'Відправити код' : 'Войти'}
+            Войти
           </Button>
         </Form.Item>
 

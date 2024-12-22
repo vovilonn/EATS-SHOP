@@ -295,9 +295,9 @@ export const createNewLevel = createAsyncThunk<void, ILevelOption>(
       url: '/admin/progress_referral_system/create',
       data: {
         name,
-        min_amount,
-        max_amount,
-        percentage_cashback,
+        min_amount: `${min_amount}`,
+        max_amount: `${max_amount}`,
+        percentage_cashback: `${percentage_cashback}`,
       },
       useLocalStorage: true,
     });
@@ -322,7 +322,13 @@ export const editLevel = createAsyncThunk<void, ILevelOption>(
     await Axios({
       method: 'post',
       url: '/admin/progress_referral_system/edit',
-      data: editedLevel,
+      data: {
+        id: editedLevel.id,
+        name: editedLevel.name,
+        min_amount: `${editedLevel.min_amount}`,
+        max_amount: `${editedLevel.max_amount}`,
+        percentage_cashback: `${editedLevel.percentage_cashback}`,
+      },
       useLocalStorage: true,
     });
   }

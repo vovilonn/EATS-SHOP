@@ -55,6 +55,14 @@ const ProviderIngredientsContent: React.FC = () => {
     dispatch(fetchProviderOrders());
   }, [dispatch]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      window.location.reload();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const columns: TableProps<IOrdersHistory>['columns'] = [
     {
       title: '№',

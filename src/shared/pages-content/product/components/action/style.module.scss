@@ -5,6 +5,10 @@
     gap: 0 20px;
     margin-bottom: 31px;
 
+    @media screen and (max-width: 768px) {
+      gap: 0 10px;
+    }
+
     .icon {
       display: grid;
       align-items: center;

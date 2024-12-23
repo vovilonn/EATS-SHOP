@@ -21,6 +21,7 @@ import { Form, message } from 'antd';
 import style from './style.module.scss';
 import { useForm } from 'antd/es/form/Form';
 import useDebounce from "@/shared/hooks/use-debounce";
+// import Map from "@/shared/components/map";
 
 interface AddressSuggestion {
   display_name: string;
@@ -290,7 +291,7 @@ const OrderConfirmForm: FC = () => {
             {/* <Link className={style.change} href="">
               Змінити адрес
             </Link> */}
-            {/* <Map /> TODO */}
+             {/*<Map /> TODO */}
 
             <div className={style.detailed}>
               <div className={style.field}>

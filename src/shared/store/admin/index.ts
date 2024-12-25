@@ -49,6 +49,7 @@ import IAccountInfo from '@/shared/interfaces/accountInfo.interface';
 import { IPromocode } from '@/shared/interfaces/promocode.interface';
 import IOrderOption from '@/shared/interfaces/delivery-option.interface';
 import ILevelOption from '@/shared/interfaces/level-option.interface';
+import { message } from "antd";
 
 export interface IInitialState {
   authToken: string | null;
@@ -174,6 +175,12 @@ const adminSlice = createSlice({
     });
 
     build.addCase(fetchProviderOrders.fulfilled, (state, action) => {
+      const diffInOrdersLength = action.payload.length - state.orders.length;
+
+      if (diffInOrdersLength > 0 && !!state.orders.length) {
+        message.info(`Новых заказов: ${diffInOrdersLength}`);
+      }
+
       state.orders = action.payload;
     });
     build.addCase(fetchProviderIngredients.fulfilled, (state, action) => {

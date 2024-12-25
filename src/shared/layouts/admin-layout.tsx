@@ -21,6 +21,9 @@ import {
 } from '@ant-design/icons';
 
 import styles from './admin-layout.module.scss';
+import {fetchProviderOrders} from "@/shared/store/admin/provider/requests";
+import {useDispatch} from "react-redux";
+import {TypeDispatch} from "@/shared/store";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -32,9 +35,22 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   const [loading, setLoading] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string>('');
   const [collapsed, setCollapsed] = useState<boolean>(false);
+  const dispatch = useDispatch<TypeDispatch>();
 
   const router = useRouter();
   const actions = useActions();
+
+  useEffect(() => {
+    dispatch(fetchProviderOrders());
+
+    const interval = setInterval(() => {
+      dispatch(fetchProviderOrders());
+    }, 10000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !authToken) {

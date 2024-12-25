@@ -51,18 +51,6 @@ const ProviderIngredientsContent: React.FC = () => {
   const [showCanceled, setShowCanceled] = useState<boolean>(false);
   const [currentStatus, setCurrentStatus] = useState<string | null>(null);
 
-  useEffect(() => {
-    dispatch(fetchProviderOrders());
-  }, [dispatch]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      window.location.reload();
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const columns: TableProps<IOrdersHistory>['columns'] = [
     {
       title: '№',

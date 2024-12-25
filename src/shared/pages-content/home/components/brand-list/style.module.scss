@@ -64,6 +64,7 @@
       @media screen and (max-width: 768px) {
         width: 100%;
         height: 170px;
+        background-position: right center;
       }
     }
 
@@ -104,6 +105,7 @@
       @media screen and (max-width: 768px) {
         width: 100%;
         height: 170px;
+        background-position: right;
       }
     }
 
@@ -115,7 +117,8 @@
       @media screen and (max-width: 768px) {
         width: 100%;
         height: 170px;
-        background-size: contain;
+        background-size: cover;
+        background-position: top;
       }
     }
   }

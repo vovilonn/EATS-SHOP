@@ -44,7 +44,7 @@ const Footer: FC = () => {
           <article className={style.item}>
             <LogoIcon className={style.logo} />
 
-            <a className={style.store} href='/'>
+            <a className={style.store} href='https://apps.apple.com/ua/app/eats/id6736828756?l=ru'>
               <AppleIcon className={style.icon} />
               <span className={style.text}>Download on the</span>
               <span className={style.title}>App Store</span>
@@ -163,9 +163,6 @@ const Footer: FC = () => {
         </article>
 
         <div className={style.rightsMobile}>
-          <a className={style.politics} href='/'>
-            Політика конфіденційності
-          </a>
           <div className={style.cards}>
             <MasterCardIcon className={style.card} />
             <VisaIcon className={style.card} />

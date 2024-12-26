@@ -256,9 +256,8 @@ const OrderConfirmForm: FC = () => {
               Адресa доставки
             </label>
             <FormInput
-              className={`${style.input} ${
-                errors.address ? style.errorBorder : ''
-              }`}
+              className={`${style.input} ${errors.address ? style.errorBorder : ''
+                }`}
               id="address"
               value={address}
               // onBlur={() => setSuggestions([])}
@@ -291,7 +290,7 @@ const OrderConfirmForm: FC = () => {
             {/* <Link className={style.change} href="">
               Змінити адрес
             </Link> */}
-             {/*<Map /> TODO */}
+            {/*<Map /> TODO */}
 
             <div className={style.detailed}>
               <div className={style.field}>
@@ -299,9 +298,8 @@ const OrderConfirmForm: FC = () => {
                   Під’їзд
                 </label>
                 <FormInput
-                  className={`${style.input} ${
-                    errors.approach ? style.errorBorder : ''
-                  }`}
+                  className={`${style.input} ${errors.approach ? style.errorBorder : ''
+                    }`}
                   id="approach"
                   type="number"
                   value={approach}
@@ -318,9 +316,8 @@ const OrderConfirmForm: FC = () => {
                   Поверх
                 </label>
                 <FormInput
-                  className={`${style.input} ${
-                    errors.floor ? style.errorBorder : ''
-                  }`}
+                  className={`${style.input} ${errors.floor ? style.errorBorder : ''
+                    }`}
                   id="floor"
                   type="number"
                   value={floor}
@@ -337,9 +334,8 @@ const OrderConfirmForm: FC = () => {
                   Квартира
                 </label>
                 <FormInput
-                  className={`${style.input} ${
-                    errors.apartment ? style.errorBorder : ''
-                  }`}
+                  className={`${style.input} ${errors.apartment ? style.errorBorder : ''
+                    }`}
                   id="apartment"
                   type="number"
                   value={apartment}
@@ -398,12 +394,11 @@ const OrderConfirmForm: FC = () => {
               Підготувати решту з
             </label>
             <FormInput
-              className={`${style.input} ${
-                errors.ready ? style.errorBorder : ''
-              }`}
+              className={`${style.input} ${errors.ready ? style.errorBorder : ''
+                }`}
               id="ready"
               type="number"
-              onChange={() => {}}
+              onChange={() => { }}
               onInput={handleNumberInput}
               large
             />
@@ -424,9 +419,8 @@ const OrderConfirmForm: FC = () => {
           <div className={style.activate}>
             <div className={style.activateContent}>
               <input
-                className={`${style.input} ${
-                  errors.promoCode ? style.errorBorder : ''
-                }`}
+                className={`${style.input} ${errors.promoCode ? style.errorBorder : ''
+                  }`}
                 type="text"
                 placeholder="Промокод"
                 value={promoCode}
@@ -468,14 +462,15 @@ const OrderConfirmForm: FC = () => {
                   {typePromocode === 'MONEY'
                     ? `грн`
                     : typePromocode === 'PERCENTAGE'
-                    ? `%`
-                    : ''}
+                      ? `%`
+                      : ''}
                 </span>
               </p>
               <p className={style.text}>
                 <span>Вартість доставки</span>
                 <span>{deliveryPrice} грн</span>
               </p>
+              <span className={style.deliveryInfo}>ℹ️ Безкоштовна доставка від 500 грн</span>
             </div>
 
             <p className={style.total}>

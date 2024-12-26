@@ -20,7 +20,7 @@ import { Form, message } from 'antd';
 
 import style from './style.module.scss';
 import { useForm } from 'antd/es/form/Form';
-import useDebounce from "@/shared/hooks/use-debounce";
+import useDebounce from '@/shared/hooks/use-debounce';
 // import Map from "@/shared/components/map";
 
 interface AddressSuggestion {
@@ -39,6 +39,12 @@ const OrderConfirmForm: FC = () => {
   const { delivery_price, min_delivery_not_price } = useTypedSelector(
     (state) => state.orders.orderOption
   );
+
+  useEffect(() => {
+    dispatch(getCart());
+    dispatch(getOrderOption());
+    dispatch(getAccountInfo());
+  }, []);
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -66,18 +72,14 @@ const OrderConfirmForm: FC = () => {
   const debouncedAddress = useDebounce(address, 500);
 
   useEffect(() => {
-    dispatch(getCart());
-    dispatch(getOrderOption());
-    dispatch(getAccountInfo());
-  }, []);
-
-  useEffect(() => {
     if (cart_items.length > 0) {
-      setDeliveryPrice(
-        total_cost <= min_delivery_not_price ? delivery_price : 0
-      );
+      if (total_cost <= min_delivery_not_price) {
+        setDeliveryPrice(delivery_price);
+      } else {
+        setDeliveryPrice(0);
+      }
     }
-  }, [total_cost]);
+  }, [total_cost, delivery_price]);
 
   const fetchSuggestions = async (query: string) => {
     try {
@@ -256,8 +258,9 @@ const OrderConfirmForm: FC = () => {
               Адресa доставки
             </label>
             <FormInput
-              className={`${style.input} ${errors.address ? style.errorBorder : ''
-                }`}
+              className={`${style.input} ${
+                errors.address ? style.errorBorder : ''
+              }`}
               id="address"
               value={address}
               // onBlur={() => setSuggestions([])}
@@ -298,8 +301,9 @@ const OrderConfirmForm: FC = () => {
                   Під’їзд
                 </label>
                 <FormInput
-                  className={`${style.input} ${errors.approach ? style.errorBorder : ''
-                    }`}
+                  className={`${style.input} ${
+                    errors.approach ? style.errorBorder : ''
+                  }`}
                   id="approach"
                   type="number"
                   value={approach}
@@ -316,8 +320,9 @@ const OrderConfirmForm: FC = () => {
                   Поверх
                 </label>
                 <FormInput
-                  className={`${style.input} ${errors.floor ? style.errorBorder : ''
-                    }`}
+                  className={`${style.input} ${
+                    errors.floor ? style.errorBorder : ''
+                  }`}
                   id="floor"
                   type="number"
                   value={floor}
@@ -334,8 +339,9 @@ const OrderConfirmForm: FC = () => {
                   Квартира
                 </label>
                 <FormInput
-                  className={`${style.input} ${errors.apartment ? style.errorBorder : ''
-                    }`}
+                  className={`${style.input} ${
+                    errors.apartment ? style.errorBorder : ''
+                  }`}
                   id="apartment"
                   type="number"
                   value={apartment}
@@ -394,11 +400,12 @@ const OrderConfirmForm: FC = () => {
               Підготувати решту з
             </label>
             <FormInput
-              className={`${style.input} ${errors.ready ? style.errorBorder : ''
-                }`}
+              className={`${style.input} ${
+                errors.ready ? style.errorBorder : ''
+              }`}
               id="ready"
               type="number"
-              onChange={() => { }}
+              onChange={() => {}}
               onInput={handleNumberInput}
               large
             />
@@ -419,8 +426,9 @@ const OrderConfirmForm: FC = () => {
           <div className={style.activate}>
             <div className={style.activateContent}>
               <input
-                className={`${style.input} ${errors.promoCode ? style.errorBorder : ''
-                  }`}
+                className={`${style.input} ${
+                  errors.promoCode ? style.errorBorder : ''
+                }`}
                 type="text"
                 placeholder="Промокод"
                 value={promoCode}
@@ -462,15 +470,17 @@ const OrderConfirmForm: FC = () => {
                   {typePromocode === 'MONEY'
                     ? `грн`
                     : typePromocode === 'PERCENTAGE'
-                      ? `%`
-                      : ''}
+                    ? `%`
+                    : ''}
                 </span>
               </p>
               <p className={style.text}>
                 <span>Вартість доставки</span>
                 <span>{deliveryPrice} грн</span>
               </p>
-              <span className={style.deliveryInfo}>ℹ️ Безкоштовна доставка від 500 грн</span>
+              <span className={style.deliveryInfo}>
+                ℹ️ Безкоштовна доставка від 500 грн
+              </span>
             </div>
 
             <p className={style.total}>

@@ -70,7 +70,9 @@ const ProfileCard: FC<ProfileCardProps> = (props) => {
 
   const calculateProgress = () => {
     if (accountInfo && currentLevel) {
-      return (accountInfo.total_amount_spent * 100) / currentLevel?.max_amount;
+      return Math.round(
+        (accountInfo.total_amount_spent * 100) / currentLevel?.max_amount
+      );
     }
   };
 

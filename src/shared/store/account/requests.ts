@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import Axios from '@/shared/utils/axios.utility';
 
 import IAccountInfo from '@/shared/interfaces/accountInfo.interface';
+import ILevelOption from '@/shared/interfaces/level-option.interface';
 
 export const getAccountInfo = createAsyncThunk<IAccountInfo>(
   'accountInfo/get',
@@ -26,5 +27,17 @@ export const updateAccountInfo = createAsyncThunk<void, FormData>(
         'Content-Type': 'multipart/form-data',
       },
     });
+  }
+);
+
+export const getLevelsInfo = createAsyncThunk<ILevelOption[]>(
+  'levels',
+  async () => {
+    const { data } = await Axios({
+      method: 'get',
+      url: '/progress_referral_system/view',
+    });
+
+    return data;
   }
 );

@@ -1,15 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getAccountInfo, updateAccountInfo } from './requests';
+import { getAccountInfo, getLevelsInfo, updateAccountInfo } from './requests';
 import IAccountInfo from '@/shared/interfaces/accountInfo.interface';
+import ILevelOption from '@/shared/interfaces/level-option.interface';
 
 interface IAccountInfoInitialState {
   accountInfo: IAccountInfo | null;
+  levelsInfo: ILevelOption[];
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: IAccountInfoInitialState = {
   accountInfo: null,
+  levelsInfo: [],
   loading: 'idle',
   error: null,
 };
@@ -42,6 +45,10 @@ const accountInfoSlice = createSlice({
       .addCase(updateAccountInfo.rejected, (state, action) => {
         state.loading = 'failed';
         state.error = action.error.message || 'Failed to update account info';
+      })
+
+      .addCase(getLevelsInfo.fulfilled, (state, action) => {
+        state.levelsInfo = action.payload;
       });
   },
 });

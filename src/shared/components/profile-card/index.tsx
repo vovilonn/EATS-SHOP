@@ -10,56 +10,50 @@ import style from './style.module.scss';
 import { useDispatch } from 'react-redux';
 import { TypeDispatch } from '@/shared/store';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
-import { getAccountInfo } from '@/shared/store/account/requests';
+import { getAccountInfo, getLevelsInfo } from '@/shared/store/account/requests';
+import ILevelOption from '@/shared/interfaces/level-option.interface';
 
 interface ProfileCardProps {
   previewImage?: File | null;
   onImageUpload?: (file: File) => void;
 }
 
-const calculateProgress = (totalAmountSpent: number) => {
-  let progressPercentage, name, percentage, progressLabel, currentLevelMax, nextLevelMax;
-
-  if (totalAmountSpent < 5000) {
-    progressPercentage = totalAmountSpent / 5000;
-    progressLabel = Math.floor(progressPercentage * 100);
-    name = 'Bronze';
-    percentage = '0%';
-    currentLevelMax = 0;
-    nextLevelMax = 5000;
-  } else if (totalAmountSpent < 10000) {
-    progressPercentage = (totalAmountSpent - 5000) / (10000 - 5000);
-    progressLabel = Math.floor(progressPercentage * 100);
-    name = 'Silver';
-    percentage = '0.5%';
-    currentLevelMax = 5000;
-    nextLevelMax = 10000;
-  } else if (totalAmountSpent < 30000) {
-    progressPercentage = (totalAmountSpent - 10000) / (30000 - 10000);
-    progressLabel = Math.floor(progressPercentage * 100);
-    name = 'Gold';
-    percentage = '0.75%';
-    currentLevelMax = 10000;
-    nextLevelMax = 30000;
-  } else {
-    progressPercentage = 1;
-    progressLabel = 100;
-    name = 'Diamond';
-    percentage = '1%';
-    currentLevelMax = 30000;
-    nextLevelMax = 0; // No further level
-  }
-
-  return { progress: progressPercentage * 100, progressLabel, name, percentage, currentLevelMax, nextLevelMax };
-};
-
 const ProfileCard: FC<ProfileCardProps> = (props) => {
   const dispatch = useDispatch<TypeDispatch>();
-  const { accountInfo } = useTypedSelector((state) => state.accountInfo);
+  const { accountInfo, levelsInfo } = useTypedSelector(
+    (state) => state.accountInfo
+  );
 
   const [uploadedImage, setUploadedImage] = useState<File | null>(
     props.previewImage ?? null
   );
+  const [currentLevel, setCurrentLevel] = useState<ILevelOption | null>(null);
+
+  useEffect(() => {
+    dispatch(getAccountInfo());
+    dispatch(getLevelsInfo());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (accountInfo) {
+      const userLevel = levelsInfo.find(
+        (level) =>
+          accountInfo.total_amount_spent >= level.min_amount &&
+          accountInfo.total_amount_spent <= level.max_amount
+      );
+
+      if (userLevel) setCurrentLevel(userLevel);
+    }
+  }, [accountInfo, levelsInfo]);
+
+  const imageUrl = uploadedImage
+    ? URL.createObjectURL(uploadedImage)
+    : accountInfo?.avatar ?? '';
+
+  const router = useRouter();
+  const isRoute = router.asPath.includes('/personal-info');
+  const needAddImage = !uploadedImage && isRoute;
+  const classNameImage: string = `${style.image} ${isRoute && style.event}`;
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -74,21 +68,11 @@ const ProfileCard: FC<ProfileCardProps> = (props) => {
     props.onImageUpload && props.onImageUpload(null as unknown as File);
   };
 
-  const imageUrl = uploadedImage
-    ? URL.createObjectURL(uploadedImage)
-    : accountInfo?.avatar ?? '';
-
-  const router = useRouter();
-  const isRoute = router.asPath.includes('/personal-info');
-  const needAddImage = !uploadedImage && isRoute;
-  const classNameImage: string = `${style.image} ${isRoute && style.event}`;
-
-  useEffect(() => {
-    dispatch(getAccountInfo());
-  }, []);
-
-  // Используем функцию для получения данных уровня и прогресса
-  const { progress, progressLabel, name, percentage, currentLevelMax, nextLevelMax } = calculateProgress(accountInfo?.totalSpent || 0);
+  const calculateProgress = () => {
+    if (accountInfo && currentLevel) {
+      return (accountInfo.total_amount_spent * 100) / currentLevel?.max_amount;
+    }
+  };
 
   return (
     <article className={style.profile}>
@@ -131,26 +115,21 @@ const ProfileCard: FC<ProfileCardProps> = (props) => {
           </div>
           <div className={style.progress}>
             <label className={style.number} htmlFor="progress">
-              {progressLabel} %
+              {calculateProgress()} %
             </label>
             <progress
               className={style.value}
               id="progress"
               max="100"
-              value={progress}
+              value={calculateProgress()}
             />
           </div>
           <p className={style.level}>
-            <b>Рівень:</b> {name}
+            <b>Рівень:</b> {currentLevel?.name}
           </p>
           <p className={style.cashback}>
-            <b>Кешбек:</b> {percentage}
+            <b>Кешбек:</b> {currentLevel?.percentage_cashback} %
           </p>
-          {nextLevelMax > 0 && (
-            <p className={style.nextLevel}>
-              {`До наступного рівня: ${nextLevelMax - (accountInfo?.totalSpent || 0)} ₴`}
-            </p>
-          )}
         </div>
       </div>
     </article>

@@ -17,10 +17,12 @@ import FormInput from '@/shared/components/ui/form/form-input';
 import FormCheckbox from '@/shared/components/ui/form/form-checkbox';
 
 import { Form, message } from 'antd';
+import InfoIcon from '@/shared/assets/icons/info-icon.svg';
 
 import style from './style.module.scss';
 import { useForm } from 'antd/es/form/Form';
-import useDebounce from '@/shared/hooks/use-debounce';
+import useDebounce from "@/shared/hooks/use-debounce";
+import { Color } from 'antd/es/color-picker';
 // import Map from "@/shared/components/map";
 
 interface AddressSuggestion {
@@ -246,6 +248,13 @@ const OrderConfirmForm: FC = () => {
     }
 
     return total;
+  };
+
+  const [isInfoVisible, setIsInfoVisible] = useState(false);
+
+  const toggleInfoVisibility = (e:any) => {
+    e.stopPropagation();
+    setIsInfoVisible((prev) => !prev);
   };
 
   return (
@@ -475,14 +484,22 @@ const OrderConfirmForm: FC = () => {
                 </span>
               </p>
               <p className={style.text}>
-                <span>Вартість доставки</span>
-                <span>{deliveryPrice} грн</span>
-              </p>
-              <span className={style.deliveryInfo}>
-                ℹ️ Безкоштовна доставка від 500 грн
-              </span>
+        <span>
+          Вартість доставки
+          <button className={style.infoButton} onClick={(e) => toggleInfoVisibility(e)}>
+            <InfoIcon style={{ width: '18px', height: '18px' }} />
+          </button>
+        </span>
+        <span>{deliveryPrice} грн</span>
+      </p>
+      <span
+        className={style.deliveryInfo}
+        style={{ display: isInfoVisible ? 'flex' : 'none' }}
+      >
+        Безкоштовна доставка від 500 грн
+      </span>
             </div>
-
+        <div>
             <p className={style.total}>
               <span>Загальна вартість</span>
               <span>{checkTotalSumm()} грн</span>

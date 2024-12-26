@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useEffect, useState } from 'react';
+import { FC, MouseEvent, useEffect, useState } from 'react';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { useDispatch } from 'react-redux';
 import { useActions } from '@/shared/hooks/use-actions';
@@ -21,8 +21,7 @@ import InfoIcon from '@/shared/assets/icons/info-icon.svg';
 
 import style from './style.module.scss';
 import { useForm } from 'antd/es/form/Form';
-import useDebounce from "@/shared/hooks/use-debounce";
-import { Color } from 'antd/es/color-picker';
+import useDebounce from '@/shared/hooks/use-debounce';
 // import Map from "@/shared/components/map";
 
 interface AddressSuggestion {
@@ -204,6 +203,8 @@ const OrderConfirmForm: FC = () => {
         setFormError('');
         setCashPayment(false);
         setCardPayment(false);
+
+        message.success('Замовлення успішно оформлене');
       } catch (error) {
         setSubmitError('Помилка при оформленні замовлення. Спробуйте ще раз.');
         console.error('Ошибка при создании заказа:', error);
@@ -252,8 +253,7 @@ const OrderConfirmForm: FC = () => {
 
   const [isInfoVisible, setIsInfoVisible] = useState(false);
 
-  const toggleInfoVisibility = (e:any) => {
-    e.stopPropagation();
+  const toggleInfoVisibility = () => {
     setIsInfoVisible((prev) => !prev);
   };
 
@@ -483,38 +483,48 @@ const OrderConfirmForm: FC = () => {
                     : ''}
                 </span>
               </p>
-              <p className={style.text}>
-        <span>
-          Вартість доставки
-          <button className={style.infoButton} onClick={(e) => toggleInfoVisibility(e)}>
-            <InfoIcon style={{ width: '18px', height: '18px' }} />
-          </button>
-        </span>
-        <span>{deliveryPrice} грн</span>
-      </p>
-      <span
-        className={style.deliveryInfo}
-        style={{ display: isInfoVisible ? 'flex' : 'none' }}
-      >
-        Безкоштовна доставка від 500 грн
-      </span>
+              <p
+                className={style.text}
+                onClick={(e: MouseEvent<HTMLParagraphElement>) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <span>
+                  Вартість доставки
+                  <button className={style.infoButton}>
+                    <InfoIcon
+                      onClick={toggleInfoVisibility}
+                      style={{ width: '18px', height: '18px' }}
+                    />
+                  </button>
+                </span>
+                <span>{deliveryPrice} грн</span>
+              </p>
+              <span
+                className={style.deliveryInfo}
+                style={{ display: isInfoVisible ? 'flex' : 'none' }}
+              >
+                Безкоштовна доставка від 500 грн
+              </span>
             </div>
-        <div>
-            <p className={style.total}>
-              <span>Загальна вартість</span>
-              <span>{checkTotalSumm()} грн</span>
-            </p>
+            <div>
+              <p className={style.total}>
+                <span>Загальна вартість</span>
+                <span>{checkTotalSumm()} грн</span>
+              </p>
+            </div>
+            <Button
+              className={style.checkout}
+              basket
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Оформлення...' : 'Оформити'}
+            </Button>
+            {formError && <span className={style.error}>{formError}</span>}
+            {submitError && <span className={style.error}>{submitError}</span>}
           </div>
-          <Button
-            className={style.checkout}
-            basket
-            type="submit"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Оформлення...' : 'Оформити'}
-          </Button>
-          {formError && <span className={style.error}>{formError}</span>}
-          {submitError && <span className={style.error}>{submitError}</span>}
         </div>
       </div>
     </form>

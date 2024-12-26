@@ -150,7 +150,7 @@ const ProductCard: FC<IProductCardProps> = (props) => {
           href={`/product/${props.id}`}
           className={style.header}
           style={{ backgroundImage: `url(${props.picture[0]})` }}
-        />
+          />
         <div className={style.containerWrapper}>
           <Link href={`/product/${props.id}`}>
             <div className={style.container}>
@@ -236,14 +236,14 @@ const ProductCard: FC<IProductCardProps> = (props) => {
                 full={props.toggleAmountFull}
               />
             </div>
-            {!isBasketPage && ( // Скрываем кнопку на странице корзины
-              <Button className={style.btn} onClick={onBasket} basket>
-                В кошик
-              </Button>
-            )}
           </footer>
         </div>
       </div>
+      {!isBasketPage && ( // Скрываем кнопку на странице корзины
+        <Button className={style.btn} onClick={onBasket} basket>
+          В кошик
+        </Button>
+      )}
     </article>
   );
 };

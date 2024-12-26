@@ -2,9 +2,11 @@
   padding: 20px;
   border-radius: 24px;
   background-color: #fff;
+
   @media screen and (max-width: 768px) {
     margin: 0 16px;
     padding: 0 12px;
+    width: calc(100% - 32px);
   }
 
   .wrapper {
@@ -12,26 +14,30 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+
     @media screen and (max-width: 768px) {
-      display: grid;
+      display: flex;
+      flex-direction: row;
+      margin-bottom: -16px;
+      margin-top: -16px;
     }
   }
-  
+
   .header {
-    width: 100%;
+    width: calc(100% - 92px);
     height: 208px;
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
     border-radius: 24px;
-    margin-bottom: 11px;
+    margin-bottom: 12px;
     margin: 0 16px;
-    @media screen and (max-width: 768px) {  
+
+    @media screen and (max-width: 768px) {
       display: grid;
       grid-area: 1 / 1 / 2 / 2;
-      width: 100px;
       margin: 0;
-      margin-right: 12px;
+      margin-right: 0px;
     }
   }
 
@@ -39,6 +45,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+
     @media screen and (max-width: 768px) {
       display: grid;
       grid-template-columns: 1fr;
@@ -57,6 +64,10 @@
   .title {
     margin-bottom: 12px;
 
+    @media screen and (max-width: 768px) {
+      margin-bottom: 0;
+    }
+
     &,
     * {
       color: #0c0c0c;
@@ -72,8 +83,10 @@
     line-height: 140%;
     margin-bottom: 12px;
     white-space: nowrap;
+
     @media screen and (max-width: 768px) {
       white-space: normal;
+      margin-bottom: 6px;
     }
   }
 
@@ -125,6 +138,9 @@
     font-size: 24px;
     font-weight: 600;
     line-height: 120%;
+    @media screen and (max-width: 768px) {
+      font-size: 20px;
+    }
   }
 
   .components {
@@ -181,8 +197,13 @@
   .actions {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;    
+    justify-content: space-between;
     margin-bottom: 12px;
+    @media screen and (max-width: 768px) {
+      margin-bottom: 0px;
+      align-items: center;
+      gap: 12px 0;
+    }
   }
 
   .row {
@@ -190,9 +211,15 @@
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 12px;
+    @media screen and (max-width: 768px) {
+      margin-bottom: 4px;
+      
+    }
   }
 
   .btn {
+    width: 100%;
+
     @media screen and (max-width: 768px) {
       margin-bottom: 12px;
     }

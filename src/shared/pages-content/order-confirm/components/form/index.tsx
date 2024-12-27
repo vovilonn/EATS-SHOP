@@ -474,14 +474,7 @@ const OrderConfirmForm: FC = () => {
               </p>
               <p className={style.text}>
                 <span>Знижка</span>
-                <span>
-                  {discount}{' '}
-                  {typePromocode === 'MONEY'
-                    ? `грн`
-                    : typePromocode === 'PERCENTAGE'
-                    ? `%`
-                    : ''}
-                </span>
+                <span>{discount} грн</span>
               </p>
               <p
                 className={style.text}

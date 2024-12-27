@@ -37,7 +37,7 @@ export const repeatPayment = createAsyncThunk(
   async (id: number) => {
     return await Axios({
       method: 'post',
-      url: '/menu/order/payment_repeate',
+      url: '/menu/order/repeat',
       data: {
         order_id: id,
       },

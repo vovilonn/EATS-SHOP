@@ -9,15 +9,56 @@ import { IOrdersHistory } from '@/shared/interfaces/order.interface';
 import Button from '@/shared/components/ui/button';
 
 import style from './style.module.scss';
+import { message } from 'antd';
+import { useRouter } from 'next/router';
 
 interface IOrdersOrderCardProps extends IOrdersHistory {}
 
 const OrdersOrderCard: FC<IOrdersOrderCardProps> = (props) => {
   const dispatch = useDispatch<TypeDispatch>();
 
+  const router = useRouter();
+
   const classNameStatus: string = `${style.status} ${
     style[props.status_order.toLowerCase()]
   }`;
+
+  const checkOrderStatus = (status: string) => {
+    let color = '';
+    let text = '';
+
+    switch (status) {
+      case 'NEWORDER':
+        color = 'green';
+        text = 'Нове замовлення';
+        break;
+      case 'WAITINGPAYMENT':
+        color = 'orange';
+        text = 'Очікується оплата';
+        break;
+      case 'PROGRESS':
+        color = 'blue';
+        text = 'Замовлення виконується';
+        break;
+      case 'DELIVERY':
+        color = 'purple';
+        text = 'Передано на доставку';
+        break;
+      case 'DELIVERED':
+        color = 'gray';
+        text = 'Доставлено';
+        break;
+      case 'CANCELED':
+        color = 'default';
+        text = 'Замовлення скасовано';
+        break;
+      default:
+        color = 'default';
+        text = 'Невідомо';
+    }
+
+    return { color, text };
+  };
 
   const imagesRendering = props.cart.cart_items.map((item) => {
     return (
@@ -32,13 +73,28 @@ const OrdersOrderCard: FC<IOrdersOrderCardProps> = (props) => {
     );
   });
 
+  const handleRepeat = async (id: number) => {
+    try {
+      await dispatch(repeatPayment(props.id));
+
+      router.push('/profile/basket');
+    } catch (err) {
+      message.error('Что то пошло не так!');
+    }
+  };
+
   return (
     <article className={style.order}>
       <header className={style.header}>
         <h1 className={style.title}>
           <Link href={`/profile/orders/${props.id}`}>Заказ №{props.id}</Link>
         </h1>
-        <p className={classNameStatus}>{props.status_order}</p>
+        <p
+          className={classNameStatus}
+          style={{ color: `${checkOrderStatus(props.status_order).color}` }}
+        >
+          {checkOrderStatus(props.status_order).text}
+        </p>
         <p className={style.date}>
           {new Date(props.createdAt * 1000).toLocaleDateString()}
         </p>{' '}
@@ -55,7 +111,7 @@ const OrdersOrderCard: FC<IOrdersOrderCardProps> = (props) => {
         <Button
           className={style.btn}
           basket
-          onClick={() => dispatch(repeatPayment(props.id))}
+          onClick={() => handleRepeat(props.id)}
         >
           Повторить
         </Button>

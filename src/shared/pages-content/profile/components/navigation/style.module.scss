@@ -4,6 +4,10 @@
   align-items: start;
   gap: 18px 0;
 
+  @media screen and (max-width: 768px) {
+    gap: 10px 0;
+  }
+
   .link,
   .exit {
     padding: 16px 20px;

@@ -112,9 +112,11 @@ const ProductAction: FC<IProductActionProps> = (props) => {
           {!isFavorite && <LikeIcon />}
         </span>
       </header>
-      <p className={style.composition}>
-        <b>Склад:</b> {props.composition}
-      </p>
+      {props.composition && (
+        <p className={style.composition}>
+          <b>Склад:</b> {props.composition}
+        </p>
+      )}
       {weight && (
         <p className={style.weight}>
           <b>Вага:</b> {weight} г

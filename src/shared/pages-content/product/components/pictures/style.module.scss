@@ -4,10 +4,14 @@
   background-color: #fff;
   @media screen and (max-width: 768px) {
     margin-bottom: 30px;
+    padding: 0;
   }
 
   .swiper {
     padding: 0 23.5px;
+    @media screen and (max-width: 768px) {
+      padding: 0;
+    }
   }
 
   .slide {
@@ -20,7 +24,7 @@
   }
   
   .image {
-    object-fit: cover;
+    object-fit: contain;
     max-width: 100%;
     @media screen and (max-width: 768px) {
       max-height: 210px;

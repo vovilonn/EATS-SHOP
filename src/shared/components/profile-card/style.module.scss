@@ -1,9 +1,17 @@
 .profile {
-  border-radius: 24px;
-  background-color: #fff;
-  padding: 24px;
   @media screen and (max-width: 768px) {
     margin-bottom: 16px;
+  }
+  @media screen and (min-width: 768px) {
+    border-radius: 24px;
+    background-color: #fff;
+    padding: 24px;
+  }
+
+  .container {
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
   }
 
   .image {
@@ -34,6 +42,11 @@
     .preview {
       width: 100%;
       height: auto;
+
+      @media screen and (max-width: 768px) {
+        width: 124px;
+        border-radius: 24px;
+      }
     }
 
     .remove {
@@ -62,6 +75,10 @@
     grid-template-columns: 1fr max-content;
     gap: 0 10px;
     margin-bottom: 44px;
+
+    @media screen and (max-width: 768px) {
+      margin-bottom: 8px;
+    }
   }
 
   .balance {
@@ -71,6 +88,13 @@
     color: #0c0c0c;
     font-size: 20px;
     font-weight: 600;
+
+    @media screen and (max-width: 768px) {
+      padding: 6px 14px;
+      font-size: 12px;
+      line-height: 15px;
+      font-weight: 500;
+    }
   }
 
   .name,
@@ -97,10 +121,38 @@
     margin-bottom: 16px;
   }
 
+  @media screen and (max-width: 768px) {
+    .name {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .number {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 20px;
+    }
+    .level, .cashback {
+      font-size: 14px;
+      line-height: 17px;
+
+      b {
+        font-size: 14px;
+      }
+    }
+    .level {
+      margin-bottom: 8px;
+    }
+  }
+
   .progress {
     display: grid;
     gap: 8px 0;
     margin-bottom: 24px;
+
+    @media screen and (max-width: 768px) {
+      gap: 4px 0;
+      margin-bottom: 12px;
+    }
 
     .value[value] {
       width: 100%;
@@ -122,7 +174,7 @@
   .mediaWrapper {
     @media screen and (max-width: 768px) {
       display: flex;
-      flex-direction: column;      
+      gap: 16px;
     }
   }
 

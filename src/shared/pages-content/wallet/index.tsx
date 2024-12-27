@@ -14,6 +14,7 @@ import {
   createReplenishment,
   getHistoryReplenishment,
 } from '@/shared/store/wallet/requests';
+import EmptyCard from '@/shared/components/empty-card';
 
 const WalletPageContent: FC = () => {
   const dispatch = useDispatch<TypeDispatch>();
@@ -48,6 +49,7 @@ const WalletPageContent: FC = () => {
       const resultAction = await dispatch(
         createReplenishment(parsedAmount)
       ).unwrap();
+      await dispatch(getHistoryReplenishment());
 
       if (resultAction.url_page) {
         window.open(resultAction.url_page, '_blank');
@@ -89,24 +91,33 @@ const WalletPageContent: FC = () => {
         </form>
 
         <h1 className={style.title}>Історія поповнень</h1>
-        <div className={style.history}>
-          {loading === 'pending' ? (
-            <p>Завантаження...</p>
-          ) : (
-            replenishments.map((item: IWallet) => (
-              <div key={item.id} className={style.item}>
-                <p>
-                  {new Date(item.createdAt * 1000).toLocaleDateString('uk-UA', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
-                </p>
-                <p>+{item.amount} грн</p>
-              </div>
-            ))
-          )}
-        </div>
+        {replenishments.length !== 0 ? (
+          <div className={style.history}>
+            {loading === 'pending' ? (
+              <p>Завантаження...</p>
+            ) : (
+              replenishments.map((item: IWallet) => (
+                <div key={item.id} className={style.item}>
+                  <p>
+                    {new Date(item.createdAt * 1000).toLocaleDateString(
+                      'uk-UA',
+                      {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      }
+                    )}
+                  </p>
+                  <p>+{item.amount} грн</p>
+                </div>
+              ))
+            )}
+          </div>
+        ) : (
+          <div style={{ textAlign: 'center' }}>
+            <p>Історія поповнень порожня 😯</p>
+          </div>
+        )}
       </section>
     </LoggedLayout>
   );

@@ -9,7 +9,7 @@ const OrderConfirmPageContent: FC = () => {
   return (
     <LoggedLayout>
       <OrderConfirmHeader />
-      {/*<ProductList products={[]} basket toggleAmountFull minAmount={1} />*/}
+      {/* <ProductList products={[]} basket toggleAmountFull minAmount={1} /> */}
       <section style={{ marginTop: '60px' }}>
         <OrderConfirmForm />
       </section>

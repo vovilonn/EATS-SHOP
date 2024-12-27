@@ -22,7 +22,10 @@ const ProductsCategoryPage: NextPage<IProductsCategoryPageProps> = (props) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
-    const response = await Axios({ method: 'get', url: '/menu/general_categories/view' });
+    const response = await Axios({
+      method: 'get',
+      url: '/menu/general_categories/view',
+    });
     const categories = response.data;
 
     if (!Array.isArray(categories) || !categories.length) {
@@ -51,11 +54,14 @@ export const getStaticProps: GetStaticProps = async (props) => {
 
   try {
     const [productsResponse, categoriesResponse] = await Promise.all([
-      Axios({ method: 'get', url: `/menu/view?limit=6&page=1&general_categories_id=${categoryId}` }),
+      Axios({
+        method: 'get',
+        url: `/menu/view?limit=10000000000000&page=1&general_categories_id=${categoryId}`,
+      }),
       Axios({ method: 'get', url: '/menu/general_categories/view' }),
     ]);
 
-    const products = productsResponse.data || []; // Если продуктов нет, возвращаем пустой массив
+    const products = productsResponse.data || [];
     const categories = categoriesResponse.data;
 
     const category = categories.find(
@@ -73,7 +79,7 @@ export const getStaticProps: GetStaticProps = async (props) => {
   } catch (error) {
     console.error('Ошибка при загрузке данных:', error);
     return {
-      notFound: true, // Показываем страницу 404 в случае ошибки
+      notFound: true,
     };
   }
 };

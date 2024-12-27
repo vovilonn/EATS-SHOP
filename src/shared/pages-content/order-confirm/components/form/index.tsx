@@ -66,6 +66,7 @@ const OrderConfirmForm: FC = () => {
   const [comment, setComment] = useState<string>('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [formError, setFormError] = useState<string>('');
+  const [cash, setCash] = useState<string>('');
 
   const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -139,6 +140,22 @@ const OrderConfirmForm: FC = () => {
     setEatsCoins(Number(e.currentTarget.value));
   };
 
+  const checkTotalSumm = () => {
+    let total = total_cost + deliveryPrice;
+
+    if (typePromocode === 'MONEY') {
+      total -= discount;
+    } else if (typePromocode === 'PERCENTAGE') {
+      total -= (total_cost * discount) / 100;
+    }
+
+    if (eatsCoinApprove) {
+      total = total - eatsCoins;
+    }
+
+    return total;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: { [key: string]: string } = {};
@@ -147,17 +164,13 @@ const OrderConfirmForm: FC = () => {
     if (!address) {
       newErrors.address = "Адреса доставки обов'язкова";
     }
-    if (!approach) {
-      newErrors.approach = "Під’їзд обов'язковий";
-    }
-    if (!floor) {
-      newErrors.floor = "Поверх обов'язковий";
-    }
-    if (!apartment) {
-      newErrors.apartment = "Квартира обов'язкова";
-    }
     if (!cashPayment && !cardPayment) {
       newErrors.payment = 'Виберіть спосіб оплати';
+    }
+
+    if (cash && Number(cash) < checkTotalSumm()) {
+      console.log('cash', cash);
+      newErrors.cash = 'Введіть відповідну суму';
     }
 
     setErrors(newErrors);
@@ -169,10 +182,10 @@ const OrderConfirmForm: FC = () => {
 
         const orderData: IOrderCreate = {
           address,
-          entrance: approach,
+          entrance: approach || '-',
           call_back: isCallback,
-          floor,
-          apartment,
+          floor: floor || '-',
+          apartment: apartment || '-',
           type_payment: cashPayment ? 'CASH' : 'ONLINE',
           type_delivery: 'DELIVERY',
           count_eats_coin: eatsCoinApprove ? eatsCoins : 0,
@@ -233,22 +246,6 @@ const OrderConfirmForm: FC = () => {
       message.error('У вас недостаточно Eats Coin');
       setEatsCoinApprove(false);
     }
-  };
-
-  const checkTotalSumm = () => {
-    let total = total_cost + deliveryPrice;
-
-    if (typePromocode === 'MONEY') {
-      total -= discount;
-    } else if (typePromocode === 'PERCENTAGE') {
-      total -= (total_cost * discount) / 100;
-    }
-
-    if (eatsCoinApprove) {
-      total = total - eatsCoins;
-    }
-
-    return total;
   };
 
   const [isInfoVisible, setIsInfoVisible] = useState(false);
@@ -414,10 +411,11 @@ const OrderConfirmForm: FC = () => {
               }`}
               id="ready"
               type="number"
-              onChange={() => {}}
-              onInput={handleNumberInput}
+              value={cash}
+              onChange={(e) => setCash(e.target.value)}
               large
             />
+            {errors.cash && <span className={style.error}>{errors.cash}</span>}
           </div>
         )}
         <div className={style.comment}>

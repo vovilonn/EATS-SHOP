@@ -158,38 +158,36 @@ const ProductCard: FC<IProductCardProps> = (props) => {
                 <h1 className={style.title}>
                   {sliceTextUtility(props.name, 25)}
                 </h1>
-                {isFavorite ||
-                  (props.basket && (
-                    <div
-                      onClick={(e: MouseEvent<HTMLDivElement>) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                    >
-                      <RemoveIcon
-                        className={`${style.icon} ${style.deleteIcon}`}
-                        onClick={() =>
-                          onToggleToIcon(
-                            props.basket ? props.cart_id ?? 0 : props.id
-                          )
-                        }
-                      />
-                    </div>
-                  ))}
-                {!isFavorite ||
-                  (!props.basket && (
-                    <div
-                      onClick={(e: MouseEvent<HTMLDivElement>) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                    >
-                      <LikeIcon
-                        className={style.icon}
-                        onClick={() => onToggleToIcon(props.id)}
-                      />
-                    </div>
-                  ))}
+                {(isFavorite || props.basket) && (
+                  <div
+                    onClick={(e: MouseEvent<HTMLDivElement>) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                  >
+                    <RemoveIcon
+                      className={`${style.icon} ${style.deleteIcon}`}
+                      onClick={() =>
+                        onToggleToIcon(
+                          props.basket ? props.cart_id ?? 0 : props.id
+                        )
+                      }
+                    />
+                  </div>
+                )}
+                {!props.basket && !isFavorite && (
+                  <div
+                    onClick={(e: MouseEvent<HTMLDivElement>) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                  >
+                    <LikeIcon
+                      className={style.icon}
+                      onClick={() => onToggleToIcon(props.id)}
+                    />
+                  </div>
+                )}
               </div>
 
               {!props.basket && props.composition && (

@@ -14,8 +14,6 @@ const ProductPage: NextPage<IProductPageProps> = (props) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  console.log('===========================>>>>>', Axios.defaults);
-
   const products = (await Axios({ method: 'get', url: '/menu/view' })).data;
 
   const paths = products.map((product: IProduct) => ({

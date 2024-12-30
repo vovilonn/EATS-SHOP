@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 import * as cookies from 'cookies-next';
 
 const instanceAxios: AxiosInstance = axios.create({
-  baseURL: 'https://eats.pp.ua/api',
+  baseURL: 'https://eats.in.ua/api',
 });
 
 instanceAxios.interceptors.request.use((config) => {

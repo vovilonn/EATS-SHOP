@@ -1,45 +1,47 @@
-import IProduct from '@/shared/interfaces/product.interface'
-import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
+import IProduct from '@/shared/interfaces/product.interface';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 
-import ProductPageContent from '@/shared/pages-content/product'
+import ProductPageContent from '@/shared/pages-content/product';
 
-import Axios from '@/shared/utils/axios.utility'
+import Axios from '@/shared/utils/axios.utility';
 
 interface IProductPageProps {
-  product: IProduct
+  product: IProduct;
 }
 
-const ProductPage: NextPage<IProductPageProps> = props => {
-  return <ProductPageContent product={props.product} />
-}
+const ProductPage: NextPage<IProductPageProps> = (props) => {
+  return <ProductPageContent product={props.product} />;
+};
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const products = (await Axios({ method: 'get', url: '/menu/view' })).data
+  console.log('===========================>>>>>', Axios.defaults);
+
+  const products = (await Axios({ method: 'get', url: '/menu/view' })).data;
 
   const paths = products.map((product: IProduct) => ({
     params: { id: String(product.id) },
-  }))
+  }));
 
   return {
     paths,
     fallback: 'blocking',
-  }
-}
+  };
+};
 
-export const getStaticProps: GetStaticProps = async props => {
-  const productId = props.params?.id
+export const getStaticProps: GetStaticProps = async (props) => {
+  const productId = props.params?.id;
 
   const product = (
     await Axios({
       method: 'get',
       url: `/menu/view?menu_id=${productId}`,
     })
-  ).data
+  ).data;
 
   return {
     props: { product: product[0] },
     revalidate: 200,
-  }
-}
+  };
+};
 
-export default ProductPage
+export default ProductPage;

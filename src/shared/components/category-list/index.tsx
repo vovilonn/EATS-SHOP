@@ -26,7 +26,7 @@ const CategoryList: FC<ICategoryListProps> = () => {
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          'https://eats.pp.ua/api/menu/general_categories/view'
+          'https://eats.in.ua/api/menu/general_categories/view'
         );
         const data = await response.json();
         if (data.status === 'OK') {

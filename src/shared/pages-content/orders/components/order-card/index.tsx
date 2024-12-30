@@ -60,6 +60,8 @@ const OrdersOrderCard: FC<IOrdersOrderCardProps> = (props) => {
     return { color, text };
   };
 
+  console.log(props);
+
   const imagesRendering = props.cart.cart_items.map((item) => {
     return (
       <div className={style.image} key={item.id}>
@@ -99,6 +101,16 @@ const OrdersOrderCard: FC<IOrdersOrderCardProps> = (props) => {
           {new Date(props.createdAt * 1000).toLocaleDateString()}
         </p>{' '}
       </header>
+      {props.status_order === 'WAITINGPAYMENT' ? (
+        <p
+          style={{ color: 'gray', fontSize: '14px', cursor: 'pointer' }}
+          onClick={() => window.open(`${props.payment_url}`, '_blank')}
+        >
+          Ссылка для оплаты
+        </p>
+      ) : (
+        ''
+      )}
       <div className={style.address}>
         <p className={style.label}>Адрес доставки</p>
         <p

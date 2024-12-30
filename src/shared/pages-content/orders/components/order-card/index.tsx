@@ -89,7 +89,8 @@ const OrdersOrderCard: FC<IOrdersOrderCardProps> = (props) => {
     <article className={style.order}>
       <header className={style.header}>
         <h1 className={style.title}>
-          <Link href={`/profile/orders/${props.id}`}>Заказ №{props.id}</Link>
+          <p>Заказ №{props.id}</p> 
+          {/* TODO  */}
         </h1>
         <p
           className={classNameStatus}
@@ -103,10 +104,10 @@ const OrdersOrderCard: FC<IOrdersOrderCardProps> = (props) => {
       </header>
       {props.status_order === 'WAITINGPAYMENT' ? (
         <p
-          style={{ color: 'gray', fontSize: '14px', cursor: 'pointer' }}
+          style={{ color: 'green', fontSize: '14px', cursor: 'pointer' }}
           onClick={() => window.open(`${props.payment_url}`, '_blank')}
         >
-          Ссылка для оплаты
+          Посилання для оплати
         </p>
       ) : (
         ''

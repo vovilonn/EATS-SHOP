@@ -70,7 +70,7 @@ const ProductsProductList: FC<IProductsProductListProps> = ({
         </Button>
       )} */}
       {products.length === 0 && (
-        <p>Товары не найдены.</p> // Сообщение, если нет товаров
+        <p>Товари не знайдені</p> 
       )}
     </section>
   );

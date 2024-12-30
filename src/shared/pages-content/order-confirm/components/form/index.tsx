@@ -55,7 +55,6 @@ const OrderConfirmForm: FC = () => {
   const [cardPayment, setCardPayment] = useState<boolean>(false);
 
   const [address, setAddress] = useState<string>('');
-  const [addressSelected, setAddressSelected] = useState(false);
   const [approach, setApproach] = useState<string>('');
   const [floor, setFloor] = useState<string>('');
   const [isCallback, setIsCallback] = useState<boolean>(false);
@@ -68,59 +67,15 @@ const OrderConfirmForm: FC = () => {
   const [formError, setFormError] = useState<string>('');
   const [cash, setCash] = useState<string>('');
 
-  const [suggestions, setSuggestions] = useState<AddressSuggestion[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const debouncedAddress = useDebounce(address, 500);
-
   useEffect(() => {
     if (cart_items.length > 0) {
-      if (total_cost <= min_delivery_not_price) {
+      if (total_cost <= min_delivery_not_price && total_cost !== 0) {
         setDeliveryPrice(delivery_price);
       } else {
         setDeliveryPrice(0);
       }
     }
   }, [total_cost, delivery_price]);
-
-  const fetchSuggestions = async (query: string) => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          query
-        )}`
-      );
-      const data = await response.json();
-      setSuggestions(data);
-    } catch (error) {
-      console.error('Ошибка при загрузке подсказок:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (debouncedAddress?.length > 2 && !addressSelected) {
-      fetchSuggestions(debouncedAddress);
-    }
-  }, [debouncedAddress, addressSelected]);
-
-  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    setAddress(inputValue);
-    setAddressSelected(false);
-
-    if (inputValue.trim() === '') {
-      setSuggestions([]);
-    }
-  };
-
-  const handleSelectSuggestion = (suggestion: AddressSuggestion) => {
-    setAddressSelected(true);
-    setAddress(suggestion.display_name);
-    setSuggestions([]);
-  };
 
   const handleCashChange = () => {
     setCashPayment(true);
@@ -269,25 +224,9 @@ const OrderConfirmForm: FC = () => {
               }`}
               id="address"
               value={address}
-              // onBlur={() => setSuggestions([])}
-              onChange={handleInputChange}
+              onChange={(e) => setAddress(e.target.value)}
               large
             />
-            {suggestions.length > 0 && (
-              <ul className={style.suggestions}>
-                {isLoading && <li className={style.loading}>Загрузка...</li>}
-                {!isLoading &&
-                  suggestions.map((suggestion, index) => (
-                    <li
-                      key={index}
-                      className={style.suggestionItem}
-                      onClick={() => handleSelectSuggestion(suggestion)}
-                    >
-                      {suggestion.display_name}
-                    </li>
-                  ))}
-              </ul>
-            )}
             {errors.address && (
               <span className={style.error}>{errors.address}</span>
             )}
@@ -431,6 +370,17 @@ const OrderConfirmForm: FC = () => {
         <div className={style.coin}>
           <h3 className={style.label}>У вас {accountInfo?.balance} eatscoin</h3>
           <div className={style.activate}>
+            <input
+              className={style.input}
+              type="text"
+              placeholder="Бонусні eatscoin"
+              onInput={handleNumberInput}
+            />
+            <span className={style.activateText} onClick={handleCheckEatsCoins}>
+              Активувати
+            </span>
+          </div>
+          <div className={style.activate}>
             <div className={style.activateContent}>
               <input
                 className={`${style.input} ${
@@ -448,17 +398,6 @@ const OrderConfirmForm: FC = () => {
                 Активувати
               </span>
             </div>
-          </div>
-          <div className={style.activate}>
-            <input
-              className={style.input}
-              type="text"
-              placeholder="Бонусні eatscoin"
-              onInput={handleNumberInput}
-            />
-            <span className={style.activateText} onClick={handleCheckEatsCoins}>
-              Активувати
-            </span>
           </div>
           <div className={style.info}>
             <div className={style.list}>

@@ -1,17 +1,21 @@
 import { ChangeEvent, FC, useEffect, useState } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/shared/store';
+import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
+
+import { getAccountInfo, getLevelsInfo } from '@/shared/store/account/requests';
+
+import ILevelOption from '@/shared/interfaces/level-option.interface';
 
 import ProfileIcon from '@/shared/assets/icons/profile-icon.svg';
 import AddProfileIcon from '@/shared/assets/icons/add-profile-icon.svg';
 import RemoveIcon from '@/shared/assets/icons/remove-icon.svg';
+import EatsCoinIcon from '@/shared/assets/icons/eats.svg';
+
+import Image from 'next/image';
 
 import style from './style.module.scss';
-import { useDispatch } from 'react-redux';
-import { TypeDispatch } from '@/shared/store';
-import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
-import { getAccountInfo, getLevelsInfo } from '@/shared/store/account/requests';
-import ILevelOption from '@/shared/interfaces/level-option.interface';
 
 interface ProfileCardProps {
   previewImage?: File | null;
@@ -113,7 +117,12 @@ const ProfileCard: FC<ProfileCardProps> = (props) => {
         <div className={style.container}>
           <div className={style.row}>
             <h2 className={style.name}>{accountInfo?.name}</h2>
-            <p className={style.balance}>{accountInfo?.balance} ₴</p>
+            <p className={style.balance}>
+              {accountInfo?.balance}{' '}
+              <span>
+                <EatsCoinIcon />
+              </span>{' '}
+            </p>
           </div>
           <div className={style.progress}>
             <label className={style.number} htmlFor="progress">

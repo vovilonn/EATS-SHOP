@@ -82,12 +82,17 @@
   }
 
   .balance {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     padding: 10px 62px;
     border-radius: 16px;
     background-color: #ffc812;
     color: #0c0c0c;
     font-size: 20px;
     font-weight: 600;
+    text-align: center;
 
     @media screen and (max-width: 768px) {
       padding: 6px 14px;
@@ -131,7 +136,8 @@
       font-weight: 500;
       line-height: 20px;
     }
-    .level, .cashback {
+    .level,
+    .cashback {
       font-size: 14px;
       line-height: 17px;
 
@@ -180,12 +186,11 @@
       }
     }
   }
-  
+
   .mediaWrapper {
     @media screen and (max-width: 768px) {
       display: flex;
       gap: 16px;
     }
   }
-
 }

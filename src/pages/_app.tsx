@@ -10,7 +10,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     <Provider store={store}>
       <Component {...pageProps} />
     </Provider>
-  )
-}
+  );
+};
 
 export default App

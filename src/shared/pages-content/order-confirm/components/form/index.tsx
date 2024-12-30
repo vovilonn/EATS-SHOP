@@ -22,6 +22,7 @@ import InfoIcon from '@/shared/assets/icons/info-icon.svg';
 import style from './style.module.scss';
 import { useForm } from 'antd/es/form/Form';
 import useDebounce from '@/shared/hooks/use-debounce';
+import {useRouter} from "next/router";
 // import Map from "@/shared/components/map";
 
 interface AddressSuggestion {
@@ -33,6 +34,7 @@ interface AddressSuggestion {
 const OrderConfirmForm: FC = () => {
   const dispatch = useDispatch<TypeDispatch>();
   const actions = useActions();
+  const { push } = useRouter();
 
   const { accountInfo } = useTypedSelector((state) => state.accountInfo);
   const { total_cost, discount, promocode_id, typePromocode, cart_items } =
@@ -157,6 +159,10 @@ const OrderConfirmForm: FC = () => {
         }
 
         actions.resetDiscount();
+
+        if (cardPayment) {
+          push('/profile/orders');
+        }
 
         setAddress('');
         setApproach('');

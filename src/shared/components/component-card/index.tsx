@@ -33,8 +33,10 @@ const ComponentCard: FC<IComponentCardProps> = (props) => {
   useEffect(() => {
     if (!ingredient?.count) {
       setAmount(0);
+    } else {
+      setAmount(ingredient.count);
     }
-  }, [ingredient]);
+  }, []);
 
   useEffect(() => {
     setClassNameComponent(`
@@ -59,6 +61,7 @@ const ComponentCard: FC<IComponentCardProps> = (props) => {
           productId={Number(id) ?? 1}
           setAmount={setAmount}
           amount={amount}
+          minAmount={0}
           component
           full
         />

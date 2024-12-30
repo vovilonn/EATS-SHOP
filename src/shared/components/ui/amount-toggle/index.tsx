@@ -33,18 +33,18 @@ const AmountToggle: FC<IAmountToggleProps> = (props) => {
     ${props.component && style.component}
   `;
 
-  const onChangeAmount = (method: string) => {
+  const onChangeAmount = async (method: string) => {
     if (stateAuth.isAuth) {
       props.setAmount((prev) => {
         const calculateAmount = eval(`${prev} ${method} 1`);
-  
-        if (calculateAmount < (props.minAmount || 1)) {
-          return prev; 
+
+        if (props.minAmount === 0 && calculateAmount < props.minAmount) {
+          return prev;
         }
-  
+
         return calculateAmount;
       });
-  
+
       if (props.basket) {
         if (method === '-' && props.amount === 1) {
           return;
@@ -52,7 +52,7 @@ const AmountToggle: FC<IAmountToggleProps> = (props) => {
 
         actions.clearProductCount(props.productId);
         actions.clearProductIngredientsCount(props.productId);
-        dispatch(
+        await dispatch(
           editCartCount({
             id: props.cartId ?? 0,
             count: method === '+' ? props.amount + 1 : props.amount - 1,
@@ -62,7 +62,7 @@ const AmountToggle: FC<IAmountToggleProps> = (props) => {
         actions.addProductIngredientsCount({
           product_id: props.productId,
           ingredients_id: props.ingredienId ?? 1,
-          ingredients_count: props.amount,
+          ingredients_count: props.amount === 0 ? 1 : props.amount,
         });
       } else if (method === '-' && props.component) {
         actions.removeProductIngredientsCount({

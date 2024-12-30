@@ -49,7 +49,8 @@ import IAccountInfo from '@/shared/interfaces/accountInfo.interface';
 import { IPromocode } from '@/shared/interfaces/promocode.interface';
 import IOrderOption from '@/shared/interfaces/delivery-option.interface';
 import ILevelOption from '@/shared/interfaces/level-option.interface';
-import { message } from "antd";
+
+import { message } from 'antd';
 
 export interface IInitialState {
   authToken: string | null;
@@ -178,6 +179,13 @@ const adminSlice = createSlice({
       const diffInOrdersLength = action.payload.length - state.orders.length;
 
       if (diffInOrdersLength > 0 && !!state.orders.length) {
+        const audio = new Audio('/sounds/notification.mp3');
+        audio
+          .play()
+          .catch((error) =>
+            console.error('Ошибка воспроизведения звука:', error)
+          );
+
         message.info(`Новых заказов: ${diffInOrdersLength}`);
       }
 

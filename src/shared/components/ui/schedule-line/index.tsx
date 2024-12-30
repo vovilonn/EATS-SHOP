@@ -12,9 +12,6 @@ export const ScheduleLine: FC = () => {
       <Modal open={isModal} onCancel={() => setIsModal(false)} footer={null}>
         <h2>Графік роботи</h2>
         <p>
-          30.12.2024 до 18:00
-        </p>
-        <p>
           31.12.2024 до 18:30
         </p>
         <p>

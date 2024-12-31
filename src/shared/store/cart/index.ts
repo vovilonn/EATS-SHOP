@@ -7,13 +7,14 @@ import {
   editCartCount,
   checkPromocode,
 } from './requests';
+import {PromocodeTypeValue} from "@/shared/interfaces/promocode.interface";
 
 interface ICartInitialState {
   cart_items: ICartItem[];
   total_cost: number;
   total_cart: number;
   discount: number;
-  typePromocode: 'MONEY' | 'PERCENTAGE' | null;
+  typePromocode: PromocodeTypeValue | null;
   promocode_id: number | null;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
   error: string | null;

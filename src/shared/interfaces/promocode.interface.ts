@@ -1,3 +1,8 @@
+export enum PromocodeTypeValue {
+  MONEY = 'MONEY',
+  PERCENTAGE = 'PERCENTAGE',
+}
+
 export interface IPromocode {
   id: number;
   type: 'DISPOSABLE';
@@ -7,7 +12,7 @@ export interface IPromocode {
   code: string;
   description: string | null;
   value_all_start: number;
-  type_value: 'MONEY' | 'PERCENTAGE';
+  type_value: PromocodeTypeValue;
 }
 
 export interface IPromocodeCreateOrUpd {
@@ -18,5 +23,5 @@ export interface IPromocodeCreateOrUpd {
   is_active: boolean;
   code: string;
   value: number;
-  type_value?: 'MONEY' | 'PERCENTAGE';
+  type_value?: PromocodeTypeValue;
 }

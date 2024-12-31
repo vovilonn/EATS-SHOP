@@ -23,6 +23,7 @@ import style from './style.module.scss';
 import { useForm } from 'antd/es/form/Form';
 import useDebounce from '@/shared/hooks/use-debounce';
 import {useRouter} from "next/router";
+import {PromocodeTypeValue} from "@/shared/interfaces/promocode.interface";
 // import Map from "@/shared/components/map";
 
 interface AddressSuggestion {
@@ -100,9 +101,9 @@ const OrderConfirmForm: FC = () => {
   const checkTotalSumm = () => {
     let total = total_cost + deliveryPrice;
 
-    if (typePromocode === 'MONEY') {
+    if (typePromocode === PromocodeTypeValue.MONEY) {
       total -= discount;
-    } else if (typePromocode === 'PERCENTAGE') {
+    } else if (typePromocode === PromocodeTypeValue.PERCENTAGE) {
       total -= (total_cost * discount) / 100;
     }
 
@@ -417,7 +418,10 @@ const OrderConfirmForm: FC = () => {
               </p>
               <p className={style.text}>
                 <span>Знижка</span>
-                <span>{discount} грн</span>
+                <span>
+                  {typePromocode === PromocodeTypeValue.PERCENTAGE ? (total_cost * discount) / 100 : discount} грн
+                  {typePromocode === PromocodeTypeValue.PERCENTAGE && ` (${discount}%)`}
+                </span>
               </p>
               <p
                 className={style.text}

@@ -118,7 +118,11 @@ const OrderConfirmForm: FC = () => {
     e.preventDefault();
     const newErrors: { [key: string]: string } = {};
     setFormError('');
-    const windowReference = window.open();
+    let windowReference = null;
+
+    if (!cashPayment) {
+      windowReference = window.open();
+    }
 
     if (!address) {
       newErrors.address = "Адреса доставки обов'язкова";

@@ -89,7 +89,7 @@ const OrdersOrderCard: FC<IOrdersOrderCardProps> = (props) => {
     <article className={style.order}>
       <header className={style.header}>
         <h1 className={style.title}>
-          <p>Заказ №{props.id}</p> 
+          <p>Замовлення №{props.id}</p> 
           {/* TODO  */}
         </h1>
         <p
@@ -113,20 +113,20 @@ const OrdersOrderCard: FC<IOrdersOrderCardProps> = (props) => {
         ''
       )}
       <div className={style.address}>
-        <p className={style.label}>Адрес доставки</p>
+        <p className={style.label}>Адреса доставки</p>
         <p
           className={style.text}
-        >{`${props.address}, кв. ${props.apartment}, подъезд ${props.entrance}, этаж ${props.floor}`}</p>
+        >{`${props.address}, кв. ${props.apartment}, під'їзд ${props.entrance}, поверх ${props.floor}`}</p>
       </div>
       <div className={style.images}>{imagesRendering}</div>
       <footer className={style.footer}>
-        <h1 className={style.title}>Сумма: {props.cost_order} грн</h1>
+        <h1 className={style.title}>Сума: {props.cost_order} грн</h1>
         <Button
           className={style.btn}
           basket
           onClick={() => handleRepeat(props.id)}
         >
-          Повторить
+          Повторити
         </Button>
       </footer>
     </article>

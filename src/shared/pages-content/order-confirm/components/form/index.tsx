@@ -118,6 +118,7 @@ const OrderConfirmForm: FC = () => {
     e.preventDefault();
     const newErrors: { [key: string]: string } = {};
     setFormError('');
+    const windowReference = window.open();
 
     if (!address) {
       newErrors.address = "Адреса доставки обов'язкова";
@@ -156,14 +157,14 @@ const OrderConfirmForm: FC = () => {
         await dispatch(getCart());
 
         if (data.payment_url) {
-          window.open(data.payment_url, '_blank');
+          if (windowReference) {
+            windowReference.location = data.payment_url;
+          }
         }
 
         actions.resetDiscount();
 
-        if (cardPayment) {
-          push('/profile/orders');
-        }
+        push('/profile/orders');
 
         setAddress('');
         setApproach('');

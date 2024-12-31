@@ -221,6 +221,9 @@ const OrderConfirmForm: FC = () => {
     <form className={style.form} onSubmit={handleSubmit}>
       <div className={style.delivery}>
         <h1 className={style.title}>Доставка</h1>
+        <div className={style.infoBlock}>
+            <p className={style.info}>Доставка до 5го поверху, якщо ліфт не працює</p>
+        </div>
         <div className={style.address}>
           <div className={style.field}>
             <label className={style.label} htmlFor="address">

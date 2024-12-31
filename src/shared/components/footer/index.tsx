@@ -101,9 +101,7 @@ const Footer: FC = () => {
             <CopyRight />
             eats. All rights reserved.
           </p>
-          <a className={style.politics} href='/'>
-            Політика конфіденційності
-          </a>
+          
         </div>
       </section>
 

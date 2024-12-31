@@ -1,34 +1,16 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
-import { useDispatch } from 'react-redux';
-import { TypeDispatch } from '@/shared/store';
-import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
+import {useDispatch} from 'react-redux';
+import {TypeDispatch} from '@/shared/store';
+import {useTypedSelector} from '@/shared/hooks/use-typed-selector';
 
-import {
-  createPromocode,
-  deletePromocode,
-  editPromocode,
-  fetchAllPromocodes,
-} from '@/shared/store/admin/requests';
+import {createPromocode, deletePromocode, editPromocode, fetchAllPromocodes,} from '@/shared/store/admin/requests';
 
-import {
-  IPromocode,
-  IPromocodeCreateOrUpd,
-} from '@/shared/interfaces/promocode.interface';
+import {IPromocode, IPromocodeCreateOrUpd, PromocodeTypeValue,} from '@/shared/interfaces/promocode.interface';
 
-import {
-  Button,
-  Form,
-  Input,
-  message,
-  Modal,
-  Radio,
-  Table,
-  TableProps,
-  Tag,
-} from 'antd';
+import {Button, Form, Input, message, Modal, Radio, Table, TableProps, Tag,} from 'antd';
 
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import {DeleteOutlined, EditOutlined} from '@ant-design/icons';
 
 const PromocodesPageContent = () => {
   const dispatch = useDispatch<TypeDispatch>();
@@ -37,8 +19,8 @@ const PromocodesPageContent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [typeValuePromocode, setTypeValuePromocode] = useState<
-    'MONEY' | 'PERCENTAGE'
-  >('PERCENTAGE');
+    PromocodeTypeValue
+  >(PromocodeTypeValue.PERCENTAGE);
   const [typePromocode, setTypePromocode] = useState<'DISPOSABLE' | 'ONETIME'>(
     'DISPOSABLE'
   );

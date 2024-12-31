@@ -434,7 +434,7 @@ const OrderConfirmForm: FC = () => {
                   e.stopPropagation();
                 }}
               >
-                <span>
+                <span style={{ display: 'flex', alignItems: 'center' }}>
                   Вартість доставки
                   <button className={style.infoButton}>
                     <InfoIcon

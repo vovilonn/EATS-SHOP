@@ -120,7 +120,7 @@ const OrderConfirmForm: FC = () => {
     setFormError('');
     let windowReference = null;
 
-    if (!cashPayment) {
+    if (cardPayment) {
       windowReference = window.open();
     }
 

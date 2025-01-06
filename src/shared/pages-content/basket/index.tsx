@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import Link from 'next/link';
 
@@ -9,9 +9,19 @@ import ProductList from '@/shared/components/product-list';
 import BasketHeader from './components/header';
 
 import style from './style.module.scss';
+import { getCart } from '@/shared/store/cart/requests';
+import { useDispatch } from 'react-redux';
+import { TypeDispatch } from '@/shared/store';
 
 const BasketPageContent: FC = () => {
-  const { total_cost } = useTypedSelector((state) => state.cart);
+  const dispatch = useDispatch<TypeDispatch>();
+  const { total_cost, total_cart } = useTypedSelector((state) => state.cart);
+
+  console.log('total_cart', total_cart);
+
+  useEffect(() => {
+    dispatch(getCart());
+  }, [total_cost]);
 
   return (
     <LoggedLayout>

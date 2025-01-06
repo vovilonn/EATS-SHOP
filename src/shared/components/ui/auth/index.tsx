@@ -3,13 +3,14 @@ import { FC, useEffect, useState } from 'react';
 import { useTypedSelector } from '@/shared/hooks/use-typed-selector';
 import { useActions } from '@/shared/hooks/use-actions';
 
-import Popup from '../popup'
-import PopupContent from '../popup/components/content'
-import PopupNumberPhone from '../popup/components/number-phone'
-import PopupLogin from '../popup/components/login'
-import PopupPersonalInfo from '../popup/components/personal-info'
-import { JWT_KEY } from '@/constanse'
-import axios from 'axios'
+import Popup from '../popup';
+import PopupContent from '../popup/components/content';
+import PopupNumberPhone from '../popup/components/number-phone';
+import PopupLogin from '../popup/components/login';
+import PopupPersonalInfo from '../popup/components/personal-info';
+import { JWT_KEY } from '@/constanse';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const Auth: FC = () => {
   const stateAuth = useTypedSelector((state) => state.auth);
@@ -19,6 +20,8 @@ const Auth: FC = () => {
   const [visiblePhoneNumber, setVisiblePhoneNumber] = useState(false);
   const [visibleLogin, setVisibleLogin] = useState(false);
   const [visiblePersonal, setVisiblePersonal] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     setVisible(stateAuth.needAuth);
@@ -40,16 +43,17 @@ const Auth: FC = () => {
   };
 
   const onSubmitLogin = (userdata: { [key: string]: string }) => {
-    setVisibleLogin(false)
-    localStorage.setItem(JWT_KEY, userdata.token)
+    setVisibleLogin(false);
+    localStorage.setItem(JWT_KEY, userdata.token);
     axios.defaults.headers.common['Authorization'] = `Bearer ${userdata.token}`;
-
 
     if (!(Object.keys(userdata.model_city || {}).length && userdata.name)) {
       setVisiblePersonal(true);
     } else {
       onClose();
     }
+
+    router.push('/profile');
   };
 
   const onSubmitPersonal = () => {

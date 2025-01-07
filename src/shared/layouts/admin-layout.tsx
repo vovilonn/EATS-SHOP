@@ -30,7 +30,7 @@ interface AdminLayoutProps {
 }
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
-  const { authToken, role } = useTypedSelector((state) => state.adminPanel);
+  const { authToken, role, isSoundPlayed } = useTypedSelector((state) => state.adminPanel);
 
   const [loading, setLoading] = useState(true);
   const [selectedKey, setSelectedKey] = useState<string>('');
@@ -51,6 +51,29 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
       clearInterval(interval);
     };
   }, [dispatch]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    const playAudio = () => {
+      const audio = new Audio('/sounds/notification.mp3');
+      audio
+        .play()
+        .catch((error) =>
+          console.error('Ошибка воспроизведения звука:', error)
+        );
+    };
+
+    if (isSoundPlayed) {
+      interval = setInterval(playAudio, 2000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    }
+  }, [isSoundPlayed]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && !authToken) {

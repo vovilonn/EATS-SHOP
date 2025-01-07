@@ -35,6 +35,7 @@ const ProductList: FC<IProductListProps> = (props) => {
         <ProductCard
           key={item.id}
           {...item.model_menu}
+          item_cost={item.item_cost}
           cart_id={item.id}
           model_options={item.model_options}
           model_menu_ingredients_cart={item.model_menu_ingredients_cart}
@@ -77,8 +78,7 @@ const ProductList: FC<IProductListProps> = (props) => {
   }, [productsRendering]);
 
   return (
-    <div
-      className={style.products}>
+    <div className={style.products}>
       {content}
     </div>
   );

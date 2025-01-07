@@ -115,18 +115,22 @@ const cartSlice = createSlice({
 
       .addCase(editCartCount.fulfilled, (state, action) => {
         const { id, count } = action.meta.arg;
+        const res = action.payload;
 
-        const existingItem = state.cart_items.find((item) => item.id === id);
+        const cartItems = res?.cart_items;
+        state.cart_items = cartItems;
+
+        const existingItem = cartItems.find((item: any) => item.id === id);
 
         if (existingItem) {
           existingItem.count = count;
         }
 
-        state.total_cost = state.cart_items.reduce(
-          (total, item) => total + item.count * item.model_options.price,
+        state.total_cost = cartItems.reduce(
+          (total: number, item: any) => total + item.item_cost,
           0
         );
-        state.total_cart = state.cart_items.length;
+        state.total_cart = cartItems.length;
         state.loading = 'succeeded';
         state.error = null;
       })

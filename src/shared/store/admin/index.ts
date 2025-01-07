@@ -68,6 +68,7 @@ export interface IInitialState {
   role: 'ADMIN' | 'PROVIDER' | null;
   orders: IOrdersHistory[];
   levelOptions: ILevelOption[] | [];
+  isSoundPlayed: boolean;
 }
 
 const initialState: IInitialState = {
@@ -89,6 +90,7 @@ const initialState: IInitialState = {
       ? (localStorage.getItem('role') as 'ADMIN' | 'PROVIDER' | null)
       : null,
   orders: [],
+  isSoundPlayed: false,
 };
 
 const adminSlice = createSlice({
@@ -106,6 +108,9 @@ const adminSlice = createSlice({
     setTokenAdmin: (state, action) => {
       state.authToken = action.payload;
     },
+    isSoundPlayedChanged: (state, action) => {
+      state.isSoundPlayed = action.payload;
+    }
   },
   extraReducers: (build) => {
     build.addCase(loginAdmin.fulfilled, (state, response) => {
@@ -179,12 +184,7 @@ const adminSlice = createSlice({
       const diffInOrdersLength = action.payload.length - state.orders.length;
 
       if (diffInOrdersLength > 0 && !!state.orders.length) {
-        const audio = new Audio('/sounds/notification.mp3');
-        audio
-          .play()
-          .catch((error) =>
-            console.error('Ошибка воспроизведения звука:', error)
-          );
+        state.isSoundPlayed = true;
 
         message.info(`Новых заказов: ${diffInOrdersLength}`);
       }

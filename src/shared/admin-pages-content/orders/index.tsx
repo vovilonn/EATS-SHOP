@@ -26,6 +26,7 @@ import {
   TableProps,
   Tag,
 } from 'antd';
+import {useActions} from "@/shared/hooks/use-actions";
 
 const { Option } = Select;
 
@@ -42,7 +43,8 @@ const statusPriority: Record<StatusOrder, number> = {
 
 const ProviderIngredientsContent: React.FC = () => {
   const dispatch = useDispatch<TypeDispatch>();
-  const { orders } = useTypedSelector((state) => state.adminPanel);
+  const actions = useActions();
+  const { orders, isSoundPlayed } = useTypedSelector((state) => state.adminPanel);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<IOrdersHistory | null>(
@@ -103,6 +105,7 @@ const ProviderIngredientsContent: React.FC = () => {
     setSelectedRecord(record);
     setCurrentStatus(record.status_order);
     setIsModalOpen(true);
+    actions.isSoundPlayedChanged(false);
   };
 
   const handleCancel = () => {

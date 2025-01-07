@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useState } from 'react';
+import {FC, MouseEvent, useEffect, useState} from 'react';
 import { useDispatch } from 'react-redux';
 import { TypeDispatch } from '@/shared/store';
 import { useActions } from '@/shared/hooks/use-actions';
@@ -35,6 +35,7 @@ interface IProductCardProps extends IProduct {
   minAmount?: number;
   model_options?: IOption;
   count?: number;
+  item_cost?: number;
   model_menu_ingredients_cart?: IModelMenuIngredientsCart[];
 }
 
@@ -48,9 +49,15 @@ const ProductCard: FC<IProductCardProps> = (props) => {
 
   const [price, setPrice] = useState<number>(
     props.basket
-      ? props.model_options?.price ?? 0
+      ? props.item_cost ?? 0
       : props.options?.[0].price ?? 0
   );
+
+  useEffect(() => {
+    if (props.basket) {
+      setPrice(props.item_cost ?? 0);
+    }
+  }, [props.basket, props.item_cost]);
 
   const [amount, setAmount] = useState<number>(
     props.basket ? props.count ?? 1 : productCount?.product_count ?? 1
@@ -61,10 +68,10 @@ const ProductCard: FC<IProductCardProps> = (props) => {
   );
   const [isFavorite, setFavorite] = useState<boolean>(props.is_favorite);
 
-  const totalPrice = totalPriceUtility({ amount, price });
-  const cartTotalPrice = totalCartPrice(
-    props.model_menu_ingredients_cart ?? []
-  );
+  const totalPrice = totalPriceUtility({ amount: props.basket ? undefined : amount, price });
+  // const cartTotalPrice = totalCartPrice(
+  //   props.model_menu_ingredients_cart ?? []
+  // );
 
   const router = useRouter();
   const isBasketPage =
@@ -221,7 +228,7 @@ const ProductCard: FC<IProductCardProps> = (props) => {
           <footer className={style.footer}>
             <div className={style.actions}>
               <h2 className={style.price}>
-                {props.basket ? cartTotalPrice + totalPrice : totalPrice} грн
+                {totalPrice} грн
               </h2>
               {/* {props.basket && <button className={style.edit}>Змінити</button>} TODO */}
               <AmountToggle

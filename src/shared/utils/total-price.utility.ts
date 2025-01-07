@@ -1,6 +1,6 @@
 interface ITotalPriceUtilityProps {
   price: number
-  amount: number
+  amount?: number
 }
 
 const totalPriceUtility = (props: ITotalPriceUtilityProps) => {
